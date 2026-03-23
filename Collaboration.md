@@ -8,4 +8,4 @@
 
 [Discord - Communication](https://discord.gg/KWYYK9vf3): Hierüber schreiben wir uns und können auch Sprach- und Videoanrufe tätigen.
 
-[Taiga - Scrum and Kanban Board](https://tree.taiga.io/project/s-voelkl-pmae-project/): Anmeldung per GitHub-Account möglich, _ggf. muss der Admin (SimonV) euch hinzufügen_.
+[Taiga - Scrum and Kanban Board](https://tree.taiga.io/project/svoelkl-pmae-projekt/): Anmeldung per Hochschul-E-Mail Adresse nötig, _ggf. muss der Admin (SimonV) euch hinzufügen_.
