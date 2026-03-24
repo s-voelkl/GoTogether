@@ -74,12 +74,3 @@ T: bis Prüfungsphase (Sommer)
 1. Ich möchte einen guten Freund kennen lernen mit Interessen. -> Interessensvergleiche (vgl. Dating Apps). Schnelle Matches finden.
 2. Reduktion der Screen-Time zur Sozialisierung.
 3.
-
-## TODOs:
-
-- TODO: Kanban / Scrum Oberfläche anlegen und Inhalte eintragen
-- TODO: Kommunikationstools festlegen (z.B. Slack, Discord, etc.)
-- TODO: Problemstellung konkretisieren
-- TODO: Ideen konkretisieren, echte Beispiele geben
-- TODO: User Stories und SMART formulieren
-- TODO: Kommerzialisierung konkretisieren
