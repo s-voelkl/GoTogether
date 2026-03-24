@@ -9,3 +9,5 @@
 [Discord - Communication](https://discord.gg/KWYYK9vf3): Hierüber schreiben wir uns und können auch Sprach- und Videoanrufe tätigen.
 
 [Taiga - Scrum and Kanban Board](https://tree.taiga.io/project/svoelkl-pmae-projekt/): Anmeldung per Hochschul-E-Mail Adresse nötig, _ggf. muss der Admin (SimonV) euch hinzufügen_.
+
+[Scrumlr - Scrum Retrospective Tool](https://scrumlr.io/): Später für die Retro benötigt. Methode ist dabei frei wählbar.
