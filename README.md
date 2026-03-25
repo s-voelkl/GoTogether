@@ -17,6 +17,22 @@ App gegen Einsamkeit
 - Mögliche Apps: Soziale Netzwerke, Dating-App,
   App für gemeinsame Aktivitäten, Spiele-App ...
 
+## Projektbeschreibung
+
+> Ein Projekt ist ein zielgerichtetes, zeitlich begrenztes Vorhaben zur Schaffung eines neuartigen Produktes oder Dienstleistung. (siehe Vorlesungsskript)
+
+Folgende Eigenschaften bestätigen die Klassifikation als Projekt:
+
+- Zielklarheit: Anhand des unten definierten SMART-Ziels ist ersichtlich, dass das Projekt das klare Ziel zur Bekämpfung von Isolation hat.
+- Einmaligkeit und Neuartigkeit: Die Aufgabe erfolgt nicht als Routinetätigkeit und bringt neuwertige Blickwinkel und Ansätze mit sich.
+- Schwierigkeit der Aufgabe: Die Nicht-Trivialität der App-Entwicklung setzt starke Kompetenzen in dem Gebiet voraus.
+- Prozesscharakter mit vielen Arbeitsschritten: Die zugrundeliegende SCRUM-Arbeitsmethode bündelt die Aufgaben in Sprints und setzt eine schrittweise Verfeinerung des MVPs voraus.
+- Terminierung: Das Projekt muss innerhalb des Sommersemesters 2026 zur Prüfungsphasea abgeschlossen sein.
+- Teambildung: Ein SCRUM-Team mit 5 Personen ist involviert.
+- Ressourcenbegrenztheit: Zeitliche und finanzielle Ressourcen sind durch die Studienumgebung stark begrenzt.
+
+Daher kann das Vorhaben als Projekt verstanden werden. Als Projektart trifft hierbei das Entwicklungsprojekt zu, das sich mit einem hohen Neuartigkeitsgrad und konkreten Zielsetzungen charakterisiert. Dabei ist die Unsicherheit im Vergleich zur Forschung eher als gering zu betrachten.
+
 ## Notizen aus Kundengesprächen (Thema 3)
 
 - Seit dem ich geschieden bin, fühle ich mich hin und wieder sehr einsam. Diese Apps oder Netzwerke bieten vielleicht für junge Menschen Kontakte. Ich kann hier nur schwer jemanden kennenlernen.
