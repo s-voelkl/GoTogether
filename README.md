@@ -45,7 +45,7 @@ App gegen Einsamkeit
 
 ## Problemstellung
 
-**TL/DR: Oberflächliche Online-Interaktionen schaffen keine echten Beziehungen und verstärken Einsamkeit.**
+**TL;DR: Oberflächliche Online-Interaktionen schaffen keine echten Beziehungen und verstärken Einsamkeit.**
 
 ### Unterprobleme:
 
@@ -53,7 +53,6 @@ Oberflächliche Interaktion statt echter Beziehung:
 
 - Likes, Follower, Chatten --> "soziale Aktivität" ohne emotionale Tiefe. (Lena, 17)
 - Studien bestätigen, dass Social Media echte Verbundenheit nicht ersetzt. ([Einsamkeitsreport TK 2024](https://www.tk.de/resource/blob/2186830/73239d0d1b389491c47f1bf7960ed254/2024-tk-einsamkeitsreport-data.pdf))
-- Studien bestätigen, dass Social Media echte Verbundenheit nicht ersetzt.
 
 Passiver Social Media-Konsum führt zu Einsamkeit:
 
@@ -63,7 +62,7 @@ Passiver Social Media-Konsum führt zu Einsamkeit:
 Fehlende lokale, reale, niedrigschwellige Sozialkontakte:
 
 - Für Erwachsene ab 40+ sind bestehende Plattformen schlecht geeignet. (Karin, 54)
-- Umzüge erhöhen Einsamkeit stark. → Quelle bestätigt diesen Effekt. ([Einsamkeitsreport TK 2024](https://www.tk.de/resource/blob/2186830/73239d0d1b389491c47f1bf7960ed254/2024-tk-einsamkeitsreport-data.pdf))
+- Umzüge erhöhen Einsamkeit stark. ([Einsamkeitsreport TK 2024](https://www.tk.de/resource/blob/2186830/73239d0d1b389491c47f1bf7960ed254/2024-tk-einsamkeitsreport-data.pdf))
 
 ### Problemdefinition
 
