@@ -45,7 +45,28 @@ App gegen Einsamkeit
 
 ## Problemstellung
 
-Social Media vernetzt Leute nicht so richtig
+**TL;DR: Oberflächliche Online-Interaktionen schaffen keine echten Beziehungen und verstärken Einsamkeit.**
+
+### Unterprobleme:
+
+Oberflächliche Interaktion statt echter Beziehung:
+
+- Likes, Follower, Chatten --> "soziale Aktivität" ohne emotionale Tiefe. (Lena, 17)
+- Studien bestätigen, dass Social Media echte Verbundenheit nicht ersetzt. ([Einsamkeitsreport TK 2024](https://www.tk.de/resource/blob/2186830/73239d0d1b389491c47f1bf7960ed254/2024-tk-einsamkeitsreport-data.pdf))
+
+Passiver Social Media-Konsum führt zu Einsamkeit:
+
+- Nur Inhalte scrollen verschärft Einsamkeit. ([JRC Studie 2024](https://joint-research-centre.ec.europa.eu/jrc-news-and-updates/how-you-scroll-matters-passive-social-media-use-linked-loneliness-2024-12-13_en))
+- Viele fühlen sich trotz großer Online-Präsenz innerlich isoliert (Tom, 29).
+
+Fehlende lokale, reale, niedrigschwellige Sozialkontakte:
+
+- Für Erwachsene ab 40+ sind bestehende Plattformen schlecht geeignet. (Karin, 54)
+- Umzüge erhöhen Einsamkeit stark. ([Einsamkeitsreport TK 2024](https://www.tk.de/resource/blob/2186830/73239d0d1b389491c47f1bf7960ed254/2024-tk-einsamkeitsreport-data.pdf))
+
+### Problemdefinition
+
+Trotz zunehmender digitaler Vernetzung durch Social Media Plattformen wird Einsamkeit und fehlende Bindung beschrieben. Oberflächliche Interaktionen, passiver Konsum, fehlende lokale Angebote und unzureichende Unterstützung bei Lebensveränderungen tragen dazu bei, dass sich Menschen trotz Online-Aktivität einsam fühlen. Es fehlt eine Lösung für tiefgehende soziale Beziehungen und persönlichen Begegnungen, die über digitale Profile hinausgehen.
 
 ## Ideen
 
