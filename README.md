@@ -17,7 +17,7 @@ App gegen Einsamkeit
 - Mögliche Apps: Soziale Netzwerke, Dating-App,
   App für gemeinsame Aktivitäten, Spiele-App ...
 
-## Projektbeschreibung
+## Projektcharakteristik
 
 > Ein Projekt ist ein zielgerichtetes, zeitlich begrenztes Vorhaben zur Schaffung eines neuartigen Produktes oder Dienstleistung. (siehe Vorlesungsskript)
 
@@ -27,16 +27,18 @@ Folgende Eigenschaften bestätigen die Klassifikation als Projekt:
 - Einmaligkeit und Neuartigkeit: Die Aufgabe erfolgt nicht als Routinetätigkeit und bringt neuwertige Blickwinkel und Ansätze mit sich.
 - Schwierigkeit der Aufgabe: Die Nicht-Trivialität der App-Entwicklung setzt starke Kompetenzen in dem Gebiet voraus.
 - Prozesscharakter mit vielen Arbeitsschritten: Die zugrundeliegende SCRUM-Arbeitsmethode bündelt die Aufgaben in Sprints und setzt eine schrittweise Verfeinerung des MVPs voraus.
-- Terminierung: Das Projekt muss innerhalb des Sommersemesters 2026 zur Prüfungsphasea abgeschlossen sein.
+- Terminierung: Das Projekt muss innerhalb des Sommersemesters 2026 zur Prüfungsphase abgeschlossen sein.
 - Teambildung: Ein SCRUM-Team mit 5 Personen ist involviert.
 - Ressourcenbegrenztheit: Zeitliche und finanzielle Ressourcen sind durch die Studienumgebung stark begrenzt.
 
 Daher kann das Vorhaben als Projekt verstanden werden. Als Projektart trifft hierbei das Entwicklungsprojekt zu, das sich mit einem hohen Neuartigkeitsgrad und konkreten Zielsetzungen charakterisiert. Dabei ist die Unsicherheit im Vergleich zur Forschung eher als gering zu betrachten.
 
+---
+
 ## Notizen aus Kundengesprächen (Thema 3)
 
 - Seit dem ich geschieden bin, fühle ich mich hin und wieder sehr einsam. Diese Apps oder Netzwerke bieten vielleicht für junge Menschen Kontakte. Ich kann hier nur schwer jemanden kennenlernen.
-- In meiner Schulzeit habe ich angefangen Videos für Tiktokzu machen. Nun bin ich auch auf Instagram. Ich habe zwar viele Follower, aber niemanden, den ich jetzt als guten Freund oder Freundin bezeichnen würde. Das ist sehr schade.
+- In meiner Schulzeit habe ich angefangen Videos für Tiktok zu machen. Nun bin ich auch auf Instagram. Ich habe zwar viele Follower, aber niemanden, den ich jetzt als guten Freund oder Freundin bezeichnen würde. Das ist sehr schade.
 - Ich bin nun seit 2 Jahren hier in München und versuche Menschen kennenzulernen. Teilweise ist dies nicht einfach. Manchmal fühle ich mich einsam, obwohl ich mit vielen Personen auf Instagram kommuniziere. Auch mit Tinder lerne und nur schwer jemanden kennen, geschweige denn einen guten Freund.
 - Seit 2022 lebe ich nun in Amberg. Die Menschen sind sehr offen. Ich habe auch schon ein paar Leute kennengelernt. Aber dennoch fühle ich mich manchmal einsam. Ich wünsche mir etwas, dass dies ändern könnte. Soziale Netzwerke tragen zwar das Label „sozial“ aber soviel erlebe ich nicht davon.
 
@@ -84,12 +86,47 @@ Fehlende lokale, reale, niedrigschwellige Sozialkontakte:
 
 Trotz zunehmender digitaler Vernetzung durch Social Media Plattformen wird Einsamkeit und fehlende Bindung beschrieben. Oberflächliche Interaktionen, passiver Konsum, fehlende lokale Angebote und unzureichende Unterstützung bei Lebensveränderungen tragen dazu bei, dass sich Menschen trotz Online-Aktivität einsam fühlen. Es fehlt eine Lösung für tiefgehende soziale Beziehungen und persönlichen Begegnungen, die über digitale Profile hinausgehen.
 
-## Ideen
+---
 
-- Stadt-Challenges (ähnlich wie Pokemon Go), Raids, Acchievements, Coupons (Payback), Teams nach Emotionalität/Interessen, Stops bei Sehenswürdigkeiten, Mini-Aufgaben, Dekorationsobjekte, Bonus bei mehr Leuten.
-- Personal Assistant: Motivierende KI, die die Teilnahme Kurse und Aktivitäten incentiviert. Gamification (Rewards)
-- Social Battery Indicator (-> Profil)
-- Vorschlagssystem für Challenges anhand Ort, Interessen, Ziele. Kompatabilität nach emotionalen Bedürfnissen
+## App-Idee
+
+**TL;DR: Die App kombiniert City‑Quests, ein emotions- und interessenbasiertes Matching sowie einen KI‑Assistenten, um aus digitalen Kontakten echte Begegnungen zu machen. Spielerische Herausforderungen, lokale Events und eine Social Map erleichtern spontane Treffen, während Gamification‑Elemente langfristig zur Teilnahme motivieren. Durch den Social‑Battery‑Index und personalisierte Empfehlungen bleibt jede Aktivität an die individuellen sozialen Bedürfnisse der Nutzer angepasst.**
+
+1. **City Quests**
+   Inspiriert von Pokémon Go. Fokus auf spielbare, lokale Stadt-Challenges, die gegenseitiges Kennenlernen fördern.
+   - Lokale Treffpunkte: Treffpunkte (Parks, Cafés, Sehenswürdigkeiten) - Minispiele, Treffen, Austausch
+   - Micro-Challenges für Begegnungen, z.B. mit anderen App-Nutzern vor Ort sprechen,
+     > Pokémon Go steigert spontane soziale Treffen ([Forschung](https://newsroom.niu.edu/more-than-a-game-niu-psychology-professor-measures-pokemon-gos-impact-on-belonging/))
+   - Team-Raids für soziale Aktivitäten: Gemeinsam größere Aufgaben lösen, z.B. Reinigungsaktion, großer Park-Picknick, stadtweite Schnitzeljagd/Aktion, Fotografieren
+   - Zeitlich begrenzte Events, z.B. Stadtfeste, Feiertage, Angebote.
+   - Dauerhafte Teams: Semi-permanente Zuordnung nach Aspekten in eine von mehreren (2-5) Gruppen.
+   - Level- oder Team-abhängige Herausforderungen für Anfänger bis Fortgeschrittene.
+
+2. **Persönlichkeits- & Emotionsorientierte Matchings**
+   - Social Battery Index: Wie viel Energie für soziale Interaktion. (Wenig Energie = ruhige 1:1-Aktivitäten, viel Energie = Gruppenquests & Events)
+   - Gemeinsame Interessen (Emotional Needs Matching). Z.B.: Hunde, Wandern, Kunst, Kochen.
+     > Basierend auf [Gamification‑Studien und Anti‑Einsamkeits‑Apps ](https://openhsu.ub.hsu-hh.de/entities/publication/15111). Jüngere profitieren auch von virtuellen Kontakten, ältere benötigen eher persönliche Interaktionen ([Studie](https://www.tandfonline.com/doi/pdf/10.1080/10447318.2025.2543994)).
+
+3. **KI-Personal Assistant**
+   - Motivation & Aktivitätsvorschläge für Nutzer, anhand von Standort, Interessen, Social Battery Index, etc.
+   - Lokale Empfehlungen für Aktivitäten, Events, Gruppen. (Werbung möglich)
+   - Begleitung für persönliche Entwicklung und Fortschritte, inkl. empathisches Coaching für Sozialisierung & Reflexionsimpulse
+   - Starke Leitplanken für Sicherheit, Privatsphäre, ethische KI-Nutzung. Werbeanzeigen nur mit klarer Kennzeichnung, keine manipulative Werbung, Datenschutz im Fokus.
+
+4. **Gamification & Rewards**
+   - Belohnungen (Avatar-Deko, Skins, virtuelle Haustiere, Abzeichen, Level-Ups), auch AR-kompatibel
+   - Digitale Währung. Für In-App-Käufe, lokale Partnerangebote, Spendenaktionen, Coupons, Payback-Coupons, Loot-Boxen, Saison-Pässe. Digitale Währung auch von Werbenden als Aktivitäts-Belohnung kaufbar.
+   - Echtwert-Coupons, nur für lokale Geschäfte, Cafés, Events. Förderung der lokalen Wirtschaft und realer Begegnungen. Kooperation mit lokalen Unternehmen möglich.
+   - Boni/Meilensteine für regelmäßige Aktivität, Freundschaftsaufbau, Challenges und Stadtmissionen
+   - Teilnahmeverifizierung durch QR-Codes vor Ort oder als (verschlüsselter) Austausch mit anderen Nutzern, daher kein [GPS-Spoofing](https://de.wikipedia.org/wiki/GPS-Spoofing#HeroSection) möglich.
+
+5. **Social Map**
+   Inspiriert z.B. von Pokémon Go, [Jagat](https://techcrunch.com/2023/12/15/jagat-location-based-social-network-focuses-on-real-life-connections-surpasses-10m-users/) und Ingress Prime. Interaktive Live-Karte.
+   - Interaktive Echtzeit-Karte.
+     - Enger Radius (ca. 50m): Andere Online-Nutzer in der Nähe.
+     - Erweiterter Radius (ca. 500m): Lokale Events, Challenges, Treffpunkte, Gruppenaktivitäten, lokale Angebote. Werbung möglich.
+     - Großer Radius (ca. 3km): Empfehlungen für Orte/Aktivitäten. KI-gestützt, Werbung möglich.
+   - Anonymität & Sicherheit: Optionaler Safe Mode für komplette Anonymität. Optionale Sichtbarkeit für Freunde. Safe Spots (z.B. Cafés) vorhanden. Profil-Verifizierung möglich.
 
 ## Kommerzialisierung
 
