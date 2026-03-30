@@ -135,13 +135,19 @@ Trotz zunehmender digitaler Vernetzung durch Social Media Plattformen wird Einsa
 
 ## Ziel der App (SMART)
 
-- Leute zusammenbringen
+S: Die App soll durch lokale, spielerische Herausforderungen (City Quests), Interessensmatching, einen KI‑Assistenten sowie eine interaktive Social Map reale soziale Begegnungen fördern und damit Einsamkeit in allen Altersgruppen reduzieren.
+M: Ein Click-Dummy mit Pseudo-Karte inkl. Challenges, Corporate Design. Full Stack Softwareprototyp der App-Infrastruktur, responsive Design mit integrierter Karte und Challenges.
+A: Trotz zunehmender digitaler Vernetzung durch Social Media Plattformen wird Einsamkeit und fehlende Bindung beschrieben. Oberflächliche Interaktionen, passiver Konsum, fehlende lokale Angebote und unzureichende Unterstützung bei Lebensveränderungen tragen dazu bei, dass sich Menschen trotz Online-Aktivität einsam fühlen. Es fehlt eine Lösung für tiefgehende soziale Beziehungen und persönlichen Begegnungen, die über digitale Profile hinausgehen.
+R: Erreichbarkeit durch bestehende Open-Source Lösungen (z.B. Open Street Map), Kollaboration im SCRUM-Team mit 7 Personen und klare Aufgabenteilung.
+T: Bis zur Projektabgabe im Juli des Sommersemesters 2026.
 
-S:
-M:
-A: Isolation bekämpfen
-R:
-T: bis Prüfungsphase (Sommer)
+## Grober Projektplan
+
+1. Sprint: Click Dummy, Corporate Design, Karte, inhaltliche Definition der Challenges, Softwarestruktur erstellen.
+2. Sprint: Grobe Softwarearchitektur, Full-Stack Funktionalität (DB, Backend, Frontend), Challenges implementieren, Karte implementieren.
+3. Sprint: Feine Softwarearchitektur, Interaktive Karte mit Challenges, Gamification-Elemente mit Belohnungen.
+4. Sprint: offen.
+   Abschluss: offen.
 
 ## User Stories:
 
