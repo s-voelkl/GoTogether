@@ -149,8 +149,25 @@ T: Bis zur Projektabgabe im Juli des Sommersemesters 2026.
 4. Sprint: offen.
    Abschluss: offen.
 
-## User Stories:
+## User Stories
 
-1. Ich möchte einen guten Freund kennen lernen mit Interessen. -> Interessensvergleiche (vgl. Dating Apps). Schnelle Matches finden.
-2. Reduktion der Screen-Time zur Sozialisierung.
-3.
+### Inhaltliche User Stories
+
+1. **Social Battery:** Als Nutzer\*in, möchte ich beim ersten Öffnen der App meinen sozialen Energielevel eingeben und flexibel über den Tag anpassen können, um Vorschläge zu erhalten, die meiner aktuellen emotionalen Belastbarkeit entsprechen (z. B. ruhige Treffen vs. Gruppenquests).
+2. **Lokale Challenges:** Als Person, die neue Menschen in meinem Umfeld kennenlernen möchte, möchte ich aus einer Auswahl lokaler Quests/Challenges wählen können, um unkompliziert Kontakt zu echten Menschen in meiner Nähe aufzubauen und soziale Barrieren zu überwinden.
+3. **Interessensmatching:** Als Nutzer\*in mit spezifischen Hobbys und Leidenschaften, möchte ich meine Interessen mit Prioritäten eintragen können, um Menschen zu finden, mit denen ich leichter eine gemeinsame Grundlage für echte Gespräche oder Aktivitäten habe.
+4. **Teamvorschläge:** Als sozial offener Mensch, der dennoch Struktur sucht (z. B. Marcel, 34), möchte ich auf Basis meines Profils ein Team vorgeschlagen bekommen, um mich einer Gruppe zugehörig zu fühlen und wiederkehrende soziale Anknüpfungspunkte zu haben.
+5. **KI‑Assistent:** Als Nutzer\*in, möchte ich einen verständnisvollen, sicheren und diskreten KI‑Assistenten haben, der mich motiviert, passende Aktivitäten vorschlägt und meine Fortschritte reflektiert, um leichter soziale Kontakte aufzubauen und mich persönlich weiterzuentwickeln.
+6. **Echtzeitkarte:** Als Person, die sich einsam fühlt (z. B. Karin oder Tom), möchte ich auf einer sicheren Echtzeitkarte sehen, wo sich Aktivitäten, Quests und potenzielle Begegnungsmöglichkeiten in meiner Umgebung befinden, um spontan an sozialen Ereignissen teilnehmen zu können.
+7. **Spielerische Fortschrittsverfolgung:** Als Nutzer\*in, möchte ich durch Challenges, regelmäßige Teilnahme, soziale Interaktionen und optional durch In-App Käufe virtuelle Dekorationsobjekte, Abzeichen und die digitale Währung sammeln, um motiviert zu bleiben und meine Fortschritte spielerisch wahrzunehmen.
+8. **Sozialer Fortschritt:** Als Nutzer\*in, möchte ich meinen sozialen Fortschritt (z. B. neue Kontakte, Treffen, Quests in Gruppen, Freunde) nachvollziehen können, um zu sehen, wie ich mich sozial weiterentwickle und motiviert bleibe.
+
+### Technische User Stories
+
+9. **Teilnahmeverifizierung:** Als Nutzer\*in, möchte ich meine Teilnahme an Quests oder Treffen einfach und sicher über ein einfaches digitales Verfahren bestätigen können, um sicherzustellen, dass Belohnungen nur für echte, vor Ort durchgeführte Aktivitäten vergeben werden.
+10. **Anonyme Nutzung:** Als sicherheitsbewusste Person, möchte ich meinen Standort und mein Profil vor anderen Nutzern und Unternehmen anonymisieren können, um die App nutzen zu können, ohne mich unwohl oder unsicher zu fühlen.
+
+### Unternehmensbezogene User Stories
+
+11. **Promotion & Marketing:** Als lokales Unternehmen möchte ich eigene Challenges, Quests oder Events in der App erstellen und lokale Empfehlungen (z. B. Café, Laden, Event) in einem transparenten Auktionsverfahren platzieren können, um Kampagnen zu starten, die Nutzer\*innen motivieren, mein Geschäft oder meine Veranstaltungen zu besuchen.
+12. **Ausgabe von In‑App‑Währung:** Als lokales Unternehmen möchte ich die digitale In‑App‑Währung über einen einfachen und für private Nutzer identischen Kaufprozess erwerben können, um sie als Belohnung für meine Challenges und Events an Nutzer\*innen ausgeben zu können.
