@@ -192,3 +192,26 @@ Einsamkeit unter jungen Menschen ist kein Randphänomen, sondern ein weit verbre
 ### 3. Online- vs. Offline-Interaktion – was tatsächlich hilft
 
 Trotz der zunehmenden Verlagerung sozialer Kontakte in digitale Räume zeigt die Forschung konsistent, dass persönliche Begegnungen in ihrer Wirkung auf das Wohlbefinden deutlich überlegen sind. Mehrere Studien belegen, dass Menschen nach Face-to-Face-Interaktionen höhere positive Emotionen, niedrigere negative Emotionen und signifikant weniger Einsamkeit berichten als nach digitalen Interaktionen ([Elmer et al., 2025](https://journals.sagepub.com/doi/10.1177/00936502251341088)). Auf quantitativer Ebene zeigt eine australische Studie, dass persönliche Begegnungen und Telefongespräche die Wahrscheinlichkeit von Einsamkeit bei Erwachsenen um 16–30 % reduzieren können ([Social Technology Use and Loneliness, Tandfonline, 2025](https://www.tandfonline.com/doi/full/10.1080/10447318.2025.2543994)). Das deckt sich mit der sogenannten Stimulationshypothese: Internet- und App-Nutzung wirkt einsamkeitsreduzierend, wenn sie bestehende Beziehungen stärkt oder neue soziale Verbindungen anbahnt – schlägt jedoch ins Gegenteil um, wenn sie als Rückzug aus der realen Welt genutzt wird ([AMA Journal of Ethics, 2023](https://journalofethics.ama-assn.org/article/internet-and-loneliness/2023-11)). Gleichzeitig belegt ein systematisches Review und eine Meta-Analyse digitaler Interventionen, dass gruppenbasierte digitale Ansätze mit einer Effektstärke von d = −0,34 deutlich wirksamer sind als individuelle (d = −0,16) – jedoch beide hinter nicht-digitalen Interventionen zurückbleiben (d ≈ −0,50) ([Digital bridges to social connection, ScienceDirect, 2025](https://www.sciencedirect.com/science/article/pii/S2214782925000570)). Für die Konzeption einer Anwendung zur Einsamkeitsreduktion ergibt sich daraus klar: Der vielversprechendste Ansatz liegt nicht in der Schaffung weiterer virtueller Sozialräume, sondern in einer digitalen Plattform, die gezielt als Brücke in die reale, physische Begegnung dient.
+
+## Rollenverteilung
+
+Folgende Verteilung der Rollen im Team ist festgelegt:
+
+- Erik D: Frontend, Design
+- Hasan: Frontend, Design
+- Johannes: Architektur, DB, Backend
+- SimonV: Architektur, Scrum Master
+- Tien: Backend
+- Julia: ?
+- SimonF: ?
+
+## MVP
+
+- Offene, lokale Liste für Challenges inkl. Challenge-Filter, damit spontane Teilnahme möglich ist. _(User Story #2, Persona: Tom, Karin)_
+- Echtzeitkarte mit eigenem Standort-Marker und dynamischen Challenges (Koordinaten, Interessenskeyword, Name, Beschreibung, Datum, Erfahrung, digitale Währung, soziale Anstrengung). _(User Story #6, Persona: Karin, Tom)_
+- Event-/Challenge-Erstellung per API durch Unternehmensprofile inkl. Interessenskeywords. _(User Story #11, #12)_
+- Social-Battery-Inputfeld mit visuellem Status und Filterlogik für passende Aktivitätsvorschläge. _(User Story #1, Persona: Karin, Tom)_
+- Interessensmatching über auswählbare Interessen-Keywords aus einer vorgegebenen Liste, kombiniert mit Challenge-Filter. _(User Story #3, Persona: Lena, Tom, Marcel)_
+- Teilnahmeverifizierung per QR-Code (Challenge-bezogen) inkl. Check-in vor Ort. _(User Story #9)_
+- Belohnungssystem mit Erfahrungspunkten und digitaler Währung für absolvierte Aktivitäten. _(User Story #7, Persona: Lena, Marcel)_
+- Freundesliste pro Person (relationales Modell, keine Graph-DB) zur Sichtbarkeit des sozialen Fortschritts. _(User Story #8, Persona: Lena, Tom)_
