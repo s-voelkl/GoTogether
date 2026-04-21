@@ -1,6 +1,6 @@
 # 4L
 
-- Teilnehmer: 5
+- Teilnehmer: 5 (Erik, Hasan, Johannes, Tien, SimonV)
 - [Link zum Board](https://scrumlr.io/board/f7b1eb47-09bb-48f9-add0-a14f035d8f72)
 
 ## Geschätzt (6 Kärtchen)
@@ -34,9 +34,11 @@
 - Höhere Teilnahmequote in den Meetings vor Ort, bzw. explizite Meldung der Nicht-Anwesenheit _(svoelkl)_
 - Mehr Anwesenheit _(Erik)_
 
-## Actions (1 Kärtchen)
+## Actions (3 Kärtchen)
 
-- Anweisenheit am Vorabend bekannt geben/ einfach anwesend sein _(Yodeling Yeti)_
+- Erneute Vorstellung der individuellen Kompetenzen, für ein besseres Matching auf die Rollen und Tasks [Teambuilding]. _(svoelkl)_
+- Weiterhin Ideen frei vorbringen, damit sich dem optimalen Produkt angenähert wird [Meinungsäußerung]. _(svoelkl)_
+- Abwesenheit frühzeitig (am Vorabend oder in der Früh) bekanntgeben, bzw. bestenfalls anwesend sein [Verantwortung]. _(Yodeling Yeti, svoelkl)_
 
 > Erstellt auf [scrumlr.io](https://scrumlr.io)  
 > Bereitgestellt mit ♥️ von [inovex](https://www.inovex.de)
