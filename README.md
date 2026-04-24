@@ -215,3 +215,26 @@ Folgende Verteilung der Rollen im Team ist festgelegt:
 - Teilnahmeverifizierung per QR-Code (Challenge-bezogen) inkl. Check-in vor Ort. _(User Story #9)_
 - Belohnungssystem mit Erfahrungspunkten und digitaler Währung für absolvierte Aktivitäten. _(User Story #7, Persona: Lena, Marcel)_
 - Freundesliste pro Person (relationales Modell, keine Graph-DB) zur Sichtbarkeit des sozialen Fortschritts. _(User Story #8, Persona: Lena, Tom)_
+
+## Architecture
+
+### Drei-Schichten-Architektur
+
+Die Architektur folgt dem MVP und konzentriert sich auf die Kern-Use-Cases aus den Abschnitten MVP, Inhaltliche User Stories, Technische User Stories und Unternehmensbezogene User Stories.
+
+**Presentation Tier:** Die React-Native-App zeigt die offene Challenge-Liste, die Echtzeitkarte, Social-Battery, Matching und den Reward-Status. Sie kapselt nur die UI und kommuniziert über die API mit dem Backend.
+
+**Application Tier:** Das Express-JS-Backend setzt die MVP-Logik um: Challenge-Filter, Kartenabfragen, Social-Battery-Filter, Interessen-Matching, QR-Check-in, Belohnungen und Unternehmens-APIs für Events oder Challenges.
+
+**Data Tier:** PostgreSQL speichert die dafür nötigen Daten wie Nutzer, Profile, Interessen, Quests, Events, Check-ins, Freundschaften, Rewards und Unternehmensprofile.
+
+### Grobe Klassenstruktur
+
+- Frontend: `MapScreen` (Karte anzeigen), `QuestListScreen` (Challenges listen), `SocialBatteryInput` (Energie wählen), `MatchingView` (Passende Menschen), `CheckInView` (Teilnahme bestätigen), `RewardView` (Belohnungen sehen)
+- Backend Controller: `AuthController` (Anfragen annehmen), `UserController` (Nutzer verwalten), `QuestController` (Quests steuern), `MatchingController` (Vorschläge liefern), `CheckInController` (Check-ins prüfen), `RewardController` (Punkte vergeben), `CompanyController` (Firmenaktionen verwalten)
+- Backend Services: `AuthService` (Login-Logik), `UserService` (Profil-Logik), `QuestService` (Quest-Logik), `MatchingService` (Match-Regeln), `CheckInService` (Check-in-Regeln), `RewardService` (Reward-Regeln), `MapService` (Kartenabfragen)
+- Datenzugriff/Modelle: `User` (Nutzer speichern), `Profile` (Profilwerte halten), `Interest` (Interessen abbilden), `Quest` (Challenge-Daten), `Event` (Termine speichern), `CheckIn` (Teilnahmen protokollieren), `Reward` (Belohnungen speichern), `Wallet` (Währung führen), `Friendship` (Freunde verknüpfen), `Company` (Firmenprofile speichern)
+
+Controller heißen so, weil sie HTTP-Anfragen entgegennehmen und an die passende Logik weitergeben. Services heißen so, weil sie die fachliche Logik bündeln und unabhängig von UI oder Datenbank bleiben. Modelle heißen so, weil sie die Datenobjekte des Systems beschreiben.
+
+So entsteht eine klare Trennung: UI für Interaktion, Backend für die MVP-Geschäftslogik und PostgreSQL für Persistenz. Für die Bewertung ist damit gut erkennbar, welche Teile direkt umgesetzt werden sollen.
