@@ -1,4 +1,6 @@
-# 4L
+# Methode: 4L
+
+4L steht für "Liked, Learned, Lacked, Longed For" und ist eine Methode zur Retrospektive, die es Teams ermöglicht, ihre Erfahrungen zu reflektieren und Verbesserungen für zukünftige Projekte zu identifizieren. Die gesammelten und kategorisierten Erkenntnisse werden diskutiert und in konkrete Maßnahmen umgewandelt, um die Teamarbeit und die Projektergebnisse zu verbessern.
 
 - Teilnehmer: 5 (Erik, Hasan, Johannes, Tien, SimonV)
 - [Link zum Board](https://scrumlr.io/board/f7b1eb47-09bb-48f9-add0-a14f035d8f72)
@@ -20,7 +22,7 @@
 - Wie ein MVP geplant bzw. erstellt wird _(Mad Minotaur)_
 - Guter Umgang mit Schwierigkeiten in der Definition des Projektziels. _(svoelkl)_
 - MVP Erstellen _(Spicy Santa)_
-- App Idee präzisioniert _(Yodeling Yeti)_
+- App Idee präzisiert _(Yodeling Yeti)_
 
 ## Gefehlt (3 Kärtchen)
 

@@ -3,6 +3,11 @@
 Soziale Netzwerke verbinden digital, aber schaffen oft keine echten Beziehungen.
 Die Nutzer wünschen sich echte Begegnungen, nachhaltige Freundschaften oder zumindest tiefere soziale Interaktionen.
 
+## LICENSE
+
+Der Quellcode dieses Projekts ist unter der MIT-Lizenz veröffentlicht. Weitere Informationen finden Sie in der Lizenzdatei `src/LICENSE`.
+Die Dokumentation und alle begleitenden Materialien sind unter der CC-BY 4.0-Lizenz (siehe `documentation/LICENSE`) veröffentlicht.
+
 ## Themenbeschreibung (Thema 3)
 
 App gegen Einsamkeit
@@ -202,8 +207,8 @@ Folgende Verteilung der Rollen im Team ist festgelegt:
 - Johannes: Architektur, DB, Backend
 - SimonV: Architektur, Scrum Master
 - Tien: Backend
-- Julia: ?
-- SimonF: ?
+- Julia: TBD (Rolle noch festzulegen)
+- SimonF: TBD (Rolle noch festzulegen)
 
 ## MVP
 
