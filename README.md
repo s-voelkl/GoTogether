@@ -3,6 +3,11 @@
 Soziale Netzwerke verbinden digital, aber schaffen oft keine echten Beziehungen.
 Die Nutzer wünschen sich echte Begegnungen, nachhaltige Freundschaften oder zumindest tiefere soziale Interaktionen.
 
+## LICENSE
+
+Der Quellcode dieses Projekts ist unter der MIT-Lizenz veröffentlicht. Weitere Informationen finden Sie in der Lizenzdatei `src/LICENSE`.
+Die Dokumentation und alle begleitenden Materialien sind unter der CC-BY 4.0-Lizenz (siehe `documentation/LICENSE`) veröffentlicht.
+
 ## Themenbeschreibung (Thema 3)
 
 App gegen Einsamkeit
@@ -192,3 +197,49 @@ Einsamkeit unter jungen Menschen ist kein Randphänomen, sondern ein weit verbre
 ### 3. Online- vs. Offline-Interaktion – was tatsächlich hilft
 
 Trotz der zunehmenden Verlagerung sozialer Kontakte in digitale Räume zeigt die Forschung konsistent, dass persönliche Begegnungen in ihrer Wirkung auf das Wohlbefinden deutlich überlegen sind. Mehrere Studien belegen, dass Menschen nach Face-to-Face-Interaktionen höhere positive Emotionen, niedrigere negative Emotionen und signifikant weniger Einsamkeit berichten als nach digitalen Interaktionen ([Elmer et al., 2025](https://journals.sagepub.com/doi/10.1177/00936502251341088)). Auf quantitativer Ebene zeigt eine australische Studie, dass persönliche Begegnungen und Telefongespräche die Wahrscheinlichkeit von Einsamkeit bei Erwachsenen um 16–30 % reduzieren können ([Social Technology Use and Loneliness, Tandfonline, 2025](https://www.tandfonline.com/doi/full/10.1080/10447318.2025.2543994)). Das deckt sich mit der sogenannten Stimulationshypothese: Internet- und App-Nutzung wirkt einsamkeitsreduzierend, wenn sie bestehende Beziehungen stärkt oder neue soziale Verbindungen anbahnt – schlägt jedoch ins Gegenteil um, wenn sie als Rückzug aus der realen Welt genutzt wird ([AMA Journal of Ethics, 2023](https://journalofethics.ama-assn.org/article/internet-and-loneliness/2023-11)). Gleichzeitig belegt ein systematisches Review und eine Meta-Analyse digitaler Interventionen, dass gruppenbasierte digitale Ansätze mit einer Effektstärke von d = −0,34 deutlich wirksamer sind als individuelle (d = −0,16) – jedoch beide hinter nicht-digitalen Interventionen zurückbleiben (d ≈ −0,50) ([Digital bridges to social connection, ScienceDirect, 2025](https://www.sciencedirect.com/science/article/pii/S2214782925000570)). Für die Konzeption einer Anwendung zur Einsamkeitsreduktion ergibt sich daraus klar: Der vielversprechendste Ansatz liegt nicht in der Schaffung weiterer virtueller Sozialräume, sondern in einer digitalen Plattform, die gezielt als Brücke in die reale, physische Begegnung dient.
+
+## Rollenverteilung
+
+Folgende Verteilung der Rollen im Team ist festgelegt:
+
+- Erik D: Frontend, Design
+- Hasan: Frontend, Design
+- Johannes: Architektur, DB, Backend
+- SimonV: Architektur, Scrum Master
+- Tien: Backend
+- Julia: TBD (Rolle noch festzulegen)
+- SimonF: TBD (Rolle noch festzulegen)
+
+## MVP
+
+- Offene, lokale Liste für Challenges inkl. Challenge-Filter, damit spontane Teilnahme möglich ist. _(User Story #2, Persona: Tom, Karin)_
+- Echtzeitkarte mit eigenem Standort-Marker und dynamischen Challenges (Koordinaten, Interessenskeyword, Name, Beschreibung, Datum, Erfahrung, digitale Währung, soziale Anstrengung). _(User Story #6, Persona: Karin, Tom)_
+- Event-/Challenge-Erstellung per API durch Unternehmensprofile inkl. Interessenskeywords. _(User Story #11, #12)_
+- Social-Battery-Inputfeld mit visuellem Status und Filterlogik für passende Aktivitätsvorschläge. _(User Story #1, Persona: Karin, Tom)_
+- Interessensmatching über auswählbare Interessen-Keywords aus einer vorgegebenen Liste, kombiniert mit Challenge-Filter. _(User Story #3, Persona: Lena, Tom, Marcel)_
+- Teilnahmeverifizierung per QR-Code (Challenge-bezogen) inkl. Check-in vor Ort. _(User Story #9)_
+- Belohnungssystem mit Erfahrungspunkten und digitaler Währung für absolvierte Aktivitäten. _(User Story #7, Persona: Lena, Marcel)_
+- Freundesliste pro Person (relationales Modell, keine Graph-DB) zur Sichtbarkeit des sozialen Fortschritts. _(User Story #8, Persona: Lena, Tom)_
+
+## Architecture
+
+### Drei-Schichten-Architektur
+
+Die Architektur folgt dem MVP und konzentriert sich auf die Kern-Use-Cases aus den Abschnitten MVP, Inhaltliche User Stories, Technische User Stories und Unternehmensbezogene User Stories.
+
+**Presentation Tier:** Die React-Native-App zeigt die offene Challenge-Liste, die Echtzeitkarte, Social-Battery, Matching und den Reward-Status. Sie kapselt nur die UI und kommuniziert über die API mit dem Backend.
+
+**Application Tier:** Das Express-JS-Backend setzt die MVP-Logik um: Challenge-Filter, Kartenabfragen, Social-Battery-Filter, Interessen-Matching, QR-Check-in, Belohnungen und Unternehmens-APIs für Events oder Challenges.
+
+**Data Tier:** PostgreSQL speichert die dafür nötigen Daten wie Nutzer, Profile, Interessen, Quests, Events, Check-ins, Freundschaften, Rewards und Unternehmensprofile.
+
+### Grobe Klassenstruktur
+
+- Frontend: `MapScreen` (Karte anzeigen), `QuestListScreen` (Challenges listen), `SocialBatteryInput` (Energie wählen), `MatchingView` (Passende Menschen), `CheckInView` (Teilnahme bestätigen), `RewardView` (Belohnungen sehen)
+- Backend Controller: `AuthController` (Anfragen annehmen), `UserController` (Nutzer verwalten), `QuestController` (Quests steuern), `MatchingController` (Vorschläge liefern), `CheckInController` (Check-ins prüfen), `RewardController` (Punkte vergeben), `CompanyController` (Firmenaktionen verwalten)
+- Backend Services: `AuthService` (Login-Logik), `UserService` (Profil-Logik), `QuestService` (Quest-Logik), `MatchingService` (Match-Regeln), `CheckInService` (Check-in-Regeln), `RewardService` (Reward-Regeln), `MapService` (Kartenabfragen)
+- Datenzugriff/Modelle: `User` (Nutzer speichern), `Profile` (Profilwerte halten), `Interest` (Interessen abbilden), `Quest` (Challenge-Daten), `Event` (Termine speichern), `CheckIn` (Teilnahmen protokollieren), `Reward` (Belohnungen speichern), `Wallet` (Währung führen), `Friendship` (Freunde verknüpfen), `Company` (Firmenprofile speichern)
+
+Controller heißen so, weil sie HTTP-Anfragen entgegennehmen und an die passende Logik weitergeben. Services heißen so, weil sie die fachliche Logik bündeln und unabhängig von UI oder Datenbank bleiben. Modelle heißen so, weil sie die Datenobjekte des Systems beschreiben.
+
+So entsteht eine klare Trennung: UI für Interaktion, Backend für die MVP-Geschäftslogik und PostgreSQL für Persistenz. Für die Bewertung ist damit gut erkennbar, welche Teile direkt umgesetzt werden sollen.
