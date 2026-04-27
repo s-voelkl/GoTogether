@@ -206,20 +206,20 @@ Folgende Verteilung der Rollen im Team ist festgelegt:
 - Hasan: Frontend, Design
 - Johannes: Architektur, DB, Backend
 - SimonV: Architektur, Scrum Master
-- Tien: Backend
+- Tien: Backend, Product Owner
 - Julia: TBD (Rolle noch festzulegen)
-- SimonF: TBD (Rolle noch festzulegen)
+- SimonF: Frontend, (Backend)
+- Mattis: Frontend, Design
 
 ## MVP
 
 - Offene, lokale Liste für Challenges inkl. Challenge-Filter, damit spontane Teilnahme möglich ist. _(User Story #2, Persona: Tom, Karin)_
-- Echtzeitkarte mit eigenem Standort-Marker und dynamischen Challenges (Koordinaten, Interessenskeyword, Name, Beschreibung, Datum, Erfahrung, digitale Währung, soziale Anstrengung). _(User Story #6, Persona: Karin, Tom)_
+- Echtzeitkarte mit eigenem Standort-Marker und dynamischen Challenges (Koordinaten, nächstgelegene Adresse, Interessenskeyword, Name, Beschreibung, Datum, Themen/Interessen (z.B. Cafe, Politik, ...), Startzeit, voraussichtliche Endzeit, Erfahrungspunkte, Anzahl der digitalen Währung, soziale Anstrengung). _(User Story #6, Persona: Karin, Tom)_
 - Event-/Challenge-Erstellung per API durch Unternehmensprofile inkl. Interessenskeywords. _(User Story #11, #12)_
 - Social-Battery-Inputfeld mit visuellem Status und Filterlogik für passende Aktivitätsvorschläge. _(User Story #1, Persona: Karin, Tom)_
 - Interessensmatching über auswählbare Interessen-Keywords aus einer vorgegebenen Liste, kombiniert mit Challenge-Filter. _(User Story #3, Persona: Lena, Tom, Marcel)_
-- Teilnahmeverifizierung per QR-Code (Challenge-bezogen) inkl. Check-in vor Ort. _(User Story #9)_
+- Teilnahmeverifizierung per [QR-Code und] 5-stelligen Code (Challenge-bezogen) inkl. Check-in vor Ort. _(User Story #9)_
 - Belohnungssystem mit Erfahrungspunkten und digitaler Währung für absolvierte Aktivitäten. _(User Story #7, Persona: Lena, Marcel)_
-- Freundesliste pro Person (relationales Modell, keine Graph-DB) zur Sichtbarkeit des sozialen Fortschritts. _(User Story #8, Persona: Lena, Tom)_
 
 ## Architecture
 
@@ -229,7 +229,7 @@ Die Architektur folgt dem MVP und konzentriert sich auf die Kern-Use-Cases aus d
 
 **Presentation Tier:** Die React-Native-App zeigt die offene Challenge-Liste, die Echtzeitkarte, Social-Battery, Matching und den Reward-Status. Sie kapselt nur die UI und kommuniziert über die API mit dem Backend.
 
-**Application Tier:** Das Express-JS-Backend setzt die MVP-Logik um: Challenge-Filter, Kartenabfragen, Social-Battery-Filter, Interessen-Matching, QR-Check-in, Belohnungen und Unternehmens-APIs für Events oder Challenges.
+**Application Tier:** Das Java Springboot mit REST-API Schnittstelle als Backend setzt die MVP-Logik um: Challenge-Filter, Kartenabfragen, Social-Battery-Filter, Interessen-Matching, QR-Check-in, Belohnungen und Unternehmens-APIs für Events oder Challenges.
 
 **Data Tier:** PostgreSQL speichert die dafür nötigen Daten wie Nutzer, Profile, Interessen, Quests, Events, Check-ins, Freundschaften, Rewards und Unternehmensprofile.
 
