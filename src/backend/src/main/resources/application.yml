@@ -1,0 +1,15 @@
+spring:
+  application:
+    name: isolaticy-backend
+
+server:
+  port: 8080
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+
+app:
+  version: 0.0.1-SNAPSHOT
