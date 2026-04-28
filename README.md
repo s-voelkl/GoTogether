@@ -243,3 +243,148 @@ Die Architektur folgt dem MVP und konzentriert sich auf die Kern-Use-Cases aus d
 Controller heißen so, weil sie HTTP-Anfragen entgegennehmen und an die passende Logik weitergeben. Services heißen so, weil sie die fachliche Logik bündeln und unabhängig von UI oder Datenbank bleiben. Modelle heißen so, weil sie die Datenobjekte des Systems beschreiben.
 
 So entsteht eine klare Trennung: UI für Interaktion, Backend für die MVP-Geschäftslogik und PostgreSQL für Persistenz. Für die Bewertung ist damit gut erkennbar, welche Teile direkt umgesetzt werden sollen.
+
+### Repository Structure
+
+Backend:
+
+src/main/java/com/example/app/
+├── AppApplication.java
+├── controller/
+│   └── UserController.java
+├── service/
+│   └── UserService.java
+├── repository/
+│   └── UserRepository.java
+├── model/
+│   └── User.java
+├── dto/
+│   ├── UserRequest.java
+│   └── UserResponse.java
+└── exception/
+    ├── ResourceNotFoundException.java
+    └── GlobalExceptionHandler.java
+
+### Datenbankschema
+
+MöglicheKlassen: User, Challenge, Map, Teilnahme, Freund, Reward/Items, ChatNachricht (KI-Assistent), Settings, Unternehmensprofil
+
+```sql
+User: 
+   {
+         userId: primary uuid, [PK]
+         name: string,
+         passwordHash: String, # hash
+         email: String, # regex validation check
+         socialBattery: int,
+         currency: int,
+         experiencePoints: int,
+         level: float (derived),
+         lastLogin: Time,
+         settings: Settings,
+   }
+```
+
+```sql
+Challenge:
+{
+   challengeId: uuid, [PK]
+   name: string,
+   host: Company,
+   xCoordinate: Geometry, # alternativ internes Koordinatentyp
+   yCoordinate: Geometry,
+   description: string,
+   startTime: DateTime,
+   duration: TimeStamp,
+   currency: int,
+   experiencePoints: int,
+   socialBattery: int,
+   verificationCode: String, # Verifizierungscode 5-stellig. Rückgabetyp beim Erstellen einer Challenge
+}
+```
+
+```sql
+Company:
+{
+   companyId: uuid, [PK]
+   name: string,
+   email: string,
+   passwordHash: string,
+   currency: int, # Gekaufte Währung des Unternehmens
+   address: String, # einfach gehalten
+   challengeCount (derived), # optional
+   participantCount (derived), # optional
+}
+```
+
+```sql
+Participance:
+{
+   userId: uuid, [PK]
+   challengeId: uuid, [PK]
+   checkInTime: DateTime,
+}
+```
+
+```sql
+Topic: 
+{
+   topicId: uuid, [PK]
+   name: String
+}
+```
+
+```sql
+UserTopic:
+{
+   userId: uuid, [PK]
+   topicId: uuid, [PK]
+}
+```
+
+```sql
+ChallengeTopic:
+{
+   challengeId: uuid, [PK]
+   topicId: uuid, [PK]
+}
+```
+
+### Controllers
+
+#### ChallengeController
+
+- GET /api/challenges/getAll: Alle Challenges (später evtl. mit Filtern) erhalten. [location, range, ...] -> List[Challenge] # ohne verificationCode!
+- GET /api/challenges/get/{challengeId}: Eine Challenge erhalten. [challengeId] -> [ChallengeDTO]
+- POST /api/challenges/post: Eine Challenge erstellen, Currency der Company reduzieren. [Company, ChallengeDTO] => [ChallengeDTO mit verificationCode]. -> http code
+- POST /api/challenges/participate: An einer Challenge teilnehmen. [userId, challengeId, verificationCode] => [ChallengeDTO] -> http code
+
+#### UserController
+
+- POST /api/users/signup: Einen neuen User registrieren: -> [Email, Name, Passwort, Interests, socialBattery] -> http code
+- POST /api/users/login: Einloggen in bestehenden User. [Email oder Name, Passwort] -> http code
+- GET /api/users/get/{userId}: Erhalten eines Nutzerdatenpunkts. [userId] -> [UserDTO]
+- POST /api/users/preferences/{userId}: Setzen der Nutzerpräferenzen. [socialBattery, Interests] -> http code
+
+#### TopicController
+
+- POST /api/topic/create: Erstellen eines Topics/Interests. [TopicDTO] -> http code
+- GET /api/topic/getAll: Erhalten aller Topics/Interests. [] -> List[TopicDTO]
+
+#### CompanyController
+
+- POST /api/company/signup: Ein neues Unternehmer erstellen [Email, Passwort, Name, Adresse, ] -> http code
+- GET /api/company/currency/{companyId}: Erhalten der aktuellen Currency des Unternehmens. [] -> currency
+- POST /api/company/currency/{companyId}: Erhöhen der Currency. [currency] -> http code
+
+### DTOs
+
+TODO: DTOs
+
+### Services
+
+TODO: Services
+
+### DrawIO Architecture Diagramm
+
+TODO: DrawIO Diagramm
