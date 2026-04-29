@@ -218,7 +218,7 @@ Folgende Verteilung der Rollen im Team ist festgelegt:
 - Event-/Challenge-Erstellung per API durch Unternehmensprofile inkl. Interessenskeywords. _(User Story #11, #12)_
 - Social-Battery-Inputfeld mit visuellem Status und Filterlogik für passende Aktivitätsvorschläge. _(User Story #1, Persona: Karin, Tom)_
 - Interessensmatching über auswählbare Interessen-Keywords aus einer vorgegebenen Liste, kombiniert mit Challenge-Filter. _(User Story #3, Persona: Lena, Tom, Marcel)_
-- Teilnahmeverifizierung per [QR-Code und] 5-stelligen Code (Challenge-bezogen) inkl. Check-in vor Ort. _(User Story #9)_
+- Teilnahmeverifizierung per QR-Code und 5-stelligem Code (Challenge-bezogen) inkl. Check-in vor Ort. _(User Story #9)_
 - Belohnungssystem mit Erfahrungspunkten und digitaler Währung für absolvierte Aktivitäten. _(User Story #7, Persona: Lena, Marcel)_
 
 ## Architecture
