@@ -269,20 +269,20 @@ src/main/java/com/example/app/
 
 MöglicheKlassen: User, Challenge, Map, Teilnahme, Freund, Reward/Items, ChatNachricht (KI-Assistent), Settings, Unternehmensprofil
 
+
 ```sql
 User: 
-   {
-         userId: primary uuid, [PK]
-         name: string,
-         passwordHash: String, # hash
-         email: String, # regex validation check
-         socialBattery: int,
-         currency: int,
-         experiencePoints: int,
-         level: float (derived),
-         lastLogin: Time,
-         settings: Settings,
-   }
+{
+   userId: primary uuid, [PK]
+   name: string,
+   passwordHash: String, # hash
+   email: String, # regex validation check
+   socialBattery: int,
+   currency: int,
+   experiencePoints: int, # calculates level
+   lastLogin: Time,
+   settings: Settings,
+}
 ```
 
 ```sql
@@ -290,13 +290,12 @@ Challenge:
 {
    challengeId: uuid, [PK]
    name: string,
-   host: Company,
-   xCoordinate: Geometry, # alternativ internes Koordinatentyp
-   yCoordinate: Geometry,
+   hostId: uuid, # FK auf Company
+   coordinate: Geometry, # interner Koordinatentyp
    description: string,
    startTime: DateTime,
-   duration: TimeStamp,
-   currency: int,
+   duration: INTERVAL,
+   currencyReward: int,
    experiencePoints: int,
    socialBattery: int,
    verificationCode: String, # Verifizierungscode 5-stellig. Rückgabetyp beim Erstellen einer Challenge
@@ -350,6 +349,15 @@ ChallengeTopic:
 }
 ```
 
+```sql
+Api:
+{
+   adminName: String, [PK]
+   key: String , # hashed
+   createdAt: DateTime
+}
+```
+
 ### Controllers
 
 #### ChallengeController
@@ -388,3 +396,7 @@ TODO: Services
 ### DrawIO Architecture Diagramm
 
 TODO: DrawIO Diagramm
+
+### Database
+
+PostgreSQL mit Docker-Container.
