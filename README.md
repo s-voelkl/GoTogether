@@ -207,7 +207,7 @@ Folgende Verteilung der Rollen im Team ist festgelegt:
 - Johannes: Architektur, DB, Backend
 - SimonV: Architektur, Scrum Master
 - Tien: Backend, Product Owner
-- Julia: TBD (Rolle noch festzulegen)
+- Julia: DB,Backend, Frontend
 - SimonF: Frontend, (Backend)
 - Mattis: Frontend, Design
 
