@@ -1,5 +1,5 @@
 {
-  "name": "Isolaticy",
+  "name": "GoTogether",
   "private": true,
   "scripts": {
     "db": "docker compose up -d",

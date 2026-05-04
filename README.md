@@ -1,4 +1,4 @@
-# Isolaticy
+# GoTogether
 
 Soziale Netzwerke verbinden digital, aber schaffen oft keine echten Beziehungen.
 Die Nutzer wünschen sich echte Begegnungen, nachhaltige Freundschaften oder zumindest tiefere soziale Interaktionen.
@@ -117,7 +117,6 @@ Trotz zunehmender digitaler Vernetzung durch Social Media Plattformen wird Einsa
    - Lokale Empfehlungen für Aktivitäten, Events, Gruppen. (Werbung möglich)
    - Begleitung für persönliche Entwicklung und Fortschritte, inkl. empathisches Coaching für Sozialisierung & Reflexionsimpulse
    - Starke Leitplanken für Sicherheit, Privatsphäre, ethische KI-Nutzung. Werbeanzeigen nur mit klarer Kennzeichnung, keine manipulative Werbung, Datenschutz im Fokus.
-
 4. **Gamification & Rewards**
    - Belohnungen (Avatar-Deko, Skins, virtuelle Haustiere, Abzeichen, Level-Ups), auch AR-kompatibel
    - Digitale Währung. Für In-App-Käufe, lokale Partnerangebote, Spendenaktionen, Coupons, Payback-Coupons, Loot-Boxen, Saison-Pässe. Digitale Währung auch von Werbenden als Aktivitäts-Belohnung kaufbar.

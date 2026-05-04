@@ -1,4 +1,4 @@
-package com.isolaticy.backend;
+package com.gotogether.backend;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
