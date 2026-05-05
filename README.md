@@ -1,4 +1,4 @@
-# Isolaticy
+# GoTogether
 
 Soziale Netzwerke verbinden digital, aber schaffen oft keine echten Beziehungen.
 Die Nutzer wünschen sich echte Begegnungen, nachhaltige Freundschaften oder zumindest tiefere soziale Interaktionen.
