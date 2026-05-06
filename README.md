@@ -211,6 +211,17 @@ Folgende Verteilung der Rollen im Team ist festgelegt:
 - SimonF: Frontend, (Backend)
 - Mattis: Frontend, Design
 
+Aufteilung nach Rollen:
+
+- Architektur: Johannes, SimonV
+- Backend: Johannes, Tien, Julia, SimonF
+- Datenbank: Johannes, Julia
+- Design: Erik D, Hasan, Mattis
+- Frontend: Erik D, Hasan, Julia, SimonF, Mattis
+- Orga: SimonV
+- Product Owner: Tien
+- Scrum Master: SimonV
+
 ## MVP
 
 - Offene, lokale Liste für Challenges inkl. Challenge-Filter, damit spontane Teilnahme möglich ist. _(User Story #2, Persona: Tom, Karin)_
