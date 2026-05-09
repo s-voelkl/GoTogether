@@ -2,21 +2,21 @@
 
 ## Terminal
 
-Starte ein Terminal (z.B. in VSCode) und navigiere zu `Isolaticy/src`
+Starte ein Terminal (z.B. in VSCode) und navigiere zu `GoTogether/src`: `cd ./src`
 
-Für Windows User: Alles MUSS in wsl stattfinden, damit docker verwendet werden kann. Achtet darauf wsl genügend Speicher und RAM zuzuweisen.
+Für **Windows User**: Alles MUSS in wsl stattfinden, damit docker verwendet werden kann. Achtet darauf wsl genügend Speicher und RAM zuzuweisen ([WSL Installer](https://learn.microsoft.com/de-de/windows/wsl/install)). WSL starten mit `wsl`.
 
 ## Datenbank
 
-Alle commands sind zentral in src/package.json zu finden
+Alle commands sind zentral in `src/package.json` zu finden.
 
-Für die Datenbank muss `yarn db` ausgeführt werden
+Für die Datenbank muss `yarn db` ausgeführt werden.
 
 ## Backend
 
-Mit `yarn backend` wird das backend (REST API auf Port 8080) gestartet
+Mit `yarn backend` wird das backend (REST API auf Port 8080) gestartet.
 
-Es befinden sich 10 sample entries im users table
+Es befinden sich 10 sample entries im users table.
 
 Request: `curl http://localhost:8080/api/users/d0ef805b-ff1c-4588-95b4-aa98cd8fe17ecdc`
 
