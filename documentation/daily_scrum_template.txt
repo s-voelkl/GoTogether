@@ -1,4 +1,4 @@
-Geschafft: <das habe ich seit dem letzten Treffen geschafft>
+Done: <das habe ich seit dem letzten Treffen geschafft>
 - Erik D: abwesend / kein Eintrag
 - Hasan: abwesend / kein Eintrag
 - Johannes: abwesend / kein Eintrag
@@ -8,7 +8,7 @@ Geschafft: <das habe ich seit dem letzten Treffen geschafft>
 - SimonF: abwesend / kein Eintrag
 - Mattis: abwesend / kein Eintrag
 
-Gerade dabei: <daran arbeite ich gerade oder habe ich vor zu tun>
+In Progress: <daran arbeite ich gerade oder habe ich vor zu tun>
 - Erik D: abwesend / kein Eintrag
 - Hasan: abwesend / kein Eintrag
 - Johannes: abwesend / kein Eintrag
@@ -18,7 +18,7 @@ Gerade dabei: <daran arbeite ich gerade oder habe ich vor zu tun>
 - SimonF: abwesend / kein Eintrag
 - Mattis: abwesend / kein Eintrag 
 
-Hindernisse (Impediments): 
+Impediments: <Hindernisse, die mich daran hindern, meine Arbeit zu erledigen>
 - 
 - 
 - 
