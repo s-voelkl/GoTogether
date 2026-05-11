@@ -1,0 +1,31 @@
+Done: <das habe ich seit dem letzten Treffen geschafft>
+- Erik D: abwesend / kein Eintrag
+- Hasan: abwesend / kein Eintrag
+- Johannes: abwesend / kein Eintrag
+- SimonV: abwesend / kein Eintrag
+- Tien: abwesend / kein Eintrag
+- Julia: abwesend / kein Eintrag
+- SimonF: abwesend / kein Eintrag
+- Mattis: abwesend / kein Eintrag
+
+In Progress: <daran arbeite ich gerade oder habe ich vor zu tun>
+- Erik D: abwesend / kein Eintrag
+- Hasan: abwesend / kein Eintrag
+- Johannes: abwesend / kein Eintrag
+- SimonV: abwesend / kein Eintrag
+- Tien: abwesend / kein Eintrag
+- Julia: abwesend / kein Eintrag
+- SimonF: abwesend / kein Eintrag
+- Mattis: abwesend / kein Eintrag 
+
+Impediments: <Hindernisse, die mich daran hindern, meine Arbeit zu erledigen>
+- 
+- 
+- 
+
+Besprochen:
+- 
+- 
+- 
+
+Dauer des Meetings: <Zeit in Minuten>
