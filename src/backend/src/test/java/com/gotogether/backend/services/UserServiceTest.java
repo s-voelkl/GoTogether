@@ -32,40 +32,37 @@ class UserServiceTest {
     @Test
     void getUserById_UserExists_ReturnsUser() {
         // Arrange
-        UUID id = UUID.randomUUID();
-        User mockUser = new User(id, "Test User", "hash", "test@test.com", 100, 0, 0, LocalDateTime.now());
-        when(userRepository.findById(id)).thenReturn(Optional.of(mockUser));
+        User mockUser = new User("Test User", "hash", "test@test.com");
+        when(userRepository.findById(mockUser.getId())).thenReturn(Optional.of(mockUser));
 
         // Act
-        User result = userService.getUserById(id);
+        User result = userService.getUserById(mockUser.getId());
 
         // Assert
         assertNotNull(result);
-        assertEquals(id, result.getId());
+        assertEquals(mockUser.getId(), result.getId());
         assertEquals("Test User", result.getName());
-        verify(userRepository, times(1)).findById(id);
+        verify(userRepository, times(1)).findById(mockUser.getId());
     }
 
     @Test
     void getUserById_UserDoesNotExist_ThrowsRuntimeException() {
         // Arrange
-        UUID id = UUID.randomUUID();
-        when(userRepository.findById(id)).thenReturn(Optional.empty());
+        User mockUser = new User("Test User", "hash", "test@test.com");
+        when(userRepository.findById(mockUser.getId())).thenReturn(Optional.empty());
 
         // Act & Assert
-        Exception exception = assertThrows(RuntimeException.class, () -> userService.getUserById(id));
+        Exception exception = assertThrows(RuntimeException.class, () -> userService.getUserById(mockUser.getId()));
         assertEquals("User not found", exception.getMessage());
-        verify(userRepository, times(1)).findById(id);
+        verify(userRepository, times(1)).findById(mockUser.getId());
     }
 
     @Test
     void getAllUsers_UsersExist_ReturnsList() {
         // Arrange
-        UUID id1 = UUID.randomUUID();
-        UUID id2 = UUID.randomUUID();
-        User user1 = new User(id1, "User One", "hash1", "one@test.com", 50, 0, 0, LocalDateTime.now());
-        User user2 = new User(id2, "User Two", "hash2", "two@test.com", 80, 0, 0, LocalDateTime.now());
-        when(userRepository.findAll()).thenReturn(List.of(user1, user2));
+        User mockUser1 = new User("User One", "hash1", "one@test.com");
+        User mockUser2 = new User("User Two", "hash2", "two@test.com");
+        when(userRepository.findAll()).thenReturn(List.of(mockUser1, mockUser2));
 
         // Act
         List<User> result = userService.getAllUsers();

@@ -2,7 +2,6 @@ package com.gotogether.backend.controller;
 
 import com.gotogether.backend.dto.UserCreateDTO;
 import com.gotogether.backend.dto.UserLoginDTO;
-import com.gotogether.backend.model.User;
 import com.gotogether.backend.services.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,7 +12,6 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.UUID;
@@ -29,26 +27,25 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    public User getById(@PathVariable UUID id) {
+    public ResponseEntity<?> getById(@PathVariable UUID id) {
         try {
-            return service.getUserById(id);
+            return ResponseEntity.ok(service.getUserById(id));
         } catch (RuntimeException e) {
-            throw new RuntimeException(e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
 
     @GetMapping()
-    public List<User> getAllUsers() {
+    public ResponseEntity<?> getAllUsers() {
         try {
-            return service.getAllUsers();
+            return ResponseEntity.ok(service.getAllUsers());
         } catch (RuntimeException e) {
-            throw new RuntimeException(e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
     }
 
     @PostMapping("/signup")
     public ResponseEntity<?> createUser(@RequestBody UserCreateDTO dto) {
-        // catch exceptions and return appropriate HTTP status codes
         try {
             UUID id = service.createUser(dto.getUsername(), dto.getPasswordHash(), dto.getEmail());
             return ResponseEntity.status(HttpStatus.CREATED).body(id);
