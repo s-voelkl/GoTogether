@@ -1,3 +1,19 @@
+-- topics
+CREATE TABLE IF NOT EXISTS topics (
+  id UUID PRIMARY KEY,
+  name VARCHAR(255) UNIQUE NOT NULL
+);
+
+-- topic examples
+INSERT INTO topics (id, name)
+SELECT gen_random_uuid(), name
+FROM unnest(ARRAY[
+  'Politik', 'Spazieren', 'Wandern', 'Kunst', 'Hunde', 'Katzen',
+  'Fahrrad fahren', 'Kochen', 'Kaffee trinken', 'Lesen', 'Programmieren',
+  'DIY handwerken', 'Gärtnern', 'Orchester spielen', 'Bandmusik spielen'
+]) AS t(name)
+ON CONFLICT DO NOTHING;
+
 -- users
 CREATE TABLE IF NOT EXISTS users (
   id UUID PRIMARY KEY,
