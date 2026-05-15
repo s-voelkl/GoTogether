@@ -1,5 +1,6 @@
 package com.gotogether.backend.services;
 
+import com.gotogether.backend.dto.UserCreateDTO;
 import com.gotogether.backend.model.User;
 import com.gotogether.backend.repository.UserRepository;
 import org.junit.jupiter.api.Test;
@@ -70,5 +71,61 @@ class UserServiceTest {
         assertNotNull(result);
         assertEquals(2, result.size());
         verify(userRepository, times(1)).findAll();
+    }
+
+    @Test
+    void createUser_EmailAlreadyExists_ThrowsRuntimeException() {
+        // Arrange
+        UserCreateDTO dto = new UserCreateDTO("testuser", "password", "test@test.com");
+        when(userRepository.existsByEmail("test@test.com")).thenReturn(true);
+
+        // Act & Assert
+        Exception exception = assertThrows(RuntimeException.class, () -> userService.createUser(dto));
+        assertTrue(exception.getMessage().contains("Email already exists: test@test.com"));
+        verify(userRepository, never()).save(any(User.class));
+    }
+
+    @Test
+    void createUser_EmptyEmail_ThrowsRuntimeException() {
+        // Arrange
+        UserCreateDTO dto = new UserCreateDTO("testuser", "password", "");
+
+        // Act & Assert
+        Exception exception = assertThrows(RuntimeException.class, () -> userService.createUser(dto));
+        assertTrue(exception.getMessage().contains("Invalid email address: "));
+        verify(userRepository, never()).save(any(User.class));
+    }
+
+    @Test
+    void createUser_InvalidEmailFormat_ThrowsRuntimeException() {
+        // Arrange
+        UserCreateDTO dto = new UserCreateDTO("testuser", "password", "not_an_email");
+
+        // Act & Assert
+        Exception exception = assertThrows(RuntimeException.class, () -> userService.createUser(dto));
+        assertTrue(exception.getMessage().contains("Invalid email address: not_an_email"));
+        verify(userRepository, never()).save(any(User.class));
+    }
+
+    @Test
+    void createUser_EmptyUsername_ThrowsRuntimeException() {
+        // Arrange
+        UserCreateDTO dto = new UserCreateDTO("", "password", "test@test.com");
+
+        // Act & Assert
+        Exception exception = assertThrows(RuntimeException.class, () -> userService.createUser(dto));
+        assertTrue(exception.getMessage().contains("Username must not be empty"));
+        verify(userRepository, never()).save(any(User.class));
+    }
+
+    @Test
+    void createUser_EmptyPassword_ThrowsRuntimeException() {
+        // Arrange
+        UserCreateDTO dto = new UserCreateDTO("testuser", "", "test@test.com");
+
+        // Act & Assert
+        Exception exception = assertThrows(RuntimeException.class, () -> userService.createUser(dto));
+        assertTrue(exception.getMessage().contains("Password must not be empty"));
+        verify(userRepository, never()).save(any(User.class));
     }
 }

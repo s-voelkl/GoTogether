@@ -61,7 +61,7 @@ Mit Hilfe der swagger-ui kann man alle REST-API Endpoints anzeigen lassen: `http
 
 Es befinden sich 10 sample entries im users table.
 
-Request: `curl http://localhost:8080/api/users/getAll`
+Request: `curl http://localhost:8080/api/users`
 
 Response: 
 ```json

@@ -9,4 +9,6 @@ import java.util.UUID;
 @Repository
 public interface UserRepository extends JpaRepository<User, UUID> {
     // findById(UUID) is inherited for free
+
+    boolean existsByEmail(String email);
 }
