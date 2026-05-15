@@ -11,6 +11,9 @@ import lombok.Setter;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+/**
+ * User entity class representing a user in the system.
+ */
 @Entity
 @Table(name = "users")
 @Getter

@@ -9,9 +9,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserCreateDTO {
-
-    private String username;
+public class UserLoginDTO {
 
     private String passwordHash; // hashed password
 
