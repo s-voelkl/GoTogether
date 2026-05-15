@@ -1,3 +1,14 @@
+CREATE TABLE IF NOT EXISTS users (
+  id UUID PRIMARY KEY,
+  name VARCHAR(255) NOT NULL,
+  password_hash VARCHAR(255) NOT NULL,
+  email VARCHAR(255) UNIQUE NOT NULL,
+  social_battery INT NOT NULL,
+  currency INT NOT NULL,
+  experience_points INT NOT NULL,
+  last_login TIMESTAMP
+);
+
 INSERT INTO users (id, name, password_hash, email, social_battery, currency, experience_points, last_login)
 VALUES
   (gen_random_uuid(), 'Alice Johnson', '$2a$10$hash1', 'alice@example.com', 80, 500, 1200, NOW()),

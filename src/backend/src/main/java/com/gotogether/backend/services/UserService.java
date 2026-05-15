@@ -4,6 +4,7 @@ import com.gotogether.backend.model.User;
 import com.gotogether.backend.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -16,5 +17,9 @@ public class UserService {
     public User getUserById(UUID id) {
         return repo.findById(id)
                 .orElseThrow(() -> new RuntimeException("User not found"));
+    }
+
+    public List<User> getAllUsers() {
+        return repo.findAll();
     }
 }
