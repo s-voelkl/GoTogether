@@ -41,6 +41,8 @@
 
 6. Nodemon für automatischen Neustart des Backends installieren: `npm install -g nodemon`
 
+7. VS Code Extensions: Docker, Java Extension Pack, Test Runner for Java (für Unit Tests)
+
 ## Terminal
 
 Starte ein Terminal (z.B. in VSCode) und navigiere zu `GoTogether/src`: `cd ./src`
