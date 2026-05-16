@@ -2,10 +2,11 @@ package com.gotogether.backend.services;
 
 import com.gotogether.backend.model.User;
 import com.gotogether.backend.repository.UserRepository;
+import com.gotogether.backend.repository.TopicRepository;
 import org.springframework.stereotype.Service;
-import com.gotogether.backend.dto.UserCreateDTO;
 
 import java.util.List;
+import java.util.stream.Collectors;
 import java.util.UUID;
 
 @Service
@@ -14,9 +15,11 @@ public class UserService {
     private static final String EMAIL_REGEX = "^[A-Za-z0-9+_.-]+@(.+)$";
 
     private final UserRepository repo;
+    private final TopicRepository topicRepo;
 
-    public UserService(UserRepository repo) {
+    public UserService(UserRepository repo, TopicRepository topicRepo) {
         this.repo = repo;
+        this.topicRepo = topicRepo;
     }
 
     public User getUserById(UUID id) {
@@ -30,32 +33,32 @@ public class UserService {
 
     public UUID createUser(String name, String passwordHash, String email) {
         // email must be unique
-        if (repo.existsByEmail(email)) {
+        if (repo.existsByEmail(email.trim().toLowerCase())) {
             throw new RuntimeException("Email already exists: " + email);
         }
 
         // email validation
         if (email == null
-                || email.isEmpty()
+                || email.trim().isEmpty()
                 || !email.matches(EMAIL_REGEX)) {
             throw new RuntimeException("Invalid email address: " + email);
         }
 
         // username must not be empty
-        if (name == null || name.isEmpty()) {
+        if (name == null || name.trim().isEmpty()) {
             throw new RuntimeException("Username must not be empty: " + name);
         }
 
         // password must not be empty
-        if (passwordHash == null || passwordHash.isEmpty()) {
+        if (passwordHash == null || passwordHash.trim().isEmpty()) {
             throw new RuntimeException("Password must not be empty.");
         }
 
         // create user
         User user = repo.save(new User(
-                name,
+                name.trim(),
                 passwordHash,
-                email));
+                email.trim().toLowerCase()));
 
         return user.getId();
     }
@@ -63,18 +66,18 @@ public class UserService {
     public UUID loginUser(String email, String passwordHash) {
         // validate email input
         if (email == null
-                || email.isEmpty()
+                || email.trim().isEmpty()
                 || !email.matches(EMAIL_REGEX)) {
             throw new RuntimeException("Invalid email address: " + email);
         }
 
         // validate password input
-        if (passwordHash == null || passwordHash.isEmpty()) {
+        if (passwordHash == null || passwordHash.trim().isEmpty()) {
             throw new RuntimeException("Password must not be empty.");
         }
 
         // find user by email
-        User user = repo.findByEmail(email);
+        User user = repo.findByEmail(email.toLowerCase());
         if (user == null) {
             throw new RuntimeException("No user found with email: " + email);
         }
@@ -106,17 +109,31 @@ public class UserService {
         repo.save(user);
     }
 
-    // TODO: implement real interests logic
-    public void setUserInterests(UUID userId, List<String> interests) {
+    public List<UUID> setUserInterests(UUID userId, List<UUID> interestIds) {
         if (userId == null) {
             throw new RuntimeException("User ID must not be null.");
+        }
+
+        if (interestIds == null) {
+            throw new RuntimeException("Interest IDs must not be null.");
+        }
+
+        // filter out duplicates (use Collectors.toList for broader Java compatibility)
+        interestIds = interestIds.stream().distinct().collect(Collectors.toList());
+
+        // validate topic existence
+        for (UUID interestId : interestIds) {
+            if (!topicRepo.existsById(interestId)) {
+                throw new RuntimeException("Interest not found: " + interestId);
+            }
         }
 
         User user = repo.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found: " + userId));
 
-        // user.setInterests(interests);
+        user.setInterests(interestIds);
         repo.save(user);
+        return interestIds;
     }
 
 }

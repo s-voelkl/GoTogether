@@ -74,12 +74,11 @@ public class UserController {
         }
     }
 
-    // TODO: implement real interests method
     @PutMapping("/preferences/interests/{userId}")
-    public ResponseEntity<?> setUserInterests(@PathVariable UUID userId, @RequestBody List<String> interests) {
+    public ResponseEntity<?> setUserInterests(@PathVariable UUID userId, @RequestBody List<UUID> interestIds) {
         try {
-            service.setUserInterests(userId, interests);
-            return ResponseEntity.ok(interests);
+            List<UUID> result = service.setUserInterests(userId, interestIds);
+            return ResponseEntity.ok(result);
         } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }

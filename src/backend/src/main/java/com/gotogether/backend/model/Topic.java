@@ -28,8 +28,4 @@ public class Topic {
     private String name;
 
     // private String description;
-
-    // @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
-    // @JoinColumn(name = "settings_id", referencedColumnName = "id")
-    // private Settings settings;
 }

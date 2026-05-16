@@ -28,15 +28,17 @@ public class TopicService {
 
     public UUID createTopic(String name) {
         if (name == null || name.trim().isEmpty()) {
-            throw new RuntimeException("Topic name cannot be empty: " + name);
+            throw new RuntimeException("Topic name cannot be empty.");
         }
+
+        String normalized = name.trim();
 
         // unique name
-        if (repo.existsByName(name)) {
-            throw new RuntimeException("Topic name already exists: " + name);
+        if (repo.existsByName(normalized)) {
+            throw new RuntimeException("Topic name already exists: " + normalized);
         }
 
-        Topic topic = new Topic(name);
+        Topic topic = new Topic(normalized);
         return repo.save(topic).getId();
     }
 

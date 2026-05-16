@@ -3,12 +3,12 @@ package com.gotogether.backend.services;
 import com.gotogether.backend.dto.UserCreateDTO;
 import com.gotogether.backend.model.User;
 import com.gotogether.backend.repository.UserRepository;
+import com.gotogether.backend.repository.TopicRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.cglib.core.Local;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -26,6 +26,9 @@ class UserServiceTest {
     @Mock
     private UserRepository userRepository;
 
+    @Mock
+    private TopicRepository topicRepository;
+
     @InjectMocks
     private UserService userService;
 
@@ -33,6 +36,7 @@ class UserServiceTest {
     void getUserById_UserExists_ReturnsUser() {
         // Arrange
         User mockUser = new User("Test User", "hash", "test@test.com");
+        mockUser.setId(UUID.randomUUID());
         when(userRepository.findById(mockUser.getId())).thenReturn(Optional.of(mockUser));
 
         // Act
@@ -49,6 +53,7 @@ class UserServiceTest {
     void getUserById_UserDoesNotExist_ThrowsRuntimeException() {
         // Arrange
         User mockUser = new User("Test User", "hash", "test@test.com");
+        mockUser.setId(UUID.randomUUID());
         when(userRepository.findById(mockUser.getId())).thenReturn(Optional.empty());
 
         // Act & Assert
@@ -137,16 +142,15 @@ class UserServiceTest {
     @Test
     void loginUser_ValidCredentials_ReturnsUserId() {
         // Arrange
-        UUID expectedId = UUID.randomUUID();
-        User mockUser = new User(expectedId, "Test User", "correct_hash", "test@test.com", 100, 0, 0,
-                LocalDateTime.now());
+        User mockUser = new User("Test User", "correct_hash", "test@test.com");
+        mockUser.setId(UUID.randomUUID());
         when(userRepository.findByEmail("test@test.com")).thenReturn(mockUser);
 
         // Act
         UUID resultId = userService.loginUser("test@test.com", "correct_hash");
 
         // Assert
-        assertEquals(expectedId, resultId);
+        assertEquals(mockUser.getId(), resultId);
         verify(userRepository, times(1)).findByEmail("test@test.com");
     }
 
@@ -181,8 +185,7 @@ class UserServiceTest {
     @Test
     void loginUser_InvalidPassword_ThrowsRuntimeException() {
         // Arrange
-        UUID id = UUID.randomUUID();
-        User mockUser = new User(id, "Test User", "correct_hash", "test@test.com", 100, 0, 0, LocalDateTime.now());
+        User mockUser = new User("Test User", "correct_hash", "test@test.com");
         when(userRepository.findByEmail("test@test.com")).thenReturn(mockUser);
 
         // Act & Assert
@@ -196,9 +199,9 @@ class UserServiceTest {
     @Test
     void loginUser_ValidCredentials_UpdatesLastLogin() {
         // Arrange: set user with old last login time
-        UUID id = UUID.randomUUID();
         LocalDateTime oldLoginTime = LocalDateTime.now().minusDays(1);
-        User mockUser = new User(id, "Test User", "correct_hash", "test@test.com", 100, 0, 0, oldLoginTime);
+        User mockUser = new User("Test User", "correct_hash", "test@test.com");
+        mockUser.setId(UUID.randomUUID());
         when(userRepository.findByEmail("test@test.com")).thenReturn(mockUser);
 
         // Act: last login time should be updated to now
@@ -212,12 +215,12 @@ class UserServiceTest {
     @Test
     void setUserSocialBattery_ValidInput_UpdatesAndSaves() {
         // Arrange
-        UUID id = UUID.randomUUID();
-        User mockUser = new User(id, "Test User", "hash", "test@test.com", 50, 0, 0, LocalDateTime.now());
-        when(userRepository.findById(id)).thenReturn(Optional.of(mockUser));
+        User mockUser = new User("Test User", "hash", "test@test.com");
+        mockUser.setId(UUID.randomUUID());
+        when(userRepository.findById(mockUser.getId())).thenReturn(Optional.of(mockUser));
 
         // Act
-        userService.setUserSocialBattery(id, 75);
+        userService.setUserSocialBattery(mockUser.getId(), 75);
 
         // Assert
         assertEquals(75, mockUser.getSocialBattery());
@@ -270,6 +273,81 @@ class UserServiceTest {
         verify(userRepository, never()).save(any(User.class));
     }
 
-    // TODO: implement real interests method when interests logic is finished
+    @Test
+    void setUserInterests_ValidInput_UpdatesAndSaves() {
+        // Arrange
+        UUID interestId1 = UUID.randomUUID();
+        UUID interestId2 = UUID.randomUUID();
+        List<UUID> interests = List.of(interestId1, interestId2);
+
+        User mockUser = new User("Test User", "hash", "test@test.com");
+        mockUser.setId(UUID.randomUUID());
+
+        when(topicRepository.existsById(interestId1)).thenReturn(true);
+        when(topicRepository.existsById(interestId2)).thenReturn(true);
+        when(userRepository.findById(mockUser.getId())).thenReturn(Optional.of(mockUser));
+
+        // Act
+        userService.setUserInterests(mockUser.getId(), interests);
+
+        // Assert
+        assertEquals(interests, mockUser.getInterests());
+        verify(userRepository, times(1)).save(mockUser);
+    }
+
+    @Test
+    void setUserInterests_NullUserId_ThrowsException() {
+        // Act & Assert
+        Exception exception = assertThrows(RuntimeException.class,
+                () -> userService.setUserInterests(null, List.of(UUID.randomUUID())));
+        assertEquals("User ID must not be null.", exception.getMessage());
+        verify(userRepository, never()).save(any(User.class));
+    }
+
+    @Test
+    void setUserInterests_NullInterestIds_ThrowsException() {
+        // Arrange
+        UUID userId = UUID.randomUUID();
+
+        // Act & Assert
+        Exception exception = assertThrows(RuntimeException.class,
+                () -> userService.setUserInterests(userId, null));
+        assertEquals("Interest IDs must not be null.", exception.getMessage());
+        verify(userRepository, never()).save(any(User.class));
+    }
+
+    @Test
+    void setUserInterests_InterestNotFound_ThrowsException() {
+        // Arrange
+        UUID userId = UUID.randomUUID();
+        UUID interestId = UUID.randomUUID();
+        List<UUID> interests = List.of(interestId);
+
+        when(topicRepository.existsById(interestId)).thenReturn(false);
+
+        // Act & Assert
+        Exception exception = assertThrows(RuntimeException.class,
+                () -> userService.setUserInterests(userId, interests));
+        assertEquals("Interest not found: " + interestId, exception.getMessage());
+        verify(userRepository, never()).findById(any(UUID.class));
+        verify(userRepository, never()).save(any(User.class));
+    }
+
+    @Test
+    void setUserInterests_UserNotFound_ThrowsException() {
+        // Arrange
+        UUID userId = UUID.randomUUID();
+        UUID interestId = UUID.randomUUID();
+        List<UUID> interests = List.of(interestId);
+
+        when(topicRepository.existsById(interestId)).thenReturn(true);
+        when(userRepository.findById(userId)).thenReturn(Optional.empty());
+
+        // Act & Assert
+        Exception exception = assertThrows(RuntimeException.class,
+                () -> userService.setUserInterests(userId, interests));
+        assertEquals("User not found: " + userId, exception.getMessage());
+        verify(userRepository, never()).save(any(User.class));
+    }
 
 }

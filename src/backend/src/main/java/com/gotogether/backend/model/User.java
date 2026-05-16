@@ -9,6 +9,8 @@ import lombok.Setter;
 // default values set via field initializers
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -33,6 +35,7 @@ public class User {
         this.socialBattery = DEFAULT_SOCIAL_BATTERY;
         this.currency = DEFAULT_CURRENCY;
         this.experiencePoints = DEFAULT_EXPERIENCE_POINTS;
+        this.interests = new ArrayList<>();
         this.lastLogin = LocalDateTime.now();
     }
 
@@ -61,8 +64,20 @@ public class User {
     @Column(nullable = false)
     private int experiencePoints = DEFAULT_EXPERIENCE_POINTS;
 
+    @ElementCollection
+    @CollectionTable(name = "user_interests", joinColumns = @JoinColumn(name = "user_id"))
+    @Column(name = "topic_id")
+    private List<UUID> interests = new ArrayList<>();
+
     @Column(nullable = false)
     private LocalDateTime lastLogin = LocalDateTime.now();
+
+    // The goal would be, that independently from users, some topics exist.
+    // A user can have some topics as interest (saved as topicIds in interests).
+    // @ManyToMany
+    // @JoinTable(
+    // name = "user_interests",
+    // joinColumns = @JoinColumn(name = "user_id"),
 
     // @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     // @JoinColumn(name = "settings_id", referencedColumnName = "id")
