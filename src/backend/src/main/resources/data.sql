@@ -3,12 +3,6 @@
 -- DELETE FROM users;
 -- DELETE FROM topics;
 
--- topics
-CREATE TABLE IF NOT EXISTS topics (
-  id UUID PRIMARY KEY,
-  name VARCHAR(255) UNIQUE NOT NULL
-);
-
 -- topic examples
 INSERT INTO topics (id, name)
 VALUES
@@ -29,26 +23,8 @@ VALUES
   (gen_random_uuid(), 'Bandmusik spielen')
 ON CONFLICT DO NOTHING;
 
--- users
-CREATE TABLE IF NOT EXISTS users (
-  id UUID PRIMARY KEY,
-  name VARCHAR(255) NOT NULL,
-  password_hash VARCHAR(255) NOT NULL,
-  email VARCHAR(255) UNIQUE NOT NULL,
-  social_battery INT NOT NULL,
-  currency INT NOT NULL,
-  experience_points INT NOT NULL,
-  last_login TIMESTAMP
-);
-
--- user_interests
-CREATE TABLE IF NOT EXISTS user_interests (
-  user_id UUID NOT NULL,
-  topic_id UUID NOT NULL
-);
-
 -- user examples
-INSERT INTO users (id, name, password_hash, email, social_battery, currency, experience_points, last_login)
+INSERT INTO users (id, name, password_hash, email, social_battery, currency, experience_points, last_login, settings)
 VALUES
   (gen_random_uuid(), 'Alice Johnson', '$2a$10$hash1', 'alice@example.com', 80, 0, 0, NOW()),
   (gen_random_uuid(), 'Bob Smith', '$2a$10$hash2', 'bob@example.com', 60, 0, 0, NOW()),
@@ -77,3 +53,13 @@ WHERE
   (u.email = 'grace@example.com' AND t.name IN ('Kochen', 'Kunst', 'Programmieren')) OR
   (u.email = 'henry@example.com' AND t.name IN ('Hunde', 'Katzen', 'Spazieren'))
 ON CONFLICT DO NOTHING;
+
+-- company examples
+INSERT INTO companies (id, name, password_hash, email, currency, street, house_number, 
+  zip_code, city, latitude, longitude)
+VALUES
+  (gen_random_uuid()), 'GoTogether', '$2a$10$hashCompany1', 'contact@gotogether.example.com', 
+  1000, 'Musterstraße', '42', '12345', 'Musterstadt', 52.52, 13.400,
+ON CONFLICT DO NOTHING;
+
+-- 
