@@ -177,6 +177,10 @@ T: Bis zur Projektabgabe im Juli des Sommersemesters 2026.
 11. **Promotion & Marketing:** Als lokales Unternehmen möchte ich eigene Challenges, Quests oder Events in der App erstellen und lokale Empfehlungen (z. B. Café, Laden, Event) in einem transparenten Auktionsverfahren platzieren können, um Kampagnen zu starten, die Nutzer\*innen motivieren, mein Geschäft oder meine Veranstaltungen zu besuchen.
 12. **Ausgabe von In‑App‑Währung:** Als lokales Unternehmen möchte ich die digitale In‑App‑Währung über einen einfachen und für private Nutzer identischen Kaufprozess erwerben können, um sie als Belohnung für meine Challenges und Events an Nutzer\*innen ausgeben zu können.
 
+### Nachtrag zu den User Stories
+
+13. **Authentifizierung:** Registierung und Login des Nutzers.
+
 ## MVP
 
 - Offene, lokale Liste für Challenges inkl. Challenge-Filter, damit spontane Teilnahme möglich ist. _(User Story #2, Persona: Tom, Karin)_
