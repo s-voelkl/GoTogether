@@ -37,6 +37,7 @@ public class User {
         this.experiencePoints = DEFAULT_EXPERIENCE_POINTS;
         this.interests = new ArrayList<>();
         this.lastLogin = LocalDateTime.now();
+        this.settings = new Settings();
     }
 
     @Id
@@ -72,14 +73,6 @@ public class User {
     @Column(nullable = false)
     private LocalDateTime lastLogin = LocalDateTime.now();
 
-    // The goal would be, that independently from users, some topics exist.
-    // A user can have some topics as interest (saved as topicIds in interests).
-    // @ManyToMany
-    // @JoinTable(
-    // name = "user_interests",
-    // joinColumns = @JoinColumn(name = "user_id"),
-
-    // @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
-    // @JoinColumn(name = "settings_id", referencedColumnName = "id")
-    // private Settings settings;
+    @Embedded
+    private Settings settings;
 }
