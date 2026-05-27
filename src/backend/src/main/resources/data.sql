@@ -24,7 +24,7 @@ VALUES
 ON CONFLICT DO NOTHING;
 
 -- user examples
-INSERT INTO users (id, name, password_hash, email, social_battery, currency, experience_points, last_login, setting)
+INSERT INTO users (id, name, password, email, social_battery, currency, experience_points, last_login, setting)
 VALUES
   (gen_random_uuid(), 'Alice Johnson', '$2a$10$hash1', 'alice@example.com', 80, 0, 0, NOW(), 'default'),
   (gen_random_uuid(), 'Bob Smith', '$2a$10$hash2', 'bob@example.com', 60, 0, 0, NOW(), 'default'),
@@ -55,7 +55,7 @@ WHERE
 ON CONFLICT DO NOTHING;
 
 -- company examples
-INSERT INTO companies (id, name, password_hash, email, currency, street, house_number, 
+INSERT INTO companies (id, name, password, email, currency, street, house_number, 
   zip_code, city, latitude, longitude)
 VALUES
   (gen_random_uuid(), 'GoTogether', '$2a$10$hashCompany1', 'contact@gotogether.example.com', 

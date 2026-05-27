@@ -3,6 +3,7 @@ package com.gotogether.backend.services;
 import com.gotogether.backend.model.User;
 import com.gotogether.backend.repository.UserRepository;
 import com.gotogether.backend.repository.TopicRepository;
+import org.apache.commons.validator.routines.EmailValidator;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -11,8 +12,6 @@ import java.util.UUID;
 
 @Service
 public class UserService {
-
-    private static final String EMAIL_REGEX = "^[A-Za-z0-9+_.-]+@(.+)$";
 
     private final UserRepository repo;
     private final TopicRepository topicRepo;
@@ -31,7 +30,7 @@ public class UserService {
         return repo.findAll();
     }
 
-    public UUID createUser(String name, String passwordHash, String email) {
+    public UUID createUser(String name, String password, String email) {
         // email must be unique
         if (repo.existsByEmail(email.trim().toLowerCase())) {
             throw new RuntimeException("Email already exists: " + email);
@@ -40,7 +39,7 @@ public class UserService {
         // email validation
         if (email == null
                 || email.trim().isEmpty()
-                || !email.matches(EMAIL_REGEX)) {
+                || !EmailValidator.getInstance().isValid(email.trim().toLowerCase())) {
             throw new RuntimeException("Invalid email address: " + email);
         }
 
@@ -50,29 +49,29 @@ public class UserService {
         }
 
         // password must not be empty
-        if (passwordHash == null || passwordHash.trim().isEmpty()) {
+        if (password == null || password.trim().isEmpty()) {
             throw new RuntimeException("Password must not be empty.");
         }
 
         // create user
         User user = repo.save(new User(
                 name.trim(),
-                passwordHash,
+                password,
                 email.trim().toLowerCase()));
 
         return user.getId();
     }
 
-    public UUID loginUser(String email, String passwordHash) {
+    public UUID loginUser(String email, String password) {
         // validate email input
         if (email == null
                 || email.trim().isEmpty()
-                || !email.matches(EMAIL_REGEX)) {
+                || !EmailValidator.getInstance().isValid(email.trim().toLowerCase())) {
             throw new RuntimeException("Invalid email address: " + email);
         }
 
         // validate password input
-        if (passwordHash == null || passwordHash.trim().isEmpty()) {
+        if (password == null || password.trim().isEmpty()) {
             throw new RuntimeException("Password must not be empty.");
         }
 
@@ -83,7 +82,7 @@ public class UserService {
         }
 
         // check password
-        if (!user.getPasswordHash().equals(passwordHash)) {
+        if (!user.getPassword().equals(password)) {
             throw new RuntimeException("Invalid password.");
         }
 

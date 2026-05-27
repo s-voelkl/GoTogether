@@ -25,9 +25,9 @@ public class Company {
 
     private static final int DEFAULT_CURRENCY = 0;
 
-    public Company(String name, String passwordHash, String email, Address address, Location location) {
+    public Company(String name, String password, String email, Address address, Location location) {
         this.name = name;
-        this.passwordHash = passwordHash;
+        this.password = password;
         this.email = email;
         this.address = address;
         this.location = location;
@@ -42,7 +42,7 @@ public class Company {
     private String name;
 
     @Column(nullable = false)
-    private String passwordHash;
+    private String password;
 
     @Email
     @Column(nullable = false, unique = true)

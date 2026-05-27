@@ -256,157 +256,62 @@ So entsteht eine klare Trennung: UI für Interaktion, Backend für die MVP-Gesch
 
 ### Repository Structure
 
-Backend:
+- `src/backend`: Java Springboot Backend mit REST-API
+   - `controller`: REST-Controller für Endpunkte
+   - `services`: Geschäftslogik für Use Cases
+   - `model`: JPA-Entities und Embeddables für DB
+   - `repository`: JPA-Repositories für DB-Zugriff
+   - `dto`: Data Transfer Objects für API-Kommunikation
+- `src/frontend`: React-Native App
+   - `components`: Wiederverwendbare UI-Komponenten 
+   - `screens`: Hauptbildschirme der App
+   - `services`: API-Client und Logik für Frontend
+   - `assets`: Bilder, Icons, Styles
 
-src/main/java/com/example/app/
-├── AppApplication.java
-├── controller/
-│   └── UserController.java
-├── service/
-│   └── UserService.java
-├── repository/
-│   └── UserRepository.java
-├── model/
-│   └── User.java
-├── dto/
-│   ├── UserRequest.java
-│   └── UserResponse.java
-└── exception/
-    ├── ResourceNotFoundException.java
-    └── GlobalExceptionHandler.java
-
-### Datenbankschema
-
-MöglicheKlassen: User, Challenge, Map, Teilnahme, Freund, Reward/Items, ChatNachricht (KI-Assistent), Settings, Unternehmensprofil
-
-
-```sql
-User: 
-{
-   userId: primary uuid, [PK]
-   name: string,
-   passwordHash: String, # hash
-   email: String, # regex validation check
-   socialBattery: int,
-   currency: int,
-   experiencePoints: int, # calculates level
-   lastLogin: Time,
-   settings: Settings,
-}
-```
-
-```sql
-Challenge:
-{
-   challengeId: uuid, [PK]
-   name: string,
-   hostId: uuid, # FK auf Company
-   coordinate: Geometry, # interner Koordinatentyp
-   description: string,
-   startTime: DateTime,
-   duration: INTERVAL,
-   currencyReward: int,
-   experiencePoints: int,
-   socialBattery: int,
-   verificationCode: String, # Verifizierungscode 5-stellig. Rückgabetyp beim Erstellen einer Challenge
-}
-```
-
-```sql
-Company:
-{
-   companyId: uuid, [PK]
-   name: string,
-   email: string,
-   passwordHash: string,
-   currency: int, # Gekaufte Währung des Unternehmens
-   address: String, # einfach gehalten
-   challengeCount (derived), # optional
-   participantCount (derived), # optional
-}
-```
-
-```sql
-Participance:
-{
-   userId: uuid, [PK]
-   challengeId: uuid, [PK]
-   checkInTime: DateTime,
-}
-```
-
-```sql
-Topic: 
-{
-   topicId: uuid, [PK]
-   name: String
-}
-```
-
-```sql
-UserTopic:
-{
-   userId: uuid, [PK]
-   topicId: uuid, [PK]
-}
-```
-
-```sql
-ChallengeTopic:
-{
-   challengeId: uuid, [PK]
-   topicId: uuid, [PK]
-}
-```
-
-```sql
-Api:
-{
-   adminName: String, [PK]
-   key: String , # hashed
-   createdAt: DateTime
-}
-```
-
-### Controllers
-
-#### ChallengeController
-
-- GET /api/challenges/getAll: Alle Challenges (später evtl. mit Filtern) erhalten. [location, range, ...] -> List[Challenge] # ohne verificationCode!
-- GET /api/challenges/get/{challengeId}: Eine Challenge erhalten. [challengeId] -> [ChallengeDTO]
-- POST /api/challenges/post: Eine Challenge erstellen, Currency der Company reduzieren. [Company, ChallengeDTO] => [ChallengeDTO mit verificationCode]. -> http code
-- POST /api/challenges/participate: An einer Challenge teilnehmen. [userId, challengeId, verificationCode] => [ChallengeDTO] -> http code
-
-#### UserController
-
-- POST /api/users/signup: Einen neuen User registrieren: -> [Email, Name, Passwort, Interests, socialBattery] -> http code
-- POST /api/users/login: Einloggen in bestehenden User. [Email oder Name, Passwort] -> http code
-- GET /api/users/get/{userId}: Erhalten eines Nutzerdatenpunkts. [userId] -> [UserDTO]
-- POST /api/users/preferences/{userId}: Setzen der Nutzerpräferenzen. [socialBattery, Interests] -> http code
-
-#### TopicController
-
-- POST /api/topic/create: Erstellen eines Topics/Interests. [TopicDTO] -> http code
-- GET /api/topic/getAll: Erhalten aller Topics/Interests. [] -> List[TopicDTO]
-
-#### CompanyController
-
-- POST /api/company/signup: Ein neues Unternehmer erstellen [Email, Passwort, Name, Adresse, ] -> http code
-- GET /api/company/currency/{companyId}: Erhalten der aktuellen Currency des Unternehmens. [] -> currency
-- POST /api/company/currency/{companyId}: Erhöhen der Currency. [currency] -> http code
+## Backend-Architecture
 
 ### DTOs
+The backend exposes simple data-transfer objects used by controllers:
 
-TODO: DTOs
+- **UserCreateDTO:** used for signup with `username`, `password`, and `email`. See [src/backend/src/main/java/com/gotogether/backend/dto/UserCreateDTO.java](src/backend/src/main/java/com/gotogether/backend/dto/UserCreateDTO.java).
+- **UserLoginDTO:** used for login with `email` and `password`. See [src/backend/src/main/java/com/gotogether/backend/dto/UserLoginDTO.java](src/backend/src/main/java/com/gotogether/backend/dto/UserLoginDTO.java).
 
 ### Services
 
-TODO: Services
+Business logic lives in the `services` package. Key services:
+
+- **`UserService`:** handles user creation, authentication, and preference updates (social battery, interests). See [src/backend/src/main/java/com/gotogether/backend/services/UserService.java](src/backend/src/main/java/com/gotogether/backend/services/UserService.java).
+- **`TopicService`:** manages topic creation, retrieval and deletion used by the topic endpoints. See [src/backend/src/main/java/com/gotogether/backend/services/TopicService.java](src/backend/src/main/java/com/gotogether/backend/services/TopicService.java).
+
+### Controllers and Endpoints
+
+The controllers wire DTOs and services to REST endpoints:
+
+- **`UserController`** exposes `/api/users` endpoints for signup (`POST /signup`), login (`POST /login`), and preference updates (`PUT /preferences/...`). See [src/backend/src/main/java/com/gotogether/backend/controller/UserController.java](src/backend/src/main/java/com/gotogether/backend/controller/UserController.java).
+- **`TopicController`** exposes `/api/topics` endpoints for listing, creating and deleting topics. See [src/backend/src/main/java/com/gotogether/backend/controller/TopicController.java](src/backend/src/main/java/com/gotogether/backend/controller/TopicController.java).
+
+### Database and Models
+
+The project uses JPA entities and embeddables in `model`:
+
+#### Entities
+
+- **`Company`** (`companies` table): stores company accounts with `id : UUID`, `name`, `password`, `email` (unique), `currency`, and embedded `Address` and `Location`. See [src/backend/src/main/java/com/gotogether/backend/model/Company.java](src/backend/src/main/java/com/gotogether/backend/model/Company.java).
+- **`Challenge`** (`challenges` table): challenge event with `id : UUID`, `title`, `description`, `startTime`, embedded `Location`, `durationMinutes`, `currency`, `experiencePoints`, `minSocialBattery`, `verificationCode` (5 chars), and `maxPlayers`. Note: topics, host, and participants are TODOs in the implementation. See [src/backend/src/main/java/com/gotogether/backend/model/Challenge.java](src/backend/src/main/java/com/gotogether/backend/model/Challenge.java).
+- Additional entities include `User` and `Topic` in the same package. See [src/backend/src/main/java/com/gotogether/backend/model/User.java](src/backend/src/main/java/com/gotogether/backend/model/User.java) and [src/backend/src/main/java/com/gotogether/backend/model/Topic.java](src/backend/src/main/java/com/gotogether/backend/model/Topic.java).
+
+#### Embeddables
+- **`Address`** holds `street`, `houseNumber`, `zipCode`, and `city`. See [src/backend/src/main/java/com/gotogether/backend/model/Address.java](src/backend/src/main/java/com/gotogether/backend/model/Address.java).
+- **`Location`** holds `latitude` and `longitude` as `double`. See [src/backend/src/main/java/com/gotogether/backend/model/Location.java](src/backend/src/main/java/com/gotogether/backend/model/Location.java).
+- **`Settings`** is an embeddable settings holder currently with a `setting` field. See [src/backend/src/main/java/com/gotogether/backend/model/Settings.java](src/backend/src/main/java/com/gotogether/backend/model/Settings.java).
+
+#### Notes / Conventions:
+
+- UUIDs are generated using `GenerationType.UUID` for primary keys on entities.
+- Embeddables are used for address/location to keep related columns inline on the owning entity tables.
+- Controllers return `ResponseEntity<?>` and map common exceptions to HTTP status codes.
 
 ### DrawIO Architecture Diagramm
 
-TODO: DrawIO Diagramm
+![Architecture Diagramm](documentation/architecture.png)
 
-### Database
-
-PostgreSQL mit Docker-Container.

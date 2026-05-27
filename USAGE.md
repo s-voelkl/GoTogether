@@ -67,15 +67,23 @@ Response:
 ```json
 [
   {
-    "id": "8f522749-1495-4d1e-8c99-bec15efff06e",
+    "id": "a9c632aa-4124-4760-9746-770a9b7fd30d",
     "name": "Alice Johnson",
-    "passwordHash": "$2a$10$hash1",
+    "password": "$2a$10$hash1",
     "email": "alice@example.com",
     "socialBattery": 80,
-    "currency": 500,
-    "experiencePoints": 1200,
-    "lastLogin": "2026-05-15T18:43:52.731445"
-  }, ...
+    "currency": 0,
+    "experiencePoints": 0,
+    "interests": [
+      "cd00e5c8-c255-49c0-a6ab-4b3fe35e84bf",
+      "43028bcf-8a21-4c3c-a779-2564c3b1c85b",
+      "43aed8eb-61bf-4b2c-b64f-530cb617c33e"
+    ],
+    "lastLogin": "2026-05-27T21:09:16.326146",
+    "settings": {
+      "setting": "default"
+    }
+   }, ...
 ]
 ```
 

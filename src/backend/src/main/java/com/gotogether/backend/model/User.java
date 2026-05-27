@@ -28,9 +28,9 @@ public class User {
     private static final int DEFAULT_CURRENCY = 0;
     private static final int DEFAULT_EXPERIENCE_POINTS = 0;
 
-    public User(String name, String passwordHash, String email) {
+    public User(String name, String password, String email) {
         this.name = name;
-        this.passwordHash = passwordHash;
+        this.password = password;
         this.email = email;
         this.socialBattery = DEFAULT_SOCIAL_BATTERY;
         this.currency = DEFAULT_CURRENCY;
@@ -49,7 +49,7 @@ public class User {
     private String name;
 
     @Column(nullable = false)
-    private String passwordHash;
+    private String password;
 
     @Email
     @Column(nullable = false, unique = true)

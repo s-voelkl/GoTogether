@@ -47,7 +47,7 @@ public class UserController {
     @PostMapping("/signup")
     public ResponseEntity<?> createUser(@RequestBody UserCreateDTO dto) {
         try {
-            UUID id = service.createUser(dto.getUsername(), dto.getPasswordHash(), dto.getEmail());
+            UUID id = service.createUser(dto.getUsername(), dto.getPassword(), dto.getEmail());
             return ResponseEntity.status(HttpStatus.CREATED).body(id);
         } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
@@ -57,7 +57,7 @@ public class UserController {
     @PostMapping("/login")
     public ResponseEntity<?> loginUser(@RequestBody UserLoginDTO dto) {
         try {
-            UUID id = service.loginUser(dto.getEmail(), dto.getPasswordHash());
+            UUID id = service.loginUser(dto.getEmail(), dto.getPassword());
             return ResponseEntity.ok(id);
         } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());

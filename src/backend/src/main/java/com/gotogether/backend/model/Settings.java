@@ -15,5 +15,5 @@ import lombok.Setter;
 public class Settings {
 
     @Column(nullable = false)
-    private String setting;
+    private String setting = "";
 }

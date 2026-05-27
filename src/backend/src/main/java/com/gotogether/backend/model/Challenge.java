@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 import jakarta.persistence.Column;
+import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -39,7 +40,7 @@ public class Challenge {
     @Column(nullable = false)
     private LocalDateTime startTime;
 
-    @Column(nullable = false)
+    @Embedded
     private Location location;
 
     @Column(nullable = false)
@@ -54,16 +55,19 @@ public class Challenge {
     @Column(nullable = false)
     private int minSocialBattery = 0;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 5)
     private String verificationCode; // 5 digits
 
     @Column(nullable = false)
-    private int maxPlayers = 0; // 0 means no limit 
+    private int maxPlayers = 0; // 0 means no limit
 
-    // topics: join table n:m mit topics -> challenge_topics mit challenge_id und topic_id
+    // TODO: topics: join table n:m mit topics -> challenge_topics mit challenge_id
+    // und topic_id
 
-    // host: durch Join Table host 1:n challenge -> challenge_host mit challenge_id und company_id
+    // TODO: host: durch Join Table host 1:n challenge -> challenge_host mit
+    // challenge_id und company_id
 
-    // users: Join Table n user : m challenges -> challenge_users mit challenge_id und user_id
+    // TODO: users: Join Table n user : m challenges -> challenge_users mit
+    // challenge_id und user_id
 
 }

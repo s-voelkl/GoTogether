@@ -86,7 +86,7 @@ class UserServiceTest {
 
         // Act & Assert
         Exception exception = assertThrows(RuntimeException.class,
-                () -> userService.createUser(dto.getUsername(), dto.getPasswordHash(), dto.getEmail()));
+                () -> userService.createUser(dto.getUsername(), dto.getPassword(), dto.getEmail()));
         assertTrue(exception.getMessage().contains("Email already exists: test@test.com"));
         verify(userRepository, never()).save(any(User.class));
     }
@@ -98,7 +98,7 @@ class UserServiceTest {
 
         // Act & Assert
         Exception exception = assertThrows(RuntimeException.class,
-                () -> userService.createUser(dto.getUsername(), dto.getPasswordHash(), dto.getEmail()));
+                () -> userService.createUser(dto.getUsername(), dto.getPassword(), dto.getEmail()));
         assertTrue(exception.getMessage().contains("Invalid email address: "));
         verify(userRepository, never()).save(any(User.class));
     }
@@ -110,8 +110,21 @@ class UserServiceTest {
 
         // Act & Assert
         Exception exception = assertThrows(RuntimeException.class,
-                () -> userService.createUser(dto.getUsername(), dto.getPasswordHash(), dto.getEmail()));
+                () -> userService.createUser(dto.getUsername(), dto.getPassword(), dto.getEmail()));
         assertTrue(exception.getMessage().contains("Invalid email address: not_an_email"));
+        verify(userRepository, never()).save(any(User.class));
+    }
+
+    @Test
+    void createUser_StrictInvalidEmailFormat_ThrowsRuntimeException() {
+        // Arrange
+        UserCreateDTO dto = new UserCreateDTO("testuser", "password", "a@b"); // Valid based on old regex, invalid for
+                                                                              // EmailValidator
+
+        // Act & Assert
+        Exception exception = assertThrows(RuntimeException.class,
+                () -> userService.createUser(dto.getUsername(), dto.getPassword(), dto.getEmail()));
+        assertTrue(exception.getMessage().contains("Invalid email address: a@b"));
         verify(userRepository, never()).save(any(User.class));
     }
 
@@ -122,7 +135,7 @@ class UserServiceTest {
 
         // Act & Assert
         Exception exception = assertThrows(RuntimeException.class,
-                () -> userService.createUser(dto.getUsername(), dto.getPasswordHash(), dto.getEmail()));
+                () -> userService.createUser(dto.getUsername(), dto.getPassword(), dto.getEmail()));
         assertTrue(exception.getMessage().contains("Username must not be empty"));
         verify(userRepository, never()).save(any(User.class));
     }
@@ -134,7 +147,7 @@ class UserServiceTest {
 
         // Act & Assert
         Exception exception = assertThrows(RuntimeException.class,
-                () -> userService.createUser(dto.getUsername(), dto.getPasswordHash(), dto.getEmail()));
+                () -> userService.createUser(dto.getUsername(), dto.getPassword(), dto.getEmail()));
         assertTrue(exception.getMessage().contains("Password must not be empty"));
         verify(userRepository, never()).save(any(User.class));
     }
@@ -159,6 +172,14 @@ class UserServiceTest {
         // Act & Assert
         Exception exception = assertThrows(RuntimeException.class, () -> userService.loginUser("not_an_email", "hash"));
         assertTrue(exception.getMessage().contains("Invalid email address: not_an_email"));
+        verify(userRepository, never()).findByEmail(anyString());
+    }
+
+    @Test
+    void loginUser_StrictInvalidEmail_ThrowsRuntimeException() {
+        // Act & Assert
+        Exception exception = assertThrows(RuntimeException.class, () -> userService.loginUser("a@b", "hash"));
+        assertTrue(exception.getMessage().contains("Invalid email address: a@b"));
         verify(userRepository, never()).findByEmail(anyString());
     }
 

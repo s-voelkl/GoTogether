@@ -13,7 +13,7 @@ public class UserCreateDTO {
 
     private String username;
 
-    private String passwordHash; // hashed password
+    private String password;
 
     private String email;
 }
