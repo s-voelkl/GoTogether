@@ -7,6 +7,7 @@
     "db:start": "docker compose start",
     "frontend": "yarn --cwd frontend start",
     "backend": "cd backend && ./gradlew bootRun",
+    "backend:watch": "nodemon --watch backend/src --exec 'cd backend && ./gradlew bootRun --continuous'",
     "backend:build": "cd backend && ./gradlew clean build"
   }
 }
