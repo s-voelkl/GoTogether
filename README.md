@@ -176,6 +176,21 @@ T: Bis zur Projektabgabe im Juli des Sommersemesters 2026.
 11. **Promotion & Marketing:** Als lokales Unternehmen möchte ich eigene Challenges, Quests oder Events in der App erstellen und lokale Empfehlungen (z. B. Café, Laden, Event) in einem transparenten Auktionsverfahren platzieren können, um Kampagnen zu starten, die Nutzer\*innen motivieren, mein Geschäft oder meine Veranstaltungen zu besuchen.
 12. **Ausgabe von In‑App‑Währung:** Als lokales Unternehmen möchte ich die digitale In‑App‑Währung über einen einfachen und für private Nutzer identischen Kaufprozess erwerben können, um sie als Belohnung für meine Challenges und Events an Nutzer\*innen ausgeben zu können.
 
+### Nachtrag zu den User Stories
+
+13. **Authentifizierung:** Registierung und Login des Nutzers.
+
+## MVP
+
+- Offene, lokale Liste für Challenges inkl. Challenge-Filter, damit spontane Teilnahme möglich ist. _(User Story #2, Persona: Tom, Karin)_
+<!-- - Echtzeitkarte mit eigenem Standort-Marker und dynamischen Challenges (Koordinaten, nächstgelegene Adresse, Interessenskeyword, Name, Beschreibung, Datum, Themen/Interessen (z.B. Cafe, Politik, ...), Startzeit, voraussichtliche Endzeit, Erfahrungspunkte, Anzahl der digitalen Währung, soziale Anstrengung). _(User Story #6, Persona: Karin, Tom)_ -->
+<!-- - Event-/Challenge-Erstellung per API durch Unternehmensprofile inkl. Interessenskeywords. _(User Story #11, #12)_ -->
+<!-- - Social-Battery-Inputfeld mit visuellem Status und Filterlogik für passende Aktivitätsvorschläge. _(User Story #1, Persona: Karin, Tom)_ -->
+- Interessensmatching über auswählbare Interessen-Keywords aus einer vorgegebenen Liste, kombiniert mit Challenge-Filter. _(User Story #3, Persona: Lena, Tom, Marcel)_
+<!-- - Teilnahmeverifizierung per [QR-Code und] 5-stelligen Code (Challenge-bezogen) inkl. Check-in vor Ort. _(User Story #9)_ -->
+- Belohnungssystem mit Erfahrungspunkten und digitaler Währung für absolvierte Aktivitäten. _(User Story #7, Persona: Lena, Marcel)_
+- KI Chatbot-Nachricht beim Login in die App mit Vorschlag für eine Challenge, anhand des Interessensmatchings _(User Story #5, #3)_
+
 ## Ähnliche Apps
 
 1. Grouya: Ist eine Matching-App für spontane Freizeitaktivitäten und gesellschaftlicher Isolation entgegenwirken. Beinhaltet Kartenfunktion und Live Events, aber KEIN Belohnungssystem.
