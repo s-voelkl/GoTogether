@@ -1,4 +1,4 @@
-# Isolaticy
+# GoTogether
 
 Soziale Netzwerke verbinden digital, aber schaffen oft keine echten Beziehungen.
 Die Nutzer wünschen sich echte Begegnungen, nachhaltige Freundschaften oder zumindest tiefere soziale Interaktionen.
@@ -117,7 +117,6 @@ Trotz zunehmender digitaler Vernetzung durch Social Media Plattformen wird Einsa
    - Lokale Empfehlungen für Aktivitäten, Events, Gruppen. (Werbung möglich)
    - Begleitung für persönliche Entwicklung und Fortschritte, inkl. empathisches Coaching für Sozialisierung & Reflexionsimpulse
    - Starke Leitplanken für Sicherheit, Privatsphäre, ethische KI-Nutzung. Werbeanzeigen nur mit klarer Kennzeichnung, keine manipulative Werbung, Datenschutz im Fokus.
-
 4. **Gamification & Rewards**
    - Belohnungen (Avatar-Deko, Skins, virtuelle Haustiere, Abzeichen, Level-Ups), auch AR-kompatibel
    - Digitale Währung. Für In-App-Käufe, lokale Partnerangebote, Spendenaktionen, Coupons, Payback-Coupons, Loot-Boxen, Saison-Pässe. Digitale Währung auch von Werbenden als Aktivitäts-Belohnung kaufbar.
@@ -237,6 +236,16 @@ Aufteilung nach Rollen:
 - Product Owner: Tien
 - Scrum Master: SimonV
 
+## MVP
+
+- Offene, lokale Liste für Challenges inkl. Challenge-Filter, damit spontane Teilnahme möglich ist. _(User Story #2, Persona: Tom, Karin)_
+- Echtzeitkarte mit eigenem Standort-Marker und dynamischen Challenges (Koordinaten, nächstgelegene Adresse, Interessenskeyword, Name, Beschreibung, Datum, Themen/Interessen (z.B. Cafe, Politik, ...), Startzeit, voraussichtliche Endzeit, Erfahrungspunkte, Anzahl der digitalen Währung, soziale Anstrengung). _(User Story #6, Persona: Karin, Tom)_
+- Event-/Challenge-Erstellung per API durch Unternehmensprofile inkl. Interessenskeywords. _(User Story #11, #12)_
+- Social-Battery-Inputfeld mit visuellem Status und Filterlogik für passende Aktivitätsvorschläge. _(User Story #1, Persona: Karin, Tom)_
+- Interessensmatching über auswählbare Interessen-Keywords aus einer vorgegebenen Liste, kombiniert mit Challenge-Filter. _(User Story #3, Persona: Lena, Tom, Marcel)_
+- Teilnahmeverifizierung per QR-Code und 5-stelligem Code (Challenge-bezogen) inkl. Check-in vor Ort. _(User Story #9)_
+- Belohnungssystem mit Erfahrungspunkten und digitaler Währung für absolvierte Aktivitäten. _(User Story #7, Persona: Lena, Marcel)_
+
 ## Architecture
 
 ### Drei-Schichten-Architektur
@@ -259,3 +268,160 @@ Die Architektur folgt dem MVP und konzentriert sich auf die Kern-Use-Cases aus d
 Controller heißen so, weil sie HTTP-Anfragen entgegennehmen und an die passende Logik weitergeben. Services heißen so, weil sie die fachliche Logik bündeln und unabhängig von UI oder Datenbank bleiben. Modelle heißen so, weil sie die Datenobjekte des Systems beschreiben.
 
 So entsteht eine klare Trennung: UI für Interaktion, Backend für die MVP-Geschäftslogik und PostgreSQL für Persistenz. Für die Bewertung ist damit gut erkennbar, welche Teile direkt umgesetzt werden sollen.
+
+### Repository Structure
+
+Backend:
+
+src/main/java/com/example/app/
+├── AppApplication.java
+├── controller/
+│   └── UserController.java
+├── service/
+│   └── UserService.java
+├── repository/
+│   └── UserRepository.java
+├── model/
+│   └── User.java
+├── dto/
+│   ├── UserRequest.java
+│   └── UserResponse.java
+└── exception/
+    ├── ResourceNotFoundException.java
+    └── GlobalExceptionHandler.java
+
+### Datenbankschema
+
+MöglicheKlassen: User, Challenge, Map, Teilnahme, Freund, Reward/Items, ChatNachricht (KI-Assistent), Settings, Unternehmensprofil
+
+
+```sql
+User: 
+{
+   userId: primary uuid, [PK]
+   name: string,
+   passwordHash: String, # hash
+   email: String, # regex validation check
+   socialBattery: int,
+   currency: int,
+   experiencePoints: int, # calculates level
+   lastLogin: Time,
+   settings: Settings,
+}
+```
+
+```sql
+Challenge:
+{
+   challengeId: uuid, [PK]
+   name: string,
+   hostId: uuid, # FK auf Company
+   coordinate: Geometry, # interner Koordinatentyp
+   description: string,
+   startTime: DateTime,
+   duration: INTERVAL,
+   currencyReward: int,
+   experiencePoints: int,
+   socialBattery: int,
+   verificationCode: String, # Verifizierungscode 5-stellig. Rückgabetyp beim Erstellen einer Challenge
+}
+```
+
+```sql
+Company:
+{
+   companyId: uuid, [PK]
+   name: string,
+   email: string,
+   passwordHash: string,
+   currency: int, # Gekaufte Währung des Unternehmens
+   address: String, # einfach gehalten
+   challengeCount (derived), # optional
+   participantCount (derived), # optional
+}
+```
+
+```sql
+Participance:
+{
+   userId: uuid, [PK]
+   challengeId: uuid, [PK]
+   checkInTime: DateTime,
+}
+```
+
+```sql
+Topic: 
+{
+   topicId: uuid, [PK]
+   name: String
+}
+```
+
+```sql
+UserTopic:
+{
+   userId: uuid, [PK]
+   topicId: uuid, [PK]
+}
+```
+
+```sql
+ChallengeTopic:
+{
+   challengeId: uuid, [PK]
+   topicId: uuid, [PK]
+}
+```
+
+```sql
+Api:
+{
+   adminName: String, [PK]
+   key: String , # hashed
+   createdAt: DateTime
+}
+```
+
+### Controllers
+
+#### ChallengeController
+
+- GET /api/challenges/getAll: Alle Challenges (später evtl. mit Filtern) erhalten. [location, range, ...] -> List[Challenge] # ohne verificationCode!
+- GET /api/challenges/get/{challengeId}: Eine Challenge erhalten. [challengeId] -> [ChallengeDTO]
+- POST /api/challenges/post: Eine Challenge erstellen, Currency der Company reduzieren. [Company, ChallengeDTO] => [ChallengeDTO mit verificationCode]. -> http code
+- POST /api/challenges/participate: An einer Challenge teilnehmen. [userId, challengeId, verificationCode] => [ChallengeDTO] -> http code
+
+#### UserController
+
+- POST /api/users/signup: Einen neuen User registrieren: -> [Email, Name, Passwort, Interests, socialBattery] -> http code
+- POST /api/users/login: Einloggen in bestehenden User. [Email oder Name, Passwort] -> http code
+- GET /api/users/get/{userId}: Erhalten eines Nutzerdatenpunkts. [userId] -> [UserDTO]
+- POST /api/users/preferences/{userId}: Setzen der Nutzerpräferenzen. [socialBattery, Interests] -> http code
+
+#### TopicController
+
+- POST /api/topic/create: Erstellen eines Topics/Interests. [TopicDTO] -> http code
+- GET /api/topic/getAll: Erhalten aller Topics/Interests. [] -> List[TopicDTO]
+
+#### CompanyController
+
+- POST /api/company/signup: Ein neues Unternehmer erstellen [Email, Passwort, Name, Adresse, ] -> http code
+- GET /api/company/currency/{companyId}: Erhalten der aktuellen Currency des Unternehmens. [] -> currency
+- POST /api/company/currency/{companyId}: Erhöhen der Currency. [currency] -> http code
+
+### DTOs
+
+TODO: DTOs
+
+### Services
+
+TODO: Services
+
+### DrawIO Architecture Diagramm
+
+TODO: DrawIO Diagramm
+
+### Database
+
+PostgreSQL mit Docker-Container.
