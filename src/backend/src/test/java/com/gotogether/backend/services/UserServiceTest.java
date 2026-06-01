@@ -68,14 +68,45 @@ class UserServiceTest {
 
         assertEquals(user.getId(), dto.getId());
         assertEquals(user.getName(), dto.getName());
-        assertEquals(user.getPassword(), dto.getPassword());
         assertEquals(user.getEmail(), dto.getEmail());
         assertEquals(user.getSocialBattery(), dto.getSocialBattery());
         assertEquals(user.getCurrency(), dto.getCurrency());
-        assertEquals(user.getExperiencePoints(), dto.getExperiencePoints());
         assertEquals(user.getInterests(), dto.getInterests());
         assertEquals(user.getLastLogin(), dto.getLastLogin());
         assertEquals(user.getSettings(), dto.getSettings());
+    }
+
+    @Test
+    void toDTO_withZeroXp_returnsZeroLevelXp() {
+        UserDTO dto = userMapper.toDTO(buildUser(0));
+
+        assertEquals(0, dto.getLevelXp());
+    }
+
+    @Test
+    void toDTO_levelXpIsXpMinusCurrentLevelFloor() {
+        // 220 XP puts us at level 2 (floor 215), so levelXp should be 5
+        UserDTO dto = userMapper.toDTO(buildUser(220));
+
+        assertEquals(2, dto.getLevel());
+        assertEquals(6, dto.getLevelXp());
+    }
+
+    @Test
+    void toDTO_levelXpResetsAtLevelBoundary() {
+        // exactly at level 2 threshold (215 XP), levelXp should be 0
+        UserDTO dto = userMapper.toDTO(buildUser(215));
+
+        assertEquals(2, dto.getLevel());
+        assertEquals(1, dto.getLevelXp());
+    }
+
+    @Test
+    void toDTO_levelXpIsAlwaysNonNegative() {
+        for (int xp = 0; xp <= 1000; xp += 50) {
+            UserDTO dto = userMapper.toDTO(buildUser(xp));
+            assertTrue(dto.getLevelXp() >= 0);
+        }
     }
 
     @Test

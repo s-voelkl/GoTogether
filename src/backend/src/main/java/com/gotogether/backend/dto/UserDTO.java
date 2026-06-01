@@ -25,9 +25,9 @@ public class UserDTO {
 
     private int currency;
 
-    private int experiencePoints;
-
     private int level; // derived
+
+    private int levelXp; // derived
 
     private List<UUID> interests;
 

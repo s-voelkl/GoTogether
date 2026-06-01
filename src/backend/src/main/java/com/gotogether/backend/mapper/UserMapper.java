@@ -13,12 +13,11 @@ public class UserMapper {
         return UserDTO.builder()
                 .id(user.getId())
                 .name(user.getName())
-                .password(user.getPassword())
                 .email(user.getEmail())
                 .socialBattery(user.getSocialBattery())
                 .currency(user.getCurrency())
-                .experiencePoints(user.getExperiencePoints())
                 .level(calculateLevel(user.getExperiencePoints()))
+                .levelXp(calculateLevelXp(user.getExperiencePoints(), calculateLevel(user.getExperiencePoints())))
                 .interests(user.getInterests())
                 .lastLogin(user.getLastLogin())
                 .settings(user.getSettings())
@@ -41,5 +40,11 @@ public class UserMapper {
 
     private long xpForLevel(int level, double a, double b) {
         return (long) (a * (1 - Math.pow(b, level)) / (1 - b));
+    }
+
+    private int calculateLevelXp(long xp, int level) {
+        if (level == 1) return (int) xp;
+        long xpForCurrentLevel = xpForLevel(level, 100.0, 1.15);
+        return (int) (xp - xpForCurrentLevel);
     }
 }
