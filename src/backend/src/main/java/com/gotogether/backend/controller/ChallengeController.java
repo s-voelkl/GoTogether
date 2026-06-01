@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.gotogether.backend.dto.ChallengeCreateDTO;
 import com.gotogether.backend.dto.ChallengeAuthenticateDTO;
 import com.gotogether.backend.dto.ChallengeFilterDTO;
+import com.gotogether.backend.dto.ChallengeParticipanceDTO;
 import com.gotogether.backend.services.ChallengeService;
 
 import java.util.UUID;
@@ -149,6 +150,37 @@ public class ChallengeController {
         try {
             return ResponseEntity.ok(service.deleteChallenge(
                     dto.getCompanyEmail(), dto.getCompanyPassword(), id));
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
+    }
+
+    /**
+     * Registers an authenticated user as a participant of a challenge.
+     *
+     * <p>
+     * The user authenticates with the credentials in
+     * {@link ChallengeParticipanceDTO} and provides their current location
+     * together with the challenge's verification code. The service enforces
+     * authentication, distance, capacity, cooldown and verification code
+     * checks; on success the challenge's currency and experience point
+     * rewards are credited to the user.
+     *
+     * @param dto the participation payload
+     * @return {@code 200 OK} with the joined challenge's id, or
+     *         {@code 400 BAD REQUEST} with an error message on any
+     *         validation, authentication or business-rule violation
+     */
+    @PostMapping(value = "/participate", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> participate(@RequestBody ChallengeParticipanceDTO dto) {
+        try {
+            return ResponseEntity.ok(service.participateInChallenge(
+                    dto.getUserEmail(),
+                    dto.getUserPassword(),
+                    dto.getUserLatitude(),
+                    dto.getUserLongitude(),
+                    dto.getChallengeId(),
+                    dto.getVerificationCode()));
         } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }

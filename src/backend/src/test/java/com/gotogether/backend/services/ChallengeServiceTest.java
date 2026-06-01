@@ -9,9 +9,11 @@ import com.gotogether.backend.model.Challenge;
 import com.gotogether.backend.model.Company;
 import com.gotogether.backend.model.Location;
 import com.gotogether.backend.model.Topic;
+import com.gotogether.backend.model.User;
 import com.gotogether.backend.repository.ChallengeRepository;
 import com.gotogether.backend.repository.CompanyRepository;
 import com.gotogether.backend.repository.TopicRepository;
+import com.gotogether.backend.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -41,6 +43,9 @@ class ChallengeServiceTest {
 
     @Mock
     private TopicRepository topicRepository;
+
+    @Mock
+    private UserRepository userRepository;
 
     @Spy
     private ChallengeMapper challengeMapper;
@@ -688,5 +693,210 @@ class ChallengeServiceTest {
 
         assertThrows(RuntimeException.class, () -> challengeService.deleteChallenge(
                 "host@example.com", "pw", missing));
+    }
+
+    // -------------------- participateInChallenge --------------------
+
+    private User buildAuthUser(String email, String password) {
+        User u = new User();
+        u.setId(UUID.randomUUID());
+        u.setName("Alice");
+        u.setEmail(email);
+        u.setPassword(password);
+        u.setCurrency(0);
+        u.setExperiencePoints(0);
+        return u;
+    }
+
+    private Challenge buildParticipationChallenge(String code, int maxPlayers) {
+        Challenge c = buildChallenge("Join Me", BERLIN_LAT, BERLIN_LON);
+        c.setVerificationCode(code);
+        c.setMaxPlayers(maxPlayers);
+        c.setCurrency(120);
+        c.setExperiencePoints(40);
+        c.setUsers(new ArrayList<>());
+        return c;
+    }
+
+    @Test
+    void participateInChallenge_ValidRequest_AddsUserAndAwardsRewards() {
+        User user = buildAuthUser("alice@example.com", "pw");
+        Challenge challenge = buildParticipationChallenge("ABCDE", 5);
+        when(userRepository.findByEmail("alice@example.com")).thenReturn(user);
+        when(challengeRepository.findById(challenge.getId())).thenReturn(Optional.of(challenge));
+        when(challengeRepository.findAll()).thenReturn(List.of(challenge));
+
+        UUID returned = challengeService.participateInChallenge(
+                "alice@example.com", "pw",
+                BERLIN_LAT, BERLIN_LON,
+                challenge.getId(), "ABCDE");
+
+        assertEquals(challenge.getId(), returned);
+        assertEquals(1, challenge.getUsers().size());
+        assertEquals(user, challenge.getUsers().get(0));
+        assertEquals(120, user.getCurrency());
+        assertEquals(40, user.getExperiencePoints());
+        verify(challengeRepository).save(challenge);
+        verify(userRepository).save(user);
+    }
+
+    @Test
+    void participateInChallenge_VerificationCodeCaseAndWhitespace_IsNormalized() {
+        User user = buildAuthUser("alice@example.com", "pw");
+        Challenge challenge = buildParticipationChallenge("AbCdE", 0); // 0 = unlimited
+        when(userRepository.findByEmail("alice@example.com")).thenReturn(user);
+        when(challengeRepository.findById(challenge.getId())).thenReturn(Optional.of(challenge));
+        when(challengeRepository.findAll()).thenReturn(List.of(challenge));
+
+        UUID returned = challengeService.participateInChallenge(
+                "alice@example.com", "pw",
+                BERLIN_LAT, BERLIN_LON,
+                challenge.getId(), "  abcde  ");
+
+        assertEquals(challenge.getId(), returned);
+    }
+
+    @Test
+    void participateInChallenge_UnknownUser_ThrowsRuntimeException() {
+        when(userRepository.findByEmail("ghost@example.com")).thenReturn(null);
+
+        assertThrows(RuntimeException.class, () -> challengeService.participateInChallenge(
+                "ghost@example.com", "pw",
+                BERLIN_LAT, BERLIN_LON,
+                UUID.randomUUID(), "ABCDE"));
+        verify(challengeRepository, never()).save(any());
+        verify(userRepository, never()).save(any());
+    }
+
+    @Test
+    void participateInChallenge_InvalidPassword_ThrowsRuntimeException() {
+        User user = buildAuthUser("alice@example.com", "pw");
+        when(userRepository.findByEmail("alice@example.com")).thenReturn(user);
+
+        assertThrows(RuntimeException.class, () -> challengeService.participateInChallenge(
+                "alice@example.com", "wrong",
+                BERLIN_LAT, BERLIN_LON,
+                UUID.randomUUID(), "ABCDE"));
+        verify(challengeRepository, never()).save(any());
+    }
+
+    @Test
+    void participateInChallenge_ChallengeNotFound_ThrowsRuntimeException() {
+        User user = buildAuthUser("alice@example.com", "pw");
+        UUID missing = UUID.randomUUID();
+        when(userRepository.findByEmail("alice@example.com")).thenReturn(user);
+        when(challengeRepository.findById(missing)).thenReturn(Optional.empty());
+
+        assertThrows(RuntimeException.class, () -> challengeService.participateInChallenge(
+                "alice@example.com", "pw",
+                BERLIN_LAT, BERLIN_LON,
+                missing, "ABCDE"));
+    }
+
+    @Test
+    void participateInChallenge_UserTooFarAway_ThrowsRuntimeException() {
+        User user = buildAuthUser("alice@example.com", "pw");
+        Challenge challenge = buildParticipationChallenge("ABCDE", 0);
+        when(userRepository.findByEmail("alice@example.com")).thenReturn(user);
+        when(challengeRepository.findById(challenge.getId())).thenReturn(Optional.of(challenge));
+
+        // ~111 km north of Berlin — clearly outside the 200 m threshold.
+        assertThrows(RuntimeException.class, () -> challengeService.participateInChallenge(
+                "alice@example.com", "pw",
+                BERLIN_LAT + 1.0, BERLIN_LON,
+                challenge.getId(), "ABCDE"));
+        verify(challengeRepository, never()).save(any());
+        verify(userRepository, never()).save(any());
+    }
+
+    @Test
+    void participateInChallenge_ChallengeFull_ThrowsRuntimeException() {
+        User user = buildAuthUser("alice@example.com", "pw");
+        Challenge challenge = buildParticipationChallenge("ABCDE", 1);
+        // already at capacity
+        User existing = buildAuthUser("bob@example.com", "pw");
+        challenge.getUsers().add(existing);
+        when(userRepository.findByEmail("alice@example.com")).thenReturn(user);
+        when(challengeRepository.findById(challenge.getId())).thenReturn(Optional.of(challenge));
+
+        assertThrows(RuntimeException.class, () -> challengeService.participateInChallenge(
+                "alice@example.com", "pw",
+                BERLIN_LAT, BERLIN_LON,
+                challenge.getId(), "ABCDE"));
+        verify(challengeRepository, never()).save(any());
+    }
+
+    @Test
+    void participateInChallenge_CooldownNotElapsed_ThrowsRuntimeException() {
+        User user = buildAuthUser("alice@example.com", "pw");
+        Challenge target = buildParticipationChallenge("ABCDE", 0);
+
+        // A recent challenge (started 5 seconds ago) the user already joined.
+        Challenge recent = buildChallenge("Recent", BERLIN_LAT, BERLIN_LON);
+        recent.setStartTime(LocalDateTime.now().minusSeconds(5));
+        recent.setUsers(new ArrayList<>(List.of(user)));
+
+        when(userRepository.findByEmail("alice@example.com")).thenReturn(user);
+        when(challengeRepository.findById(target.getId())).thenReturn(Optional.of(target));
+        when(challengeRepository.findAll()).thenReturn(List.of(target, recent));
+
+        assertThrows(RuntimeException.class, () -> challengeService.participateInChallenge(
+                "alice@example.com", "pw",
+                BERLIN_LAT, BERLIN_LON,
+                target.getId(), "ABCDE"));
+        verify(challengeRepository, never()).save(any());
+    }
+
+    @Test
+    void participateInChallenge_CooldownElapsed_Succeeds() {
+        User user = buildAuthUser("alice@example.com", "pw");
+        Challenge target = buildParticipationChallenge("ABCDE", 0);
+
+        // A past challenge well outside the cooldown window.
+        Challenge old = buildChallenge("Old", BERLIN_LAT, BERLIN_LON);
+        old.setStartTime(LocalDateTime.now().minusHours(2));
+        old.setUsers(new ArrayList<>(List.of(user)));
+
+        when(userRepository.findByEmail("alice@example.com")).thenReturn(user);
+        when(challengeRepository.findById(target.getId())).thenReturn(Optional.of(target));
+        when(challengeRepository.findAll()).thenReturn(List.of(target, old));
+
+        UUID returned = challengeService.participateInChallenge(
+                "alice@example.com", "pw",
+                BERLIN_LAT, BERLIN_LON,
+                target.getId(), "ABCDE");
+
+        assertEquals(target.getId(), returned);
+    }
+
+    @Test
+    void participateInChallenge_InvalidVerificationCode_ThrowsRuntimeException() {
+        User user = buildAuthUser("alice@example.com", "pw");
+        Challenge challenge = buildParticipationChallenge("ABCDE", 0);
+        when(userRepository.findByEmail("alice@example.com")).thenReturn(user);
+        when(challengeRepository.findById(challenge.getId())).thenReturn(Optional.of(challenge));
+        when(challengeRepository.findAll()).thenReturn(List.of(challenge));
+
+        assertThrows(RuntimeException.class, () -> challengeService.participateInChallenge(
+                "alice@example.com", "pw",
+                BERLIN_LAT, BERLIN_LON,
+                challenge.getId(), "ZZZZZ"));
+        verify(challengeRepository, never()).save(any());
+        verify(userRepository, never()).save(any());
+    }
+
+    @Test
+    void participateInChallenge_UserAlreadyJoined_ThrowsRuntimeException() {
+        User user = buildAuthUser("alice@example.com", "pw");
+        Challenge challenge = buildParticipationChallenge("ABCDE", 0);
+        challenge.getUsers().add(user);
+        when(userRepository.findByEmail("alice@example.com")).thenReturn(user);
+        when(challengeRepository.findById(challenge.getId())).thenReturn(Optional.of(challenge));
+
+        assertThrows(RuntimeException.class, () -> challengeService.participateInChallenge(
+                "alice@example.com", "pw",
+                BERLIN_LAT, BERLIN_LON,
+                challenge.getId(), "ABCDE"));
+        verify(challengeRepository, never()).save(any());
     }
 }

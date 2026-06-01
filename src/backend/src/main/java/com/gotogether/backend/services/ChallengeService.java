@@ -9,9 +9,11 @@ import com.gotogether.backend.model.Challenge;
 import com.gotogether.backend.model.Company;
 import com.gotogether.backend.model.Location;
 import com.gotogether.backend.model.Topic;
+import com.gotogether.backend.model.User;
 import com.gotogether.backend.repository.ChallengeRepository;
 import com.gotogether.backend.repository.CompanyRepository;
 import com.gotogether.backend.repository.TopicRepository;
+import com.gotogether.backend.repository.UserRepository;
 
 import lombok.RequiredArgsConstructor;
 
@@ -35,6 +37,7 @@ public class ChallengeService {
     private final ChallengeRepository repo;
     private final CompanyRepository companyRepo;
     private final TopicRepository topicRepo;
+    private final UserRepository userRepo;
 
     private final ChallengeMapper challengeMapper;
 
@@ -64,6 +67,19 @@ public class ChallengeService {
 
     /** Default page size when the caller does not specify a limit. */
     private static final int DEFAULT_RESULT_LIMIT = 10;
+
+    /**
+     * Maximum distance in meters between the user's current location and the
+     * challenge location for a participation to be accepted.
+     */
+    private static final double MAX_PARTICIPATION_DISTANCE_METERS = 400.0;
+
+    /**
+     * Minimum amount of time, in seconds, that must have passed between two
+     * subsequent participations of the same user. Acts as a basic abuse and
+     * brute-force safeguard.
+     */
+    private static final long PARTICIPATION_COOLDOWN_SECONDS = 10; // good for testing
 
     /**
      * Calculates the great-circle distance (shortest "as the crow flies" path
@@ -676,6 +692,166 @@ public class ChallengeService {
 
         repo.delete(challenge);
         return challengeId;
+    }
+
+    /**
+     * Registers an authenticated user as a participant of a challenge and
+     * awards the challenge's currency and experience point rewards to the
+     * user.
+     *
+     * <p>
+     * The following invariants are enforced; any violation results in a
+     * {@link RuntimeException} and no state is mutated:
+     * <ol>
+     * <li>{@code userEmail} / {@code userPassword} authenticate against an
+     * existing user record.</li>
+     * <li>The user's current location is within
+     * {@value #MAX_PARTICIPATION_DISTANCE_METERS} meters of the challenge
+     * location, computed via
+     * {@link #calculateLocationDistance(double, double, double, double)}.</li>
+     * <li>The challenge still has capacity: {@code maxPlayers == 0}
+     * (unlimited) or the current participant count is strictly less than
+     * {@code maxPlayers}.</li>
+     * <li>The user has not participated in another challenge within the last
+     * {@value #PARTICIPATION_COOLDOWN_SECONDS} minutes; the most recent
+     * participation is approximated by the largest {@code startTime} among
+     * the challenges the user is already enrolled in.</li>
+     * <li>The supplied {@code verificationCode} matches the challenge's code
+     * after trimming and lower-casing both sides.</li>
+     * <li>The user is not already enrolled in this challenge.</li>
+     * </ol>
+     *
+     * <p>
+     * On success, the user is added to the challenge's participant list, the
+     * challenge's {@code currency} and {@code experiencePoints} rewards are
+     * added to the user's balances, and both the challenge and the user are
+     * persisted.
+     *
+     * @param userEmail        email used to authenticate the user
+     * @param userPassword     password used to authenticate the user
+     * @param userLatitude     current user latitude in decimal degrees
+     * @param userLongitude    current user longitude in decimal degrees
+     * @param challengeId      id of the challenge to join
+     * @param verificationCode verification code presented by the user
+     * @return the id of the joined challenge
+     * @throws RuntimeException if any of the invariants above is violated
+     */
+    public UUID participateInChallenge(
+            String userEmail,
+            String userPassword,
+            Double userLatitude,
+            Double userLongitude,
+            UUID challengeId,
+            String verificationCode) {
+
+        // -------- validate inputs --------
+        if (userEmail == null || userEmail.trim().isEmpty()) {
+            throw new RuntimeException("User email must not be empty.");
+        }
+        if (userPassword == null || userPassword.trim().isEmpty()) {
+            throw new RuntimeException("User password must not be empty.");
+        }
+        if (challengeId == null) {
+            throw new RuntimeException("Challenge id must be provided.");
+        }
+        if (verificationCode == null || verificationCode.trim().isEmpty()) {
+            throw new RuntimeException("Verification code must not be empty.");
+        }
+        if (userLatitude == null || userLongitude == null) {
+            throw new RuntimeException("User location must be provided.");
+        }
+        if (userLatitude < -90 || userLatitude > 90) {
+            throw new RuntimeException(
+                    "User latitude must be between -90 and 90: " + userLatitude);
+        }
+        if (userLongitude < -180 || userLongitude > 180) {
+            throw new RuntimeException(
+                    "User longitude must be between -180 and 180: " + userLongitude);
+        }
+
+        // -------- authenticate user --------
+        User user = userRepo.findByEmail(userEmail.trim().toLowerCase());
+        if (user == null) {
+            throw new RuntimeException("No user found with email: " + userEmail);
+        }
+        if (!user.getPassword().equals(userPassword)) {
+            throw new RuntimeException("Invalid user credentials.");
+        }
+
+        // -------- load challenge --------
+        Challenge challenge = repo.findById(challengeId)
+                .orElseThrow(() -> new RuntimeException("Challenge not found: " + challengeId));
+
+        // -------- distance check --------
+        if (challenge.getLocation() == null) {
+            throw new RuntimeException("Challenge has no location set.");
+        }
+        double distanceMeters = calculateLocationDistance(
+                userLatitude, userLongitude,
+                challenge.getLocation().getLatitude(),
+                challenge.getLocation().getLongitude());
+        if (distanceMeters >= MAX_PARTICIPATION_DISTANCE_METERS) {
+            throw new RuntimeException(
+                    "User is too far away from the challenge location: "
+                            + ((long) distanceMeters) + " m");
+        }
+
+        // -------- capacity check --------
+        List<User> participants = challenge.getUsers() == null
+                ? new ArrayList<>()
+                : challenge.getUsers();
+        if (challenge.getMaxPlayers() > 0 && participants.size() >= challenge.getMaxPlayers()) {
+            throw new RuntimeException("Challenge is already full.");
+        }
+
+        // -------- duplicate-participation check --------
+        boolean alreadyJoined = participants.stream()
+                .anyMatch(p -> p.getId() != null && p.getId().equals(user.getId()));
+        if (alreadyJoined) {
+            throw new RuntimeException("User is already participating in this challenge.");
+        }
+
+        // -------- cooldown check --------
+        // Approximate the user's most recent participation by the largest
+        // startTime among the challenges they are already enrolled in.
+        // NOTE: this can be highly inefficient for many challenges!
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime cooldownThreshold = now.minusSeconds(PARTICIPATION_COOLDOWN_SECONDS);
+        LocalDateTime lastParticipation = repo.findAll().stream()
+                .filter(c -> c.getUsers() != null && c.getUsers().stream()
+                        .anyMatch(p -> p.getId() != null && p.getId().equals(user.getId())))
+                .map(Challenge::getStartTime)
+                .filter(t -> t != null)
+                .max(Comparator.naturalOrder())
+                .orElse(null);
+        if (lastParticipation != null && lastParticipation.isAfter(cooldownThreshold)) {
+            throw new RuntimeException(
+                    "User must wait at least " + PARTICIPATION_COOLDOWN_SECONDS
+                            + " seconds between challenges.");
+        }
+
+        // -------- verification code check (trim + lower-case both sides) --------
+        String providedCode = verificationCode.trim().toLowerCase();
+        String expectedCode = challenge.getVerificationCode() == null
+                ? ""
+                : challenge.getVerificationCode().trim().toLowerCase();
+        if (!providedCode.equals(expectedCode)) {
+            throw new RuntimeException("Invalid verification code.");
+        }
+
+        // -------- mutate state and persist --------
+        participants.add(user);
+        challenge.setUsers(participants);
+        // NOTE: the currency is not yet distributed but just given out fully to all
+        // users! This could be made better, e.g. with dividing through the maxPlayers
+        // (must not be 0!)
+        user.setCurrency(user.getCurrency() + challenge.getCurrency());
+        user.setExperiencePoints(user.getExperiencePoints() + challenge.getExperiencePoints());
+
+        repo.save(challenge);
+        userRepo.save(user);
+
+        return challenge.getId();
     }
 
 }
