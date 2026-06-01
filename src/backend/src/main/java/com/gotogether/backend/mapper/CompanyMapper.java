@@ -11,6 +11,7 @@ public class CompanyMapper {
 
     public CompanyDTO toDTO(Company company) {
         return CompanyDTO.builder()
+                .id(company.getId())
                 .name(company.getName())
                 .email(company.getEmail())
                 .street(company.getAddress().getStreet())
