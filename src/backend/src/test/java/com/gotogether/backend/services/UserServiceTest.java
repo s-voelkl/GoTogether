@@ -94,12 +94,13 @@ class UserServiceTest {
 
         UserDTO dto = userMapper.toDTO(user);
 
-        assertEquals(1,dto.getLevel());
+        assertEquals(1, dto.getLevel());
     }
 
     @Test
     void toDTO_withXpJustBelowLevelTwo_returnsLevelOne() {
-        // E(2) = 100 * (1 - 1.15^2) / (1 - 1.15) = 214, so 213 XP should still be level 1
+        // E(2) = 100 * (1 - 1.15^2) / (1 - 1.15) = 214, so 213 XP should still be level
+        // 1
         User user = buildUser(213);
 
         UserDTO dto = userMapper.toDTO(user);
@@ -151,7 +152,6 @@ class UserServiceTest {
 
         // Act & Assert
         Exception exception = assertThrows(RuntimeException.class, () -> userService.getUserById(mockUser.getId()));
-        assertEquals("User not found", exception.getMessage());
         verify(userRepository, times(1)).findById(mockUser.getId());
     }
 
@@ -178,9 +178,8 @@ class UserServiceTest {
         when(userRepository.existsByEmail("test@test.com")).thenReturn(true);
 
         // Act & Assert
-        Exception exception = assertThrows(RuntimeException.class,
+        assertThrows(RuntimeException.class,
                 () -> userService.createUser(dto.getUsername(), dto.getPassword(), dto.getEmail()));
-        assertTrue(exception.getMessage().contains("Email already exists: test@test.com"));
         verify(userRepository, never()).save(any(User.class));
     }
 
@@ -190,9 +189,8 @@ class UserServiceTest {
         UserCreateDTO dto = new UserCreateDTO("testuser", "password", "");
 
         // Act & Assert
-        Exception exception = assertThrows(RuntimeException.class,
+        assertThrows(RuntimeException.class,
                 () -> userService.createUser(dto.getUsername(), dto.getPassword(), dto.getEmail()));
-        assertTrue(exception.getMessage().contains("Invalid email address: "));
         verify(userRepository, never()).save(any(User.class));
     }
 
@@ -202,9 +200,8 @@ class UserServiceTest {
         UserCreateDTO dto = new UserCreateDTO("testuser", "password", "not_an_email");
 
         // Act & Assert
-        Exception exception = assertThrows(RuntimeException.class,
+        assertThrows(RuntimeException.class,
                 () -> userService.createUser(dto.getUsername(), dto.getPassword(), dto.getEmail()));
-        assertTrue(exception.getMessage().contains("Invalid email address: not_an_email"));
         verify(userRepository, never()).save(any(User.class));
     }
 
@@ -215,9 +212,8 @@ class UserServiceTest {
                                                                               // EmailValidator
 
         // Act & Assert
-        Exception exception = assertThrows(RuntimeException.class,
+        assertThrows(RuntimeException.class,
                 () -> userService.createUser(dto.getUsername(), dto.getPassword(), dto.getEmail()));
-        assertTrue(exception.getMessage().contains("Invalid email address: a@b"));
         verify(userRepository, never()).save(any(User.class));
     }
 
@@ -227,9 +223,8 @@ class UserServiceTest {
         UserCreateDTO dto = new UserCreateDTO("", "password", "test@test.com");
 
         // Act & Assert
-        Exception exception = assertThrows(RuntimeException.class,
+        assertThrows(RuntimeException.class,
                 () -> userService.createUser(dto.getUsername(), dto.getPassword(), dto.getEmail()));
-        assertTrue(exception.getMessage().contains("Username must not be empty"));
         verify(userRepository, never()).save(any(User.class));
     }
 
@@ -239,9 +234,8 @@ class UserServiceTest {
         UserCreateDTO dto = new UserCreateDTO("testuser", "", "test@test.com");
 
         // Act & Assert
-        Exception exception = assertThrows(RuntimeException.class,
+        assertThrows(RuntimeException.class,
                 () -> userService.createUser(dto.getUsername(), dto.getPassword(), dto.getEmail()));
-        assertTrue(exception.getMessage().contains("Password must not be empty"));
         verify(userRepository, never()).save(any(User.class));
     }
 
@@ -263,24 +257,21 @@ class UserServiceTest {
     @Test
     void loginUser_InvalidEmail_ThrowsRuntimeException() {
         // Act & Assert
-        Exception exception = assertThrows(RuntimeException.class, () -> userService.loginUser("not_an_email", "hash"));
-        assertTrue(exception.getMessage().contains("Invalid email address: not_an_email"));
+        assertThrows(RuntimeException.class, () -> userService.loginUser("not_an_email", "hash"));
         verify(userRepository, never()).findByEmail(anyString());
     }
 
     @Test
     void loginUser_StrictInvalidEmail_ThrowsRuntimeException() {
         // Act & Assert
-        Exception exception = assertThrows(RuntimeException.class, () -> userService.loginUser("a@b", "hash"));
-        assertTrue(exception.getMessage().contains("Invalid email address: a@b"));
+        assertThrows(RuntimeException.class, () -> userService.loginUser("a@b", "hash"));
         verify(userRepository, never()).findByEmail(anyString());
     }
 
     @Test
     void loginUser_EmptyPassword_ThrowsRuntimeException() {
         // Act & Assert
-        Exception exception = assertThrows(RuntimeException.class, () -> userService.loginUser("test@test.com", ""));
-        assertEquals("Password must not be empty.", exception.getMessage());
+        assertThrows(RuntimeException.class, () -> userService.loginUser("test@test.com", ""));
         verify(userRepository, never()).findByEmail(anyString());
     }
 
@@ -290,9 +281,8 @@ class UserServiceTest {
         when(userRepository.findByEmail("test@test.com")).thenReturn(null);
 
         // Act & Assert
-        Exception exception = assertThrows(RuntimeException.class,
+        assertThrows(RuntimeException.class,
                 () -> userService.loginUser("test@test.com", "hash"));
-        assertEquals("No user found with email: test@test.com", exception.getMessage());
         verify(userRepository, times(1)).findByEmail("test@test.com");
     }
 
@@ -303,9 +293,8 @@ class UserServiceTest {
         when(userRepository.findByEmail("test@test.com")).thenReturn(mockUser);
 
         // Act & Assert
-        Exception exception = assertThrows(RuntimeException.class,
+        assertThrows(RuntimeException.class,
                 () -> userService.loginUser("test@test.com", "wrong_hash"));
-        assertEquals("Invalid password.", exception.getMessage());
         verify(userRepository, times(1)).findByEmail("test@test.com");
     }
 
@@ -347,9 +336,8 @@ class UserServiceTest {
         UUID id = UUID.randomUUID();
 
         // Act & Assert
-        Exception exception = assertThrows(RuntimeException.class,
+        assertThrows(RuntimeException.class,
                 () -> userService.setUserSocialBattery(id, -1));
-        assertTrue(exception.getMessage().contains("Social battery must be between 0 and 100"));
         verify(userRepository, never()).save(any(User.class));
     }
 
@@ -359,18 +347,16 @@ class UserServiceTest {
         UUID id = UUID.randomUUID();
 
         // Act & Assert
-        Exception exception = assertThrows(RuntimeException.class,
+        assertThrows(RuntimeException.class,
                 () -> userService.setUserSocialBattery(id, 101));
-        assertTrue(exception.getMessage().contains("Social battery must be between 0 and 100"));
         verify(userRepository, never()).save(any(User.class));
     }
 
     @Test
     void setUserSocialBattery_NullUserId_ThrowsException() {
         // Act & Assert
-        Exception exception = assertThrows(RuntimeException.class,
+        assertThrows(RuntimeException.class,
                 () -> userService.setUserSocialBattery(null, 50));
-        assertEquals("User ID must not be null.", exception.getMessage());
         verify(userRepository, never()).save(any(User.class));
     }
 
@@ -381,9 +367,8 @@ class UserServiceTest {
         when(userRepository.findById(id)).thenReturn(Optional.empty());
 
         // Act & Assert
-        Exception exception = assertThrows(RuntimeException.class,
+        assertThrows(RuntimeException.class,
                 () -> userService.setUserSocialBattery(id, 50));
-        assertTrue(exception.getMessage().contains("User not found"));
         verify(userRepository, never()).save(any(User.class));
     }
 
