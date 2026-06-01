@@ -813,7 +813,8 @@ public class ChallengeService {
 
         // -------- cooldown check --------
         // Approximate the user's most recent participation by the largest
-        // startTime among the challenges they are already enrolled in.
+        // startTime among the challenges they are already enrolled in (ignoring future
+        // ones).
         // NOTE: this can be highly inefficient for many challenges!
         LocalDateTime now = LocalDateTime.now();
         LocalDateTime cooldownThreshold = now.minusSeconds(PARTICIPATION_COOLDOWN_SECONDS);
@@ -821,7 +822,7 @@ public class ChallengeService {
                 .filter(c -> c.getUsers() != null && c.getUsers().stream()
                         .anyMatch(p -> p.getId() != null && p.getId().equals(user.getId())))
                 .map(Challenge::getStartTime)
-                .filter(t -> t != null)
+                .filter(t -> t != null && !t.isAfter(now))
                 .max(Comparator.naturalOrder())
                 .orElse(null);
         if (lastParticipation != null && lastParticipation.isAfter(cooldownThreshold)) {
