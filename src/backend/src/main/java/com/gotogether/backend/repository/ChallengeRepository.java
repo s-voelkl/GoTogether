@@ -20,5 +20,4 @@ import java.util.UUID;
 @Repository
 public interface ChallengeRepository extends JpaRepository<Challenge, UUID> {
     // findById(UUID) is inherited for free
-
 }

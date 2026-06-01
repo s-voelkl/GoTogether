@@ -1,6 +1,10 @@
 -- deletion is important for backend test stability, but breaks unit tests!
+-- DELETE FROM challenge_users;
+-- DELETE FROM challenge_topics;
+-- DELETE FROM challenges;
 -- DELETE FROM user_interests;
 -- DELETE FROM users;
+-- DELETE FROM companies;
 -- DELETE FROM topics;
 
 -- topic examples
@@ -62,6 +66,63 @@ VALUES
   1000, 'Musterstraße', '42', '12345', 'Musterstadt', 52.52, 13.400),
   (gen_random_uuid(), 'TechCorp', '$2a$10$hashCompany2', 'contact@techcorp.example.com', 
   2000, 'Technostraße', '24', '54321', 'Technostadt', 48.85, 2.35)
+ON CONFLICT DO NOTHING;
+
+-- challenge examples
+INSERT INTO challenges (id, title, description, is_archived, start_time, latitude, longitude,
+  duration_minutes, currency, experience_points, min_social_battery, verification_code,
+  max_players, host_company_id)
+SELECT
+  gen_random_uuid(),
+  ch.title,
+  ch.description,
+  false,
+  ch.start_time,
+  ch.latitude,
+  ch.longitude,
+  ch.duration_minutes,
+  ch.currency,
+  ch.experience_points,
+  ch.min_social_battery,
+  ch.verification_code,
+  ch.max_players,
+  c.id
+FROM (
+  VALUES
+    ('Gemeinsam Wandern im Park', 'Lockere Wanderung durch den Stadtpark.',
+     NOW() + INTERVAL '1 day',  52.520, 13.405,  90, 50, 100, 20, '12345', 10,
+     'contact@gotogether.example.com'),
+    ('Kaffee & Kunst',            'Gemütliches Treffen mit Galeriebesuch.',
+     NOW() + INTERVAL '2 day',   52.515, 13.388,  60, 30,  50, 10, '23456',  6,
+     'contact@gotogether.example.com'),
+    ('Tech Meetup: Programmieren','Open-Space Coding Session.',
+     NOW() + INTERVAL '3 day',   48.852,  2.349, 120, 80, 150, 40, '34567',  0,
+     'contact@techcorp.example.com')
+) AS ch(title, description, start_time, latitude, longitude, duration_minutes, currency,
+        experience_points, min_social_battery, verification_code, max_players, host_email)
+JOIN companies c ON c.email = ch.host_email
+ON CONFLICT DO NOTHING;
+
+-- challenge_topics examples
+INSERT INTO challenge_topics (challenge_id, topic_id)
+SELECT ch.id, t.id
+FROM challenges ch
+CROSS JOIN topics t
+WHERE
+  (ch.title = 'Gemeinsam Wandern im Park'  AND t.name IN ('Wandern', 'Spazieren')) OR
+  (ch.title = 'Kaffee & Kunst'             AND t.name IN ('Kaffee trinken', 'Kunst')) OR
+  (ch.title = 'Tech Meetup: Programmieren' AND t.name IN ('Programmieren'))
+ON CONFLICT DO NOTHING;
+
+-- challenge_users examples 
+INSERT INTO challenge_users (challenge_id, user_id)
+SELECT ch.id, u.id
+FROM challenges ch
+CROSS JOIN users u
+WHERE
+  (ch.title = 'Gemeinsam Wandern im Park'  AND u.email IN ('alice@example.com', 'bob@example.com')) OR
+  (ch.title = 'Kaffee & Kunst'             AND u.email IN ('carol@example.com')) OR
+  (ch.title = 'Tech Meetup: Programmieren' AND u.email IN ('grace@example.com', 'carol@example.com'))
 ON CONFLICT DO NOTHING;
 
 -- 

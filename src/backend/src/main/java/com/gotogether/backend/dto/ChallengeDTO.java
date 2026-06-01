@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 @Data
@@ -39,5 +40,14 @@ public class ChallengeDTO {
 
     @Builder.Default
     private int maxPlayers = 0; // 0 means no limit
+
+    @Builder.Default
+    private int currentPlayers = 0;
+
+    @Builder.Default
+    private String hostCompanyName = "";
+
+    @Builder.Default
+    private List<UUID> topicIds = List.of();
 
 }

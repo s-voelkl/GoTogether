@@ -4,6 +4,7 @@ import com.gotogether.backend.dto.UserCreateDTO;
 import com.gotogether.backend.dto.UserDTO;
 import com.gotogether.backend.mapper.UserMapper;
 import com.gotogether.backend.model.Settings;
+import com.gotogether.backend.model.Topic;
 import com.gotogether.backend.model.User;
 import com.gotogether.backend.repository.UserRepository;
 import com.gotogether.backend.repository.TopicRepository;
@@ -54,7 +55,10 @@ class UserServiceTest {
         user.setSocialBattery(80);
         user.setCurrency(200);
         user.setExperiencePoints(xp);
-        user.setInterests(List.of(UUID.randomUUID()));
+        Topic topic = new Topic();
+        topic.setId(UUID.randomUUID());
+        topic.setName("sample");
+        user.setInterests(List.of(topic));
         user.setLastLogin(LocalDateTime.now());
         user.setSettings(new Settings());
         return user;
@@ -71,7 +75,7 @@ class UserServiceTest {
         assertEquals(user.getEmail(), dto.getEmail());
         assertEquals(user.getSocialBattery(), dto.getSocialBattery());
         assertEquals(user.getCurrency(), dto.getCurrency());
-        assertEquals(user.getInterests(), dto.getInterests());
+        assertEquals(user.getInterests().stream().map(Topic::getId).toList(), dto.getInterests());
         assertEquals(user.getLastLogin(), dto.getLastLogin());
         assertEquals(user.getSettings(), dto.getSettings());
     }
@@ -182,7 +186,7 @@ class UserServiceTest {
         when(userRepository.findById(mockUser.getId())).thenReturn(Optional.empty());
 
         // Act & Assert
-        Exception exception = assertThrows(RuntimeException.class, () -> userService.getUserById(mockUser.getId()));
+        assertThrows(RuntimeException.class, () -> userService.getUserById(mockUser.getId()));
         verify(userRepository, times(1)).findById(mockUser.getId());
     }
 
@@ -413,15 +417,19 @@ class UserServiceTest {
         User mockUser = new User("Test User", "hash", "test@test.com");
         mockUser.setId(UUID.randomUUID());
 
-        when(topicRepository.existsById(interestId1)).thenReturn(true);
-        when(topicRepository.existsById(interestId2)).thenReturn(true);
+        Topic t1 = new Topic();
+        t1.setId(interestId1);
+        Topic t2 = new Topic();
+        t2.setId(interestId2);
+        when(topicRepository.findById(interestId1)).thenReturn(Optional.of(t1));
+        when(topicRepository.findById(interestId2)).thenReturn(Optional.of(t2));
         when(userRepository.findById(mockUser.getId())).thenReturn(Optional.of(mockUser));
 
         // Act
         userService.setUserInterests(mockUser.getId(), interests);
 
         // Assert
-        assertEquals(interests, mockUser.getInterests());
+        assertEquals(interests, mockUser.getInterests().stream().map(Topic::getId).toList());
         verify(userRepository, times(1)).save(mockUser);
     }
 
@@ -453,7 +461,7 @@ class UserServiceTest {
         UUID interestId = UUID.randomUUID();
         List<UUID> interests = List.of(interestId);
 
-        when(topicRepository.existsById(interestId)).thenReturn(false);
+        when(topicRepository.findById(interestId)).thenReturn(Optional.empty());
 
         // Act & Assert
         Exception exception = assertThrows(RuntimeException.class,
@@ -470,7 +478,9 @@ class UserServiceTest {
         UUID interestId = UUID.randomUUID();
         List<UUID> interests = List.of(interestId);
 
-        when(topicRepository.existsById(interestId)).thenReturn(true);
+        Topic topic = new Topic();
+        topic.setId(interestId);
+        when(topicRepository.findById(interestId)).thenReturn(Optional.of(topic));
         when(userRepository.findById(userId)).thenReturn(Optional.empty());
 
         // Act & Assert

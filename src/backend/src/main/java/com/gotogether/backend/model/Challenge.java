@@ -1,14 +1,21 @@
 package com.gotogether.backend.model;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -61,13 +68,16 @@ public class Challenge {
     @Column(nullable = false)
     private int maxPlayers = 0; // 0 means no limit
 
-    // TODO: topics: join table n:m mit topics -> challenge_topics mit challenge_id
-    // und topic_id
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "challenge_topics", joinColumns = @JoinColumn(name = "challenge_id"), inverseJoinColumns = @JoinColumn(name = "topic_id"))
+    private List<Topic> topics = new ArrayList<>();
 
-    // TODO: host: durch Join Table host 1:n challenge -> challenge_host mit
-    // challenge_id und company_id
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "host_company_id", nullable = false)
+    private Company host;
 
-    // TODO: users: Join Table n user : m challenges -> challenge_users mit
-    // challenge_id und user_id
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "challenge_users", joinColumns = @JoinColumn(name = "challenge_id"), inverseJoinColumns = @JoinColumn(name = "user_id"))
+    private List<User> users = new ArrayList<>();
 
 }

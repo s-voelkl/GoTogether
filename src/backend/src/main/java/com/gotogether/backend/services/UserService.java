@@ -2,6 +2,7 @@ package com.gotogether.backend.services;
 
 import com.gotogether.backend.dto.UserDTO;
 import com.gotogether.backend.mapper.UserMapper;
+import com.gotogether.backend.model.Topic;
 import com.gotogether.backend.model.User;
 import com.gotogether.backend.repository.UserRepository;
 import com.gotogether.backend.repository.CompanyRepository;
@@ -128,17 +129,18 @@ public class UserService {
         // filter out duplicates (use Collectors.toList for broader Java compatibility)
         interestIds = interestIds.stream().distinct().collect(Collectors.toList());
 
-        // validate topic existence
+        // validate topic existence and resolve to entities
+        List<Topic> topics = new java.util.ArrayList<>(interestIds.size());
         for (UUID interestId : interestIds) {
-            if (!topicRepo.existsById(interestId)) {
-                throw new RuntimeException("Interest not found: " + interestId);
-            }
+            Topic topic = topicRepo.findById(interestId)
+                    .orElseThrow(() -> new RuntimeException("Interest not found: " + interestId));
+            topics.add(topic);
         }
 
         User user = repo.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found: " + userId));
 
-        user.setInterests(interestIds);
+        user.setInterests(topics);
         repo.save(user);
         return interestIds;
     }

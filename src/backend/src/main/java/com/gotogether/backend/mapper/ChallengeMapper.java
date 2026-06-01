@@ -1,6 +1,9 @@
 package com.gotogether.backend.mapper;
 
 import lombok.RequiredArgsConstructor;
+
+import java.util.List;
+
 import org.springframework.stereotype.Component;
 
 import com.gotogether.backend.dto.ChallengeDTO;
@@ -26,6 +29,11 @@ public class ChallengeMapper {
                 // verificationCode: intentionally not included in the DTO, should not be
                 // exposed to the client
                 .maxPlayers(challenge.getMaxPlayers())
+                .currentPlayers(challenge.getUsers().size())
+                .hostCompanyName(challenge.getHost() != null ? challenge.getHost().getName() : "")
+                .topicIds(challenge.getTopics() != null
+                        ? challenge.getTopics().stream().map(t -> t.getId()).toList()
+                        : List.of())
                 .build();
     }
 
