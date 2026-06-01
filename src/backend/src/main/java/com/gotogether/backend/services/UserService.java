@@ -1,8 +1,11 @@
 package com.gotogether.backend.services;
 
+import com.gotogether.backend.dto.UserDTO;
+import com.gotogether.backend.mapper.UserMapper;
 import com.gotogether.backend.model.User;
 import com.gotogether.backend.repository.UserRepository;
 import com.gotogether.backend.repository.TopicRepository;
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.validator.routines.EmailValidator;
 import org.springframework.stereotype.Service;
 
@@ -11,23 +14,20 @@ import java.util.stream.Collectors;
 import java.util.UUID;
 
 @Service
+@RequiredArgsConstructor
 public class UserService {
 
     private final UserRepository repo;
     private final TopicRepository topicRepo;
+    private final UserMapper userMapper;
 
-    public UserService(UserRepository repo, TopicRepository topicRepo) {
-        this.repo = repo;
-        this.topicRepo = topicRepo;
-    }
-
-    public User getUserById(UUID id) {
-        return repo.findById(id)
+    public UserDTO getUserById(UUID id) {
+        return repo.findById(id).map(userMapper::toDTO)
                 .orElseThrow(() -> new RuntimeException("User not found"));
     }
 
-    public List<User> getAllUsers() {
-        return repo.findAll();
+    public List<UserDTO> getAllUsers() {
+        return repo.findAll().stream().map(userMapper::toDTO).toList();
     }
 
     public UUID createUser(String name, String password, String email) {
