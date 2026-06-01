@@ -68,6 +68,8 @@ public class ChallengeService {
     /** Default page size when the caller does not specify a limit. */
     private static final int DEFAULT_RESULT_LIMIT = 10;
 
+    private static final int DEFAULT_XP_REWARD_BASE = 100;
+
     /**
      * Maximum distance in meters between the user's current location and the
      * challenge location for a participation to be accepted.
@@ -432,18 +434,53 @@ public class ChallengeService {
     /**
      * Determines the experience points a challenge should award.
      *
-     * <p>
-     * The final implementation is expected to derive the value from the
-     * challenge's properties (duration, difficulty, topics, ...). The current
-     * placeholder returns a constant value so the rest of the create flow can
-     * be implemented and tested independently.
-     *
+     * The calculation is based on the following factors:
+     * <ul>
+     * <li>Base reward: a fixed amount of {@value #DEFAULT_XP_REWARD_BASE} XP.</li>
+     * <li>Currency reward: adds linearly (1 XP per currency unit).</li>
+     * <li>Social battery requirement: every point of required social battery adds
+     * 0.5 XP.</li>
+     * <li>Duration: starting from the default duration, apply a 1.5x bonus for each
+     * additional default duration, up to a maximum of 2.5x total.</li>
+     * <li>Max players: apply a 1.05x bonus per max player, up to a maximum of 1.5x
+     * total.</li>
+     * </ul>
+     * 
+     * 
+     * @param durationMinutes  the challenge duration in minutes; longer challenges
+     *                         are rewarded with more experience points
+     * @param currencyReward   the amount of currency rewarded by the challenge
+     * @param minSocialBattery the minimum social battery required for the challenge
+     * @param topics           the list of topics associated with the challenge
+     * @param maxPlayers       the maximum number of players allowed in the
+     *                         challenge
      * @return the experience points to assign to the challenge
      */
-    int calculateExperiencePoints() {
-        // TODO: replace with a real heuristic based on the challenge
-        // properties (duration, social-battery cost, topics, ...).
-        return 100;
+    int calculateExperiencePoints(int durationMinutes, int currencyReward, int minSocialBattery, List<Topic> topics,
+            int maxPlayers) {
+        // base reward
+        int xp = DEFAULT_XP_REWARD_BASE;
+
+        // currency reward adds linearly (1 XP per currency unit)
+        xp += currencyReward;
+        // every point of social Battery adds 0.5 xp on top.
+        xp += minSocialBattery / 2;
+
+        // multipliers:
+        // starting from the default duration.
+        // apply 1.5x bonus for each additional default duration, max 2.5x total.
+        if (durationMinutes > DEFAULT_DURATION_MINUTES) {
+            xp *= 1 + 0.5 * Math.min(durationMinutes - DEFAULT_DURATION_MINUTES, 3 * DEFAULT_DURATION_MINUTES)
+                    / DEFAULT_DURATION_MINUTES;
+        }
+        // apply 1.05 factor bonus per maxPlayer, max 1.5
+        if (maxPlayers > 2) {
+            xp *= 1 + 0.05 * Math.min(maxPlayers, 10);
+        }
+        // 1.1 factor bonus per topic, max 1.5x.
+        xp *= 1 + (topics == null ? 0 : Math.min(topics.size(), 5) * 0.1);
+
+        return xp;
     }
 
     /**
@@ -603,7 +640,8 @@ public class ChallengeService {
             topics.add(topic);
         }
 
-        int experiencePoints = calculateExperiencePoints();
+        int experiencePoints = calculateExperiencePoints(
+                finalDuration, finalCurrency, finalMinSocialBattery, topics, finalMaxPlayers);
         String verificationCode = generateVerificationCode();
 
         // -------- transfer currency from company to challenge --------

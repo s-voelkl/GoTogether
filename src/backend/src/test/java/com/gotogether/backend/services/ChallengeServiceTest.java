@@ -475,8 +475,8 @@ class ChallengeServiceTest {
         assertEquals("Sunday morning run", saved.getDescription());
         assertEquals(90, saved.getDurationMinutes());
         assertEquals(200, saved.getCurrency());
-        assertEquals(100, saved.getExperiencePoints()); // static placeholder
         assertEquals(30, saved.getMinSocialBattery());
+        // assertEquals(___, saved.getExperiencePoints());
         assertEquals(8, saved.getMaxPlayers());
         assertEquals(52.6, saved.getLocation().getLatitude());
         assertEquals(13.5, saved.getLocation().getLongitude());
@@ -693,6 +693,60 @@ class ChallengeServiceTest {
 
         assertThrows(RuntimeException.class, () -> challengeService.deleteChallenge(
                 "host@example.com", "pw", missing));
+    }
+
+    // -------------------- calculateExperiencePoints --------------------
+
+    /**
+     * Expected values are derived from the documented formula in
+     * {@link ChallengeService#calculateExperiencePoints}:
+     * <ul>
+     * <li>base = 100, +currency, +socialBattery/2 (int division)</li>
+     * <li>duration multiplier (only if duration > 120): 1 + 0.5 * min(d-120,
+     * 360)/120</li>
+     * <li>maxPlayers multiplier (only if &gt; 2): 1 + 0.05 * min(maxPlayers,
+     * 10)</li>
+     * <li>topics multiplier: 1 + min(size, 5) * 0.1</li>
+     * </ul>
+     * Each multiplication assigns back to {@code int}, so intermediate
+     * truncation matters.
+     */
+    @org.junit.jupiter.params.ParameterizedTest(name = "[{index}] dur={0}, cur={1}, sb={2}, topics={3}, mp={4} -> {5}")
+    @org.junit.jupiter.params.provider.CsvSource({
+            // duration, currency, socialBattery, topicCount, maxPlayers, expectedXp
+            "  60,   0,  0, 0,  0, 100", // base only
+            " 120,  50, 20, 0,  0, 160", // additive only, duration at threshold
+            " 240,   0,  0, 0,  0, 150", // duration bonus x1.5
+            "  60, 100, 40, 0,  5, 275", // additive + maxPlayers x1.25
+            " 600,   0,  0, 3,  0, 325", // duration capped x2.5 + 3 topics x1.3
+            "  60,   0,  0, 5, 20, 225", // maxPlayers capped x1.5 + topics capped x1.5
+            "  60,   0,  1, 0,  0, 100", // socialBattery=1 -> int division yields 0
+    })
+    void calculateExperiencePoints_VariousInputs_ReturnsExpectedXp(
+            int durationMinutes,
+            int currencyReward,
+            int minSocialBattery,
+            int topicCount,
+            int maxPlayers,
+            int expectedXp) {
+        List<Topic> topics = new ArrayList<>();
+        for (int i = 0; i < topicCount; i++) {
+            Topic t = new Topic();
+            t.setId(UUID.randomUUID());
+            t.setName("topic" + i);
+            topics.add(t);
+        }
+
+        int xp = challengeService.calculateExperiencePoints(
+                durationMinutes, currencyReward, minSocialBattery, topics, maxPlayers);
+
+        assertEquals(expectedXp, xp);
+    }
+
+    @Test
+    void calculateExperiencePoints_NullTopics_AppliesNoTopicMultiplier() {
+        int xp = challengeService.calculateExperiencePoints(60, 50, 0, null, 0);
+        assertEquals(150, xp);
     }
 
     // -------------------- participateInChallenge --------------------
