@@ -2,6 +2,7 @@ package com.gotogether.backend.services;
 
 import com.gotogether.backend.model.User;
 import com.gotogether.backend.repository.UserRepository;
+import com.gotogether.backend.repository.CompanyRepository;
 import com.gotogether.backend.repository.TopicRepository;
 import org.apache.commons.validator.routines.EmailValidator;
 import org.springframework.stereotype.Service;
@@ -15,10 +16,12 @@ public class UserService {
 
     private final UserRepository repo;
     private final TopicRepository topicRepo;
+    private final CompanyRepository companyRepo;
 
-    public UserService(UserRepository repo, TopicRepository topicRepo) {
+    public UserService(UserRepository repo, TopicRepository topicRepo, CompanyRepository companyRepo) {
         this.repo = repo;
         this.topicRepo = topicRepo;
+        this.companyRepo = companyRepo;
     }
 
     public User getUserById(UUID id) {
@@ -31,9 +34,13 @@ public class UserService {
     }
 
     public UUID createUser(String name, String password, String email) {
-        // email must be unique
+        // email must be unique in both users and companies
         if (repo.existsByEmail(email.trim().toLowerCase())) {
             throw new RuntimeException("Email already exists: " + email);
+        }
+
+        if (companyRepo.existsByEmail(email.trim().toLowerCase())) {
+            throw new RuntimeException("Email already exists at companies: " + email);
         }
 
         // email validation
@@ -92,7 +99,7 @@ public class UserService {
         return user.getId();
     }
 
-    public void setUserSocialBattery(UUID userId, int socialBattery) {
+    public int setUserSocialBattery(UUID userId, int socialBattery) {
         if (socialBattery < 0 || socialBattery > 100) {
             throw new RuntimeException("Social battery must be between 0 and 100: " + socialBattery);
         }
@@ -106,6 +113,7 @@ public class UserService {
 
         user.setSocialBattery(socialBattery);
         repo.save(user);
+        return socialBattery;
     }
 
     public List<UUID> setUserInterests(UUID userId, List<UUID> interestIds) {

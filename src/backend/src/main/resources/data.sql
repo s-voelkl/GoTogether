@@ -59,7 +59,9 @@ INSERT INTO companies (id, name, password, email, currency, street, house_number
   zip_code, city, latitude, longitude)
 VALUES
   (gen_random_uuid(), 'GoTogether', '$2a$10$hashCompany1', 'contact@gotogether.example.com', 
-  1000, 'Musterstraße', '42', '12345', 'Musterstadt', 52.52, 13.400)
+  1000, 'Musterstraße', '42', '12345', 'Musterstadt', 52.52, 13.400),
+  (gen_random_uuid(), 'TechCorp', '$2a$10$hashCompany2', 'contact@techcorp.example.com', 
+  2000, 'Technostraße', '24', '54321', 'Technostadt', 48.85, 2.35)
 ON CONFLICT DO NOTHING;
 
 -- 
