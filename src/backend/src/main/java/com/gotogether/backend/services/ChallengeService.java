@@ -1,17 +1,29 @@
 package com.gotogether.backend.services;
 
+import com.gotogether.backend.dto.ChallengeCreatedDTO;
 import com.gotogether.backend.dto.ChallengeDTO;
 import com.gotogether.backend.dto.ChallengeSortAttribute;
 import com.gotogether.backend.dto.ChallengeVerificationDTO;
 import com.gotogether.backend.mapper.ChallengeMapper;
 import com.gotogether.backend.model.Challenge;
+import com.gotogether.backend.model.Company;
+import com.gotogether.backend.model.Location;
+import com.gotogether.backend.model.Topic;
 import com.gotogether.backend.repository.ChallengeRepository;
+import com.gotogether.backend.repository.CompanyRepository;
+import com.gotogether.backend.repository.TopicRepository;
 
 import lombok.RequiredArgsConstructor;
 
+import net.glxn.qrgen.javase.QRCode;
+
 import org.springframework.stereotype.Service;
 
+import java.io.ByteArrayOutputStream;
+import java.security.SecureRandom;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Base64;
 import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
@@ -21,8 +33,28 @@ import java.util.UUID;
 public class ChallengeService {
 
     private final ChallengeRepository repo;
+    private final CompanyRepository companyRepo;
+    private final TopicRepository topicRepo;
 
     private final ChallengeMapper challengeMapper;
+
+    /** Default duration applied when the caller does not supply one. */
+    private static final int DEFAULT_DURATION_MINUTES = 120;
+
+    /** Default currency reward funded by the company when not specified. */
+    private static final int DEFAULT_CURRENCY_REWARD = 100;
+
+    /** Length of the alphanumeric verification code (matches the entity column). */
+    private static final int VERIFICATION_CODE_LENGTH = 5;
+
+    /** Character set used to build the verification code. */
+    private static final String VERIFICATION_CODE_ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+
+    /** Edge length (in pixels) of the rendered QR code PNG. */
+    private static final int QR_CODE_SIZE_PX = 250;
+
+    /** Cryptographically strong RNG for generating verification codes. */
+    private static final SecureRandom RNG = new SecureRandom();
 
     /** Mean Earth radius in kilometers used by the Haversine formula. */
     private static final int EARTH_RADIUS_KM = 6371;
@@ -379,6 +411,271 @@ public class ChallengeService {
         } else {
             throw new RuntimeException("Invalid verification code");
         }
+    }
+
+    /**
+     * Determines the experience points a challenge should award.
+     *
+     * <p>
+     * The final implementation is expected to derive the value from the
+     * challenge's properties (duration, difficulty, topics, ...). The current
+     * placeholder returns a constant value so the rest of the create flow can
+     * be implemented and tested independently.
+     *
+     * @return the experience points to assign to the challenge
+     */
+    int calculateExperiencePoints() {
+        // TODO: replace with a real heuristic based on the challenge
+        // properties (duration, social-battery cost, topics, ...).
+        return 100;
+    }
+
+    /**
+     * Generates a random alphanumeric verification code of length
+     * {@value #VERIFICATION_CODE_LENGTH} using a cryptographically strong RNG.
+     *
+     * @return the newly generated code (upper-case letters and digits)
+     */
+    String generateVerificationCode() {
+        StringBuilder sb = new StringBuilder(VERIFICATION_CODE_LENGTH);
+        for (int i = 0; i < VERIFICATION_CODE_LENGTH; i++) {
+            sb.append(VERIFICATION_CODE_ALPHABET.charAt(
+                    RNG.nextInt(VERIFICATION_CODE_ALPHABET.length())));
+        }
+        return sb.toString();
+    }
+
+    /**
+     * Renders the supplied payload as a QR code and returns it as a
+     * Base64-encoded PNG image suitable for embedding via a {@code data:} URL
+     * or returning inside a JSON response.
+     *
+     * <p>
+     * Uses the <a href="https://github.com/kenglxn/QRGen">QRGen</a> library,
+     * a thin builder-style wrapper around ZXing. The fluent chain is:
+     * <ol>
+     * <li>{@code QRCode.from(text)} — create a builder for the payload.</li>
+     * <li>{@code .withSize(w, h)} — set the rendered edge length in pixels.</li>
+     * <li>{@code .stream()} — render in-memory into a
+     * {@link ByteArrayOutputStream}; PNG is QRGen's default output format,
+     * so no explicit {@code .to(...)} call is required.</li>
+     * </ol>
+     *
+     * @param payload the text to encode into the QR code
+     * @return the Base64-encoded PNG bytes of the rendered QR code
+     */
+    String generateQrCodePngBase64(String payload) {
+        ByteArrayOutputStream baos = QRCode.from(payload)
+                .withSize(QR_CODE_SIZE_PX, QR_CODE_SIZE_PX)
+                .stream();
+        return Base64.getEncoder().encodeToString(baos.toByteArray());
+    }
+
+    /**
+     * Creates a new challenge on behalf of an authenticated company.
+     *
+     * <p>
+     * The company is authenticated via {@code companyEmail} /
+     * {@code companyPassword}. The configured currency reward is transferred
+     * from the company's balance to the challenge; the call fails (and no
+     * state is mutated) when the company has insufficient funds.
+     *
+     * <p>
+     * Optional parameters fall back to sensible defaults:
+     * <ul>
+     * <li>{@code description} → {@code title} when blank</li>
+     * <li>{@code durationMinutes} → {@value #DEFAULT_DURATION_MINUTES}</li>
+     * <li>{@code latitude} / {@code longitude} → the company's location</li>
+     * <li>{@code currency} → {@value #DEFAULT_CURRENCY_REWARD}</li>
+     * <li>{@code minSocialBattery} → 0</li>
+     * <li>{@code maxPlayers} → 0 (unlimited)</li>
+     * </ul>
+     *
+     * @return the new challenge's id and verification code
+     * @throws RuntimeException on validation errors, missing references or
+     *                          insufficient company funds
+     */
+    public ChallengeCreatedDTO createChallenge(
+            String companyEmail,
+            String companyPassword,
+            String title,
+            String description,
+            LocalDateTime startTime,
+            Integer durationMinutes,
+            Double latitude,
+            Double longitude,
+            Integer currency,
+            Integer minSocialBattery,
+            Integer maxPlayers,
+            List<UUID> topicIds) {
+
+        // -------- authenticate company --------
+        if (companyEmail == null || companyEmail.trim().isEmpty()) {
+            throw new RuntimeException("Company email must not be empty.");
+        }
+        if (companyPassword == null || companyPassword.trim().isEmpty()) {
+            throw new RuntimeException("Company password must not be empty.");
+        }
+
+        Company company = companyRepo.findByEmail(companyEmail.trim().toLowerCase());
+        if (company == null) {
+            throw new RuntimeException("No company found with email: " + companyEmail);
+        }
+        if (!company.getPassword().equals(companyPassword)) {
+            throw new RuntimeException("Invalid company credentials.");
+        }
+
+        // -------- validate required inputs --------
+        if (title == null || title.trim().isEmpty()) {
+            throw new RuntimeException("Title must not be empty.");
+        }
+        if (startTime == null) {
+            throw new RuntimeException("Start time must be provided.");
+        }
+        if (topicIds == null || topicIds.isEmpty()) {
+            throw new RuntimeException("At least one topic must be provided.");
+        }
+
+        // -------- apply defaults --------
+        // use title as description when description is blank
+        String finalDescription = (description == null || description.trim().isEmpty())
+                ? title.trim()
+                : description.trim();
+        // use default duration if not provided
+        int finalDuration = (durationMinutes == null || durationMinutes <= 0)
+                ? DEFAULT_DURATION_MINUTES
+                : durationMinutes;
+        // use small default currency if not provided
+        int finalCurrency = (currency == null) ? DEFAULT_CURRENCY_REWARD : currency;
+        if (finalCurrency < 0) {
+            throw new RuntimeException("Currency reward must be non-negative: " + finalCurrency);
+        }
+        int finalMinSocialBattery = (minSocialBattery == null) ? 0 : minSocialBattery;
+        if (finalMinSocialBattery < 0 || finalMinSocialBattery > 100) {
+            throw new RuntimeException(
+                    "minSocialBattery must be between 0 and 100: " + finalMinSocialBattery);
+        }
+        int finalMaxPlayers = (maxPlayers == null || maxPlayers < 0) ? 0 : maxPlayers;
+
+        // -------- resolve location (fallback to company) --------
+        Location location;
+        if (latitude == null || longitude == null) {
+            if (company.getLocation() == null) {
+                throw new RuntimeException(
+                        "Location not provided and host company has no location set.");
+            }
+            location = new Location(
+                    company.getLocation().getLatitude(),
+                    company.getLocation().getLongitude());
+        } else {
+            if (latitude < -90 || latitude > 90) {
+                throw new RuntimeException(
+                        "Latitude must be between -90 and 90: " + latitude);
+            }
+            if (longitude < -180 || longitude > 180) {
+                throw new RuntimeException(
+                        "Longitude must be between -180 and 180: " + longitude);
+            }
+            location = new Location(latitude, longitude);
+        }
+
+        // -------- resolve topics --------
+        List<Topic> topics = new ArrayList<>(topicIds.size());
+        for (UUID topicId : topicIds) {
+            Topic topic = topicRepo.findById(topicId)
+                    .orElseThrow(() -> new RuntimeException("Topic not found: " + topicId));
+            topics.add(topic);
+        }
+
+        int experiencePoints = calculateExperiencePoints();
+        String verificationCode = generateVerificationCode();
+
+        // -------- transfer currency from company to challenge --------
+        if (company.getCurrency() < finalCurrency) {
+            throw new RuntimeException(
+                    "Company has insufficient currency: has " + company.getCurrency()
+                            + ", needs " + finalCurrency);
+        }
+        company.setCurrency(company.getCurrency() - finalCurrency);
+        companyRepo.save(company);
+
+        // -------- build and persist the challenge --------
+        Challenge challenge = new Challenge();
+        challenge.setTitle(title.trim());
+        challenge.setDescription(finalDescription);
+        challenge.setArchived(false);
+        challenge.setStartTime(startTime);
+        challenge.setLocation(location);
+        challenge.setDurationMinutes(finalDuration);
+        challenge.setCurrency(finalCurrency);
+        challenge.setExperiencePoints(experiencePoints);
+        challenge.setMinSocialBattery(finalMinSocialBattery);
+        challenge.setVerificationCode(verificationCode);
+        challenge.setMaxPlayers(finalMaxPlayers);
+        challenge.setHost(company);
+        challenge.setTopics(topics);
+        challenge.setUsers(new ArrayList<>());
+
+        Challenge saved = repo.save(challenge);
+
+        return ChallengeCreatedDTO.builder()
+                .id(saved.getId())
+                .verificationCode(saved.getVerificationCode())
+                .qrCodePngBase64(generateQrCodePngBase64(saved.getVerificationCode()))
+                .build();
+    }
+
+    /**
+     * Deletes a challenge and refunds its currency reward to the hosting
+     * company (when the company still exists).
+     *
+     * <p>
+     * The hosting company is authenticated via the supplied credentials and
+     * must match the challenge's host. If the host record has been removed in
+     * the meantime, the challenge is still deleted but no refund is issued.
+     *
+     * @param companyEmail    email of the authenticated company
+     * @param companyPassword password of the authenticated company
+     * @param challengeId     id of the challenge to delete
+     * @return the id of the deleted challenge
+     * @throws RuntimeException on authentication errors or when the challenge
+     *                          does not exist / is not hosted by the company
+     */
+    public UUID deleteChallenge(String companyEmail, String companyPassword, UUID challengeId) {
+        if (companyEmail == null || companyEmail.trim().isEmpty()) {
+            throw new RuntimeException("Company email must not be empty.");
+        }
+        if (companyPassword == null || companyPassword.trim().isEmpty()) {
+            throw new RuntimeException("Company password must not be empty.");
+        }
+        if (challengeId == null) {
+            throw new RuntimeException("Challenge id must be provided.");
+        }
+
+        Company company = companyRepo.findByEmail(companyEmail.trim().toLowerCase());
+        if (company == null) {
+            throw new RuntimeException("No company found with email: " + companyEmail);
+        }
+        if (!company.getPassword().equals(companyPassword)) {
+            throw new RuntimeException("Invalid company credentials.");
+        }
+
+        Challenge challenge = repo.findById(challengeId)
+                .orElseThrow(() -> new RuntimeException("Challenge not found: " + challengeId));
+
+        if (challenge.getHost() == null || !challenge.getHost().getId().equals(company.getId())) {
+            throw new RuntimeException("Challenge is not hosted by the authenticated company.");
+        }
+
+        // Refund the challenge's currency to the host company when it still
+        // exists in the database (re-read to avoid acting on a stale entity).
+        companyRepo.findById(company.getId()).ifPresent(refundTarget -> {
+            refundTarget.setCurrency(refundTarget.getCurrency() + challenge.getCurrency());
+            companyRepo.save(refundTarget);
+        });
+
+        repo.delete(challenge);
+        return challengeId;
     }
 
 }

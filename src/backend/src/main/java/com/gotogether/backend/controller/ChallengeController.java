@@ -1,7 +1,9 @@
 package com.gotogether.backend.controller;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -9,6 +11,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.gotogether.backend.dto.ChallengeCreateDTO;
+import com.gotogether.backend.dto.ChallengeAuthenticateDTO;
 import com.gotogether.backend.dto.ChallengeFilterDTO;
 import com.gotogether.backend.services.ChallengeService;
 
@@ -91,6 +95,62 @@ public class ChallengeController {
                     filter.getLimit() == null ? 0 : filter.getLimit()));
         } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+    }
+
+    /**
+     * Creates a new challenge on behalf of an authenticated company.
+     *
+     * <p>
+     * The company is authenticated via {@code companyEmail} and
+     * {@code companyPassword} in the request body. On success the configured
+     * currency reward is transferred from the company to the new challenge
+     * and a {@link com.gotogether.backend.dto.ChallengeCreatedDTO} is
+     * returned, containing the new id and the verification code.
+     *
+     * @param dto the challenge creation payload
+     * @return {@code 201 CREATED} with the created challenge response, or
+     *         {@code 400 BAD REQUEST} with an error message on validation or
+     *         authentication errors
+     */
+    @PostMapping
+    public ResponseEntity<?> createChallenge(@RequestBody ChallengeCreateDTO dto) {
+        try {
+            return ResponseEntity.status(HttpStatus.CREATED).body(service.createChallenge(
+                    dto.getCompanyEmail(),
+                    dto.getCompanyPassword(),
+                    dto.getTitle(),
+                    dto.getDescription(),
+                    dto.getStartTime(),
+                    dto.getDurationMinutes(),
+                    dto.getLatitude(),
+                    dto.getLongitude(),
+                    dto.getCurrency(),
+                    dto.getMinSocialBattery(),
+                    dto.getMaxPlayers(),
+                    dto.getTopicIds()));
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
+    }
+
+    /**
+     * Deletes a challenge and refunds its currency reward to the hosting
+     * company (when the company still exists).
+     *
+     * @param id  the id of the challenge to delete (path variable)
+     * @param dto the company credentials in the request body
+     * @return {@code 200 OK} with the id of the deleted challenge, or
+     *         {@code 400 BAD REQUEST} with an error message on authentication
+     *         or lookup errors
+     */
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteChallenge(@PathVariable UUID id, @RequestBody ChallengeAuthenticateDTO dto) {
+        try {
+            return ResponseEntity.ok(service.deleteChallenge(
+                    dto.getCompanyEmail(), dto.getCompanyPassword(), id));
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
 

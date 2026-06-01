@@ -1,5 +1,6 @@
 package com.gotogether.backend.services;
 
+import com.gotogether.backend.dto.ChallengeCreatedDTO;
 import com.gotogether.backend.dto.ChallengeDTO;
 import com.gotogether.backend.dto.ChallengeSortAttribute;
 import com.gotogether.backend.dto.ChallengeVerificationDTO;
@@ -7,10 +8,14 @@ import com.gotogether.backend.mapper.ChallengeMapper;
 import com.gotogether.backend.model.Challenge;
 import com.gotogether.backend.model.Company;
 import com.gotogether.backend.model.Location;
+import com.gotogether.backend.model.Topic;
 import com.gotogether.backend.repository.ChallengeRepository;
+import com.gotogether.backend.repository.CompanyRepository;
+import com.gotogether.backend.repository.TopicRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
@@ -30,6 +35,12 @@ class ChallengeServiceTest {
 
     @Mock
     private ChallengeRepository challengeRepository;
+
+    @Mock
+    private CompanyRepository companyRepository;
+
+    @Mock
+    private TopicRepository topicRepository;
 
     @Spy
     private ChallengeMapper challengeMapper;
@@ -402,5 +413,280 @@ class ChallengeServiceTest {
 
         // MAX_RESULT_LIMIT = 100
         assertEquals(100, result.size());
+    }
+
+    // -------------------- createChallenge --------------------
+
+    private Company buildAuthCompany(String email, String password, int currency) {
+        Company company = new Company();
+        company.setId(UUID.randomUUID());
+        company.setName("HostCo");
+        company.setEmail(email);
+        company.setPassword(password);
+        company.setCurrency(currency);
+        company.setLocation(new Location(BERLIN_LAT, BERLIN_LON));
+        return company;
+    }
+
+    private Topic buildTopic(String name) {
+        Topic t = new Topic();
+        t.setId(UUID.randomUUID());
+        t.setName(name);
+        return t;
+    }
+
+    @Test
+    void createChallenge_ValidInputs_PersistsChallengeAndReturnsDTO() {
+        Company company = buildAuthCompany("host@example.com", "pw", 500);
+        Topic topic = buildTopic("Wandern");
+        when(companyRepository.findByEmail("host@example.com")).thenReturn(company);
+        when(topicRepository.findById(topic.getId())).thenReturn(Optional.of(topic));
+        when(challengeRepository.save(any(Challenge.class))).thenAnswer(inv -> {
+            Challenge c = inv.getArgument(0);
+            c.setId(UUID.randomUUID());
+            return c;
+        });
+
+        ChallengeCreatedDTO result = challengeService.createChallenge(
+                "host@example.com", "pw",
+                "Trail Run", "Sunday morning run",
+                LocalDateTime.of(2026, 7, 1, 9, 0),
+                90, 52.6, 13.5, 200, 30, 8,
+                List.of(topic.getId()));
+
+        assertNotNull(result);
+        assertNotNull(result.getId());
+        assertNotNull(result.getVerificationCode());
+        assertEquals(5, result.getVerificationCode().length());
+        assertNotNull(result.getQrCodePngBase64());
+        // PNG magic bytes "\x89PNG" -> base64 prefix "iVBORw0KGgo"
+        assertTrue(result.getQrCodePngBase64().startsWith("iVBORw0KGgo"),
+                "QR code output should be a Base64-encoded PNG");
+
+        ArgumentCaptor<Challenge> captor = ArgumentCaptor.forClass(Challenge.class);
+        verify(challengeRepository).save(captor.capture());
+        Challenge saved = captor.getValue();
+        assertEquals("Trail Run", saved.getTitle());
+        assertEquals("Sunday morning run", saved.getDescription());
+        assertEquals(90, saved.getDurationMinutes());
+        assertEquals(200, saved.getCurrency());
+        assertEquals(100, saved.getExperiencePoints()); // static placeholder
+        assertEquals(30, saved.getMinSocialBattery());
+        assertEquals(8, saved.getMaxPlayers());
+        assertEquals(52.6, saved.getLocation().getLatitude());
+        assertEquals(13.5, saved.getLocation().getLongitude());
+        assertEquals(company, saved.getHost());
+        assertEquals(1, saved.getTopics().size());
+
+        // Currency was withdrawn from the company.
+        assertEquals(300, company.getCurrency());
+        verify(companyRepository).save(company);
+    }
+
+    @Test
+    void createChallenge_BlankDescription_DefaultsToTitle() {
+        Company company = buildAuthCompany("host@example.com", "pw", 500);
+        Topic topic = buildTopic("Kunst");
+        when(companyRepository.findByEmail("host@example.com")).thenReturn(company);
+        when(topicRepository.findById(topic.getId())).thenReturn(Optional.of(topic));
+        when(challengeRepository.save(any(Challenge.class))).thenAnswer(inv -> inv.getArgument(0));
+
+        challengeService.createChallenge(
+                "host@example.com", "pw",
+                "Picnic", "   ",
+                LocalDateTime.of(2026, 7, 1, 9, 0),
+                null, null, null, null, null, null,
+                List.of(topic.getId()));
+
+        ArgumentCaptor<Challenge> captor = ArgumentCaptor.forClass(Challenge.class);
+        verify(challengeRepository).save(captor.capture());
+        assertEquals("Picnic", captor.getValue().getDescription());
+    }
+
+    @Test
+    void createChallenge_OmittedOptionalFields_UsesDefaults() {
+        Company company = buildAuthCompany("host@example.com", "pw", 500);
+        Topic topic = buildTopic("Lesen");
+        when(companyRepository.findByEmail("host@example.com")).thenReturn(company);
+        when(topicRepository.findById(topic.getId())).thenReturn(Optional.of(topic));
+        when(challengeRepository.save(any(Challenge.class))).thenAnswer(inv -> inv.getArgument(0));
+
+        challengeService.createChallenge(
+                "host@example.com", "pw",
+                "Bookclub", null,
+                LocalDateTime.of(2026, 7, 1, 9, 0),
+                null, null, null, null, null, null,
+                List.of(topic.getId()));
+
+        ArgumentCaptor<Challenge> captor = ArgumentCaptor.forClass(Challenge.class);
+        verify(challengeRepository).save(captor.capture());
+        Challenge saved = captor.getValue();
+        assertEquals(120, saved.getDurationMinutes());
+        assertEquals(100, saved.getCurrency());
+        assertEquals(0, saved.getMinSocialBattery());
+        assertEquals(0, saved.getMaxPlayers());
+        // location falls back to company location
+        assertEquals(BERLIN_LAT, saved.getLocation().getLatitude());
+        assertEquals(BERLIN_LON, saved.getLocation().getLongitude());
+        // company funded the default 100 reward
+        assertEquals(400, company.getCurrency());
+    }
+
+    @Test
+    void createChallenge_InvalidCredentials_ThrowsRuntimeException() {
+        Company company = buildAuthCompany("host@example.com", "pw", 500);
+        when(companyRepository.findByEmail("host@example.com")).thenReturn(company);
+
+        assertThrows(RuntimeException.class, () -> challengeService.createChallenge(
+                "host@example.com", "wrong",
+                "T", "D", LocalDateTime.now(), null, null, null, null, null, null,
+                List.of(UUID.randomUUID())));
+        verify(challengeRepository, never()).save(any());
+    }
+
+    @Test
+    void createChallenge_UnknownCompany_ThrowsRuntimeException() {
+        when(companyRepository.findByEmail("nobody@example.com")).thenReturn(null);
+
+        assertThrows(RuntimeException.class, () -> challengeService.createChallenge(
+                "nobody@example.com", "pw",
+                "T", "D", LocalDateTime.now(), null, null, null, null, null, null,
+                List.of(UUID.randomUUID())));
+    }
+
+    @Test
+    void createChallenge_MissingTitle_ThrowsRuntimeException() {
+        Company company = buildAuthCompany("host@example.com", "pw", 500);
+        when(companyRepository.findByEmail("host@example.com")).thenReturn(company);
+
+        assertThrows(RuntimeException.class, () -> challengeService.createChallenge(
+                "host@example.com", "pw",
+                " ", "D", LocalDateTime.now(), null, null, null, null, null, null,
+                List.of(UUID.randomUUID())));
+    }
+
+    @Test
+    void createChallenge_MissingTopics_ThrowsRuntimeException() {
+        Company company = buildAuthCompany("host@example.com", "pw", 500);
+        when(companyRepository.findByEmail("host@example.com")).thenReturn(company);
+
+        assertThrows(RuntimeException.class, () -> challengeService.createChallenge(
+                "host@example.com", "pw",
+                "T", "D", LocalDateTime.now(), null, null, null, null, null, null,
+                List.of()));
+    }
+
+    @Test
+    void createChallenge_InsufficientCompanyCurrency_ThrowsRuntimeException() {
+        Company company = buildAuthCompany("host@example.com", "pw", 50);
+        Topic topic = buildTopic("Kochen");
+        when(companyRepository.findByEmail("host@example.com")).thenReturn(company);
+        when(topicRepository.findById(topic.getId())).thenReturn(Optional.of(topic));
+
+        assertThrows(RuntimeException.class, () -> challengeService.createChallenge(
+                "host@example.com", "pw",
+                "T", "D", LocalDateTime.now(), null, null, null, 200, null, null,
+                List.of(topic.getId())));
+        verify(challengeRepository, never()).save(any());
+        assertEquals(50, company.getCurrency());
+    }
+
+    @Test
+    void createChallenge_NegativeCurrency_ThrowsRuntimeException() {
+        Company company = buildAuthCompany("host@example.com", "pw", 500);
+        when(companyRepository.findByEmail("host@example.com")).thenReturn(company);
+
+        assertThrows(RuntimeException.class, () -> challengeService.createChallenge(
+                "host@example.com", "pw",
+                "T", "D", LocalDateTime.now(), null, null, null, -10, null, null,
+                List.of(UUID.randomUUID())));
+    }
+
+    @Test
+    void createChallenge_UnknownTopic_ThrowsRuntimeException() {
+        Company company = buildAuthCompany("host@example.com", "pw", 500);
+        UUID missingTopicId = UUID.randomUUID();
+        when(companyRepository.findByEmail("host@example.com")).thenReturn(company);
+        when(topicRepository.findById(missingTopicId)).thenReturn(Optional.empty());
+
+        assertThrows(RuntimeException.class, () -> challengeService.createChallenge(
+                "host@example.com", "pw",
+                "T", "D", LocalDateTime.now(), null, null, null, null, null, null,
+                List.of(missingTopicId)));
+    }
+
+    // -------------------- deleteChallenge --------------------
+
+    @Test
+    void deleteChallenge_ValidRequest_DeletesAndRefundsCompany() {
+        Company company = buildAuthCompany("host@example.com", "pw", 200);
+        Challenge challenge = buildChallenge("ToDelete", BERLIN_LAT, BERLIN_LON);
+        challenge.setCurrency(150);
+        challenge.setHost(company);
+        when(companyRepository.findByEmail("host@example.com")).thenReturn(company);
+        when(challengeRepository.findById(challenge.getId())).thenReturn(Optional.of(challenge));
+        when(companyRepository.findById(company.getId())).thenReturn(Optional.of(company));
+
+        UUID returned = challengeService.deleteChallenge(
+                "host@example.com", "pw", challenge.getId());
+
+        assertEquals(challenge.getId(), returned);
+        assertEquals(350, company.getCurrency()); // 200 + 150 refund
+        verify(companyRepository).save(company);
+        verify(challengeRepository).delete(challenge);
+    }
+
+    @Test
+    void deleteChallenge_CompanyMissingInDb_StillDeletesWithoutRefund() {
+        Company company = buildAuthCompany("host@example.com", "pw", 200);
+        Challenge challenge = buildChallenge("ToDelete", BERLIN_LAT, BERLIN_LON);
+        challenge.setCurrency(150);
+        challenge.setHost(company);
+        when(companyRepository.findByEmail("host@example.com")).thenReturn(company);
+        when(challengeRepository.findById(challenge.getId())).thenReturn(Optional.of(challenge));
+        // company removed between auth and refund
+        when(companyRepository.findById(company.getId())).thenReturn(Optional.empty());
+
+        UUID returned = challengeService.deleteChallenge(
+                "host@example.com", "pw", challenge.getId());
+
+        assertEquals(challenge.getId(), returned);
+        verify(companyRepository, never()).save(any());
+        verify(challengeRepository).delete(challenge);
+    }
+
+    @Test
+    void deleteChallenge_WrongCompany_ThrowsRuntimeException() {
+        Company authCompany = buildAuthCompany("host@example.com", "pw", 200);
+        Company otherHost = buildAuthCompany("other@example.com", "pw", 0);
+        Challenge challenge = buildChallenge("Other", BERLIN_LAT, BERLIN_LON);
+        challenge.setHost(otherHost);
+        when(companyRepository.findByEmail("host@example.com")).thenReturn(authCompany);
+        when(challengeRepository.findById(challenge.getId())).thenReturn(Optional.of(challenge));
+
+        assertThrows(RuntimeException.class, () -> challengeService.deleteChallenge(
+                "host@example.com", "pw", challenge.getId()));
+        verify(challengeRepository, never()).delete(any());
+    }
+
+    @Test
+    void deleteChallenge_InvalidCredentials_ThrowsRuntimeException() {
+        Company company = buildAuthCompany("host@example.com", "pw", 200);
+        when(companyRepository.findByEmail("host@example.com")).thenReturn(company);
+
+        assertThrows(RuntimeException.class, () -> challengeService.deleteChallenge(
+                "host@example.com", "wrong", UUID.randomUUID()));
+        verify(challengeRepository, never()).delete(any());
+    }
+
+    @Test
+    void deleteChallenge_ChallengeNotFound_ThrowsRuntimeException() {
+        Company company = buildAuthCompany("host@example.com", "pw", 200);
+        UUID missing = UUID.randomUUID();
+        when(companyRepository.findByEmail("host@example.com")).thenReturn(company);
+        when(challengeRepository.findById(missing)).thenReturn(Optional.empty());
+
+        assertThrows(RuntimeException.class, () -> challengeService.deleteChallenge(
+                "host@example.com", "pw", missing));
     }
 }
