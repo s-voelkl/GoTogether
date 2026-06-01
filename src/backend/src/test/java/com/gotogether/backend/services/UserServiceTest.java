@@ -1,13 +1,18 @@
 package com.gotogether.backend.services;
 
 import com.gotogether.backend.dto.UserCreateDTO;
+import com.gotogether.backend.dto.UserDTO;
+import com.gotogether.backend.mapper.UserMapper;
+import com.gotogether.backend.model.Settings;
 import com.gotogether.backend.model.User;
 import com.gotogether.backend.repository.UserRepository;
 import com.gotogether.backend.repository.TopicRepository;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDateTime;
@@ -32,15 +37,134 @@ class UserServiceTest {
     @InjectMocks
     private UserService userService;
 
+    @Spy
+    private UserMapper userMapper;
+
+    @BeforeEach
+    void setUp() {
+        userMapper = new UserMapper();
+    }
+
+    private User buildUser(int xp) {
+        User user = new User();
+        user.setId(UUID.randomUUID());
+        user.setName("Test User");
+        user.setPassword("secret");
+        user.setEmail("test@example.com");
+        user.setSocialBattery(80);
+        user.setCurrency(200);
+        user.setExperiencePoints(xp);
+        user.setInterests(List.of(UUID.randomUUID()));
+        user.setLastLogin(LocalDateTime.now());
+        user.setSettings(new Settings());
+        return user;
+    }
+
+    @Test
+    void toDTO_mapsAllFieldsCorrectly() {
+        User user = buildUser(0);
+
+        UserDTO dto = userMapper.toDTO(user);
+
+        assertEquals(user.getId(), dto.getId());
+        assertEquals(user.getName(), dto.getName());
+        assertEquals(user.getEmail(), dto.getEmail());
+        assertEquals(user.getSocialBattery(), dto.getSocialBattery());
+        assertEquals(user.getCurrency(), dto.getCurrency());
+        assertEquals(user.getInterests(), dto.getInterests());
+        assertEquals(user.getLastLogin(), dto.getLastLogin());
+        assertEquals(user.getSettings(), dto.getSettings());
+    }
+
+    @Test
+    void toDTO_withZeroXp_returnsZeroLevelXp() {
+        UserDTO dto = userMapper.toDTO(buildUser(0));
+
+        assertEquals(0, dto.getLevelXp());
+    }
+
+    @Test
+    void toDTO_levelXpIsXpMinusCurrentLevelFloor() {
+        // 220 XP puts us at level 2 (floor 215), so levelXp should be 5
+        UserDTO dto = userMapper.toDTO(buildUser(220));
+
+        assertEquals(2, dto.getLevel());
+        assertEquals(6, dto.getLevelXp());
+    }
+
+    @Test
+    void toDTO_levelXpResetsAtLevelBoundary() {
+        // exactly at level 2 threshold (215 XP), levelXp should be 0
+        UserDTO dto = userMapper.toDTO(buildUser(215));
+
+        assertEquals(2, dto.getLevel());
+        assertEquals(1, dto.getLevelXp());
+    }
+
+    @Test
+    void toDTO_levelXpIsAlwaysNonNegative() {
+        for (int xp = 0; xp <= 1000; xp += 50) {
+            UserDTO dto = userMapper.toDTO(buildUser(xp));
+            assertTrue(dto.getLevelXp() >= 0);
+        }
+    }
+
+    @Test
+    void toDTO_withNullInterests_mapsToNull() {
+        User user = buildUser(0);
+        user.setInterests(null);
+
+        UserDTO dto = userMapper.toDTO(user);
+
+        assertNull(dto.getInterests());
+    }
+
+    @Test
+    void toDTO_withZeroXp_returnsLevelOne() {
+        User user = buildUser(0);
+
+        UserDTO dto = userMapper.toDTO(user);
+
+        assertEquals(1,dto.getLevel());
+    }
+
+    @Test
+    void toDTO_withXpJustBelowLevelTwo_returnsLevelOne() {
+        // E(2) = 100 * (1 - 1.15^2) / (1 - 1.15) = 214, so 213 XP should still be level 1
+        User user = buildUser(213);
+
+        UserDTO dto = userMapper.toDTO(user);
+
+        assertEquals(1, dto.getLevel());
+    }
+
+    @Test
+    void toDTO_withXpAtLevelTwo_returnsLevelTwo() {
+        User user = buildUser(214);
+
+        UserDTO dto = userMapper.toDTO(user);
+
+        assertEquals(2, dto.getLevel());
+    }
+
+    @Test
+    void toDTO_withVeryHighXp_capsAtMaxLevel() {
+        User user = buildUser(Integer.MAX_VALUE);
+
+        UserDTO dto = userMapper.toDTO(user);
+
+        assertEquals(100, dto.getLevel());
+    }
+
     @Test
     void getUserById_UserExists_ReturnsUser() {
         // Arrange
-        User mockUser = new User("Test User", "hash", "test@test.com");
+        User mockUser = buildUser(0);
         mockUser.setId(UUID.randomUUID());
         when(userRepository.findById(mockUser.getId())).thenReturn(Optional.of(mockUser));
 
         // Act
-        User result = userService.getUserById(mockUser.getId());
+        UserDTO result = userService.getUserById(mockUser.getId());
 
         // Assert
         assertNotNull(result);
@@ -70,7 +194,7 @@ class UserServiceTest {
         when(userRepository.findAll()).thenReturn(List.of(mockUser1, mockUser2));
 
         // Act
-        List<User> result = userService.getAllUsers();
+        List<UserDTO> result = userService.getAllUsers();
 
         // Assert
         assertNotNull(result);
