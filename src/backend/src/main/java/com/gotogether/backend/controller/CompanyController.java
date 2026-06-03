@@ -65,8 +65,7 @@ public class CompanyController {
         }
     }
 
-    // add currency method
-    @PutMapping("/currency/{companyId}")
+    @PostMapping("/currency/{companyId}")
     public ResponseEntity<?> addCurrency(@PathVariable UUID companyId, @RequestBody int currency) {
         try {
             int updatedCurrency = service.addCompanyCurrency(companyId, currency);
