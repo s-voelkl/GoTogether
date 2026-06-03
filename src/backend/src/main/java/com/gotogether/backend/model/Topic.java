@@ -25,6 +25,12 @@ public class Topic {
         this.name = name;
     }
 
+    public Topic(String name, String icon, String backgroundColor) {
+        this.name = name;
+        this.icon = icon;
+        this.backgroundColor = backgroundColor;
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(updatable = false, nullable = false)
@@ -33,5 +39,9 @@ public class Topic {
     @Column(nullable = false)
     private String name;
 
-    // private String description;
+    @Column
+    private String icon;
+
+    @Column(name = "background_color", length = 9)
+    private String backgroundColor;
 }

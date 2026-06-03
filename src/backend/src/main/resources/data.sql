@@ -10,28 +10,28 @@
 -- =====================================================================
 -- Topics
 -- =====================================================================
-INSERT INTO topics (id, name)
+INSERT INTO topics (id, name, icon, background_color)
 VALUES
-  (gen_random_uuid(), 'Politik'),
-  (gen_random_uuid(), 'Spazieren'),
-  (gen_random_uuid(), 'Wandern'),
-  (gen_random_uuid(), 'Natur'),
-  (gen_random_uuid(), 'Stadt & Geschichte'),
-  (gen_random_uuid(), 'Kunst & Kreatives'),
-  (gen_random_uuid(), 'Musik'),
-  (gen_random_uuid(), 'Lesen'),
-  (gen_random_uuid(), 'Programmieren'),
-  (gen_random_uuid(), 'Handwerk & Garten'),
-  (gen_random_uuid(), 'Essen & Kochen'),
-  (gen_random_uuid(), 'Café'),
-  (gen_random_uuid(), 'Sport'),
-  (gen_random_uuid(), 'Tiere'),
-  (gen_random_uuid(), 'Spiele'),
-  (gen_random_uuid(), 'Abenteuer'),
-  (gen_random_uuid(), 'Gemeinschaft'),
-  (gen_random_uuid(), 'Unterhaltung'),
-  (gen_random_uuid(), 'Entspannung'),
-  (gen_random_uuid(), 'Drinnen')
+  (gen_random_uuid(), 'Politik',            'megaphone',       '#6366F1'),
+  (gen_random_uuid(), 'Spazieren',          'walk',            '#10B981'),
+  (gen_random_uuid(), 'Wandern',            'trail-sign',      '#059669'),
+  (gen_random_uuid(), 'Natur',              'leaf',            '#22C55E'),
+  (gen_random_uuid(), 'Stadt & Geschichte', 'business',        '#A78BFA'),
+  (gen_random_uuid(), 'Kunst & Kreatives',  'color-palette',   '#EC4899'),
+  (gen_random_uuid(), 'Musik',              'musical-notes',   '#F59E0B'),
+  (gen_random_uuid(), 'Lesen',              'book',            '#8B5CF6'),
+  (gen_random_uuid(), 'Programmieren',      'code-slash',      '#0EA5E9'),
+  (gen_random_uuid(), 'Handwerk & Garten',  'hammer',          '#84CC16'),
+  (gen_random_uuid(), 'Essen & Kochen',     'restaurant',      '#FF6B6B'),
+  (gen_random_uuid(), 'Café',               'cafe',            '#D97706'),
+  (gen_random_uuid(), 'Sport',              'football',        '#4ECDC4'),
+  (gen_random_uuid(), 'Tiere',              'paw',             '#F97316'),
+  (gen_random_uuid(), 'Spiele',             'game-controller', '#6366F1'),
+  (gen_random_uuid(), 'Abenteuer',          'compass',         '#14B8A6'),
+  (gen_random_uuid(), 'Gemeinschaft',       'people',          '#F59E0B'),
+  (gen_random_uuid(), 'Unterhaltung',       'happy',           '#EAB308'),
+  (gen_random_uuid(), 'Entspannung',        'bed',             '#38BDF8'),
+  (gen_random_uuid(), 'Drinnen',            'home',            '#94A3B8')
 ON CONFLICT DO NOTHING;
 
 -- =====================================================================

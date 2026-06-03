@@ -80,7 +80,7 @@ class TopicServiceTest {
         });
 
         // Act
-        UUID resultId = topicService.createTopic(name);
+        UUID resultId = topicService.createTopic(name, "cafe", "#FF6B6B");
 
         // Assert
         assertNotNull(resultId);
@@ -91,14 +91,14 @@ class TopicServiceTest {
     @Test
     void createTopic_EmptyName_ThrowsException() {
         // Act & Assert
-        assertThrows(RuntimeException.class, () -> topicService.createTopic(" "));
+        assertThrows(RuntimeException.class, () -> topicService.createTopic(" ", null, null));
         verify(topicRepository, never()).save(any());
     }
 
     @Test
     void createTopic_NullName_ThrowsException() {
         // Act & Assert
-        assertThrows(RuntimeException.class, () -> topicService.createTopic(null));
+        assertThrows(RuntimeException.class, () -> topicService.createTopic(null, null, null));
         verify(topicRepository, never()).save(any());
     }
 
@@ -109,7 +109,18 @@ class TopicServiceTest {
         when(topicRepository.existsByName(name.trim().toLowerCase())).thenReturn(true);
 
         // Act & Assert
-        assertThrows(RuntimeException.class, () -> topicService.createTopic(name));
+        assertThrows(RuntimeException.class, () -> topicService.createTopic(name, null, null));
+        verify(topicRepository, never()).save(any());
+    }
+
+    @Test
+    void createTopic_InvalidBackgroundColor_ThrowsException() {
+        // Arrange
+        String name = "ColorTopic";
+        when(topicRepository.existsByName(name)).thenReturn(false);
+
+        // Act & Assert
+        assertThrows(RuntimeException.class, () -> topicService.createTopic(name, "cafe", "red"));
         verify(topicRepository, never()).save(any());
     }
 
