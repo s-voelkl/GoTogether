@@ -111,7 +111,9 @@ export const NearbyOverlay = forwardRef<NearbyOverlayHandle, NearbyOverlayProps>
           <View style={styles.handle} />
 
           <View style={styles.headerRow}>
-            <Text style={styles.title}>Nearby Challenges</Text>
+            <Text style={styles.title}>
+              Nearby Challenges <Text style={styles.count}>({challenges.length})</Text>
+            </Text>
           </View>
 
           <View onLayout={e => setCarouselWidth(e.nativeEvent.layout.width)}>
@@ -183,7 +185,7 @@ const styles = StyleSheet.create({
   handle: {
     width: 36,
     height: 4,
-    backgroundColor: '#D9D9D9',
+    backgroundColor: colors.handle,
     borderRadius: 99,
     alignSelf: 'center',
     marginBottom: 10,
@@ -222,11 +224,20 @@ const styles = StyleSheet.create({
     width: 7,
     height: 7,
     borderRadius: 99,
-    backgroundColor: '#DDD',
+    backgroundColor: colors.dotInactive,
   },
 
   dotActive: {
     width: 18,
     backgroundColor: colors.black,
   },
+
+  title: {
+    fontSize: 16,
+    fontFamily: font.headingBold,
+    fontWeight: '900',
+    color: colors.black,
+    letterSpacing: -0.3,
+  },
+  count: { color: colors.gray500 },
 });

@@ -24,6 +24,17 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "plugins": [
+      "@maplibre/maplibre-react-native",
+      [
+        "expo-camera",
+        { "cameraPermission": "Allow GoTogether to scan challenge QR codes." }
+      ],
+      [
+        "expo-location",
+        { "locationWhenInUsePermission": "Show nearby challenges and your position on the map." }
+      ]
+    ]
   }
 }

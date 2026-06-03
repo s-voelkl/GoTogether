@@ -1,75 +1,98 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { StyleSheet, View } from 'react-native';
-import {
-  Camera,
-  Map,
-  UserLocation,
-} from '@maplibre/maplibre-react-native';
-import { useNavigation } from '@react-navigation/native';
+import { Animated, StyleSheet, View } from 'react-native';
+import { Camera, Map } from '@maplibre/maplibre-react-native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 
 import { ScreenShell } from '../components/ScreenShell';
 import { FilterButton } from '../components/FilterButton';
 import { FilterSheet } from '../components/FilterSheet';
 import { ChallengeMarker } from '../components/ChallengeMarker';
-import {
-  NearbyOverlay,
-  NearbyOverlayHandle,
-} from '../components/NearbyOverlay';
+import { UserLocationMarker } from '../components/UserLocationMarker';
+import { NearbyOverlay, NearbyOverlayHandle } from '../components/NearbyOverlay';
 
-import { useFilteredChallenges } from '../context/FiltersContext';
-import { Challenge } from '../data/mockChallenges';
-import { TabNavigationProp } from '../navigation/types';
+import { useFilteredChallenges, useFilters } from '../context/FiltersContext';
+import { useUserLocation } from '../context/LocationContext';
+import { mockChallenges, Challenge } from '../data/mockChallenges';
+import { TabNavigationProp, TabRouteProp } from '../navigation/types';
+import { colors } from '../theme';
 
 const POSITRON_STYLE_URL = 'https://tiles.openfreemap.org/styles/positron';
 
 const AMBERG_CENTER: [number, number] = [11.862, 49.4422];
-const DEFAULT_ZOOM = 12.6;
 
-// Shift camera slightly south so selected marker appears above the bottom overlay.
+const DEFAULT_ZOOM = 12.6;
+const CHALLENGE_ZOOM = 14.4;
+
 const PANEL_LAT_OFFSET = 0.0015;
+const USER_PANEL_LAT_OFFSET = 0.0065;
 
 export const HomeScreen: React.FC = () => {
   const navigation = useNavigation<TabNavigationProp<'Home'>>();
+  const route = useRoute<TabRouteProp<'Home'>>();
 
   const cameraRef = useRef<any>(null);
   const nearbyRef = useRef<NearbyOverlayHandle>(null);
 
   const filtered = useFilteredChallenges();
+  const { clearFilters } = useFilters();
+  const { coords, accuracy } = useUserLocation();
+
+  const coordsRef = useRef(coords);
+  coordsRef.current = coords;
 
   const [filterOpen, setFilterOpen] = useState(false);
   const [selectedId, setSelectedId] = useState<string | null>(null);
 
-  const toggleFilter = useCallback(() => {
-    setFilterOpen(prev => !prev);
-  }, []);
+  const zoomAnim = useRef(new Animated.Value(DEFAULT_ZOOM)).current;
 
-  const closeFilter = useCallback(() => {
-    setFilterOpen(false);
-  }, []);
+  const handleRegionChange = useCallback(
+    (e: any) => {
+      const zoom = e?.nativeEvent?.zoom;
+      if (typeof zoom === 'number') zoomAnim.setValue(zoom);
+    },
+    [zoomAnim],
+  );
 
-  const moveCameraTo = useCallback((challenge: Challenge) => {
-    const center: [number, number] = [
-      challenge.lng,
-      challenge.lat - PANEL_LAT_OFFSET,
-    ];
+  const toggleFilter = useCallback(() => setFilterOpen(prev => !prev), []);
+  const closeFilter = useCallback(() => setFilterOpen(false), []);
 
-    if (cameraRef.current?.setCamera) {
-      cameraRef.current.setCamera({
-        centerCoordinate: center,
-        zoomLevel: 14.4,
-        animationMode: 'flyTo',
-        animationDuration: 650,
-      });
-      return;
-    }
+  const animateCameraTo = useCallback(
+    (center: [number, number], zoom: number, duration = 700) => {
+      const cam = cameraRef.current;
+      if (!cam) return;
 
-    cameraRef.current?.setStop?.({
-      center,
-      zoom: 14.4,
-      easing: 'fly',
-      duration: 650,
-    });
-  }, []);
+      if (typeof cam.flyTo === 'function') {
+        cam.flyTo({ center, zoom, duration });
+      } else if (typeof cam.setStop === 'function') {
+        cam.setStop({ center, zoom, easing: 'fly', duration });
+      }
+    },
+    [],
+  );
+
+  const moveCameraToUserLocation = useCallback(
+    (duration = 800) => {
+      const c = coordsRef.current;
+
+      const center: [number, number] = c
+        ? [c.longitude, c.latitude - USER_PANEL_LAT_OFFSET]
+        : AMBERG_CENTER;
+
+      animateCameraTo(center, c ? DEFAULT_ZOOM : DEFAULT_ZOOM, duration);
+    },
+    [animateCameraTo],
+  );
+
+  const moveCameraTo = useCallback(
+    (challenge: Challenge) => {
+      animateCameraTo(
+        [challenge.lng, challenge.lat - PANEL_LAT_OFFSET],
+        CHALLENGE_ZOOM,
+        650,
+      );
+    },
+    [animateCameraTo],
+  );
 
   const focusChallenge = useCallback(
     (challenge: Challenge, index: number, syncCarousel = true) => {
@@ -102,6 +125,7 @@ export const HomeScreen: React.FC = () => {
     (challenge: Challenge) => {
       navigation.navigate('Challenges', {
         selectedChallengeId: challenge.id,
+        selectedTs: Date.now(),
       });
     },
     [navigation],
@@ -122,12 +146,51 @@ export const HomeScreen: React.FC = () => {
     }
   }, [filtered, selectedId]);
 
+  const didInitialCenter = useRef(false);
+
+  useEffect(() => {
+    if (didInitialCenter.current || !coords) return;
+    if (!cameraRef.current) return;
+
+    didInitialCenter.current = true;
+    moveCameraToUserLocation(900);
+  }, [coords, moveCameraToUserLocation]);
+
+  const focusId = route.params?.focusChallengeId;
+  const focusTs = route.params?.focusTs;
+
+  useEffect(() => {
+    if (!focusId) return;
+
+    const target = mockChallenges.find(c => c.id === focusId);
+    if (!target) return;
+
+    const idx = filtered.findIndex(c => c.id === focusId);
+
+    if (idx === -1) {
+      clearFilters();
+      return;
+    }
+
+    focusChallenge(target, idx, true);
+  }, [focusId, focusTs, filtered, clearFilters, focusChallenge]);
+
+  const recenterTs = route.params?.recenterTs;
+
+  useEffect(() => {
+    if (!recenterTs) return;
+    moveCameraToUserLocation(800);
+  }, [recenterTs, moveCameraToUserLocation]);
+
+  useEffect(() => {
+    const unsub = navigation.addListener('blur', () => setFilterOpen(false));
+    return unsub;
+  }, [navigation]);
+
   return (
     <ScreenShell
-      rightButton={
-        <FilterButton open={filterOpen} onPress={toggleFilter} />
-      }
-      cardBackground="#efefef"
+      rightButton={<FilterButton open={filterOpen} onPress={toggleFilter} />}
+      cardBackground={colors.mapBackground}
       cardStyle={styles.mapCard}
     >
       <View collapsable={false} style={styles.mapHost}>
@@ -140,20 +203,31 @@ export const HomeScreen: React.FC = () => {
           scaleBar={false}
           touchRotate={false}
           touchPitch={false}
+          onRegionIsChanging={handleRegionChange}
+          onRegionDidChange={handleRegionChange}
         >
           <Camera
             ref={cameraRef}
-            center={AMBERG_CENTER}
-            zoom={DEFAULT_ZOOM}
+            initialViewState={{
+              center: AMBERG_CENTER,
+              zoom: DEFAULT_ZOOM,
+            }}
           />
 
-          <UserLocation visible />
+          {coords && (
+            <UserLocationMarker
+              latitude={coords.latitude}
+              longitude={coords.longitude}
+              accuracy={accuracy}
+            />
+          )}
 
           {filtered.map(challenge => (
             <ChallengeMarker
               key={challenge.id}
               challenge={challenge}
               selected={selectedId === challenge.id}
+              zoomAnim={zoomAnim}
               onPress={() => handleMarkerPress(challenge)}
             />
           ))}

@@ -5,7 +5,7 @@ import React, {
   useMemo,
   useState,
 } from 'react';
-import { mockChallenges, Challenge } from '../data/mockChallenges';
+import { mockChallenges, Challenge, isChallengeFull } from '../data/mockChallenges';
 
 /**
  * Shared filter state.
@@ -54,11 +54,15 @@ export function useFilters(): FiltersContextValue {
  */
 export function useFilteredChallenges(): Challenge[] {
   const { activeFilters } = useFilters();
-  return useMemo(
-    () =>
+  return useMemo(() => {
+    const base =
       activeFilters.length > 0
         ? mockChallenges.filter(c => activeFilters.includes(c.category))
-        : mockChallenges,
-    [activeFilters],
-  );
+        : mockChallenges;
+
+    // Stable sort: full challenges sink to the bottom, order otherwise preserved.
+    return [...base].sort(
+      (a, b) => Number(isChallengeFull(a)) - Number(isChallengeFull(b)),
+    );
+  }, [activeFilters]);
 }
