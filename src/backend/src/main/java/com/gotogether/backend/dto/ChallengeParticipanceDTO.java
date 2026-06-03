@@ -1,7 +1,5 @@
 package com.gotogether.backend.dto;
 
-import java.util.UUID;
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -33,9 +31,6 @@ public class ChallengeParticipanceDTO {
 
     /** Current longitude of the user in decimal degrees ([-180, 180]). */
     private Double userLongitude;
-
-    /** Id of the challenge the user wants to join. */
-    private UUID challengeId;
 
     /** Verification code shown at the challenge location. */
     private String verificationCode;

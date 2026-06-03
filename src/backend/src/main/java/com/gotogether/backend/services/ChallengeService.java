@@ -487,15 +487,25 @@ public class ChallengeService {
      * Generates a random alphanumeric verification code of length
      * {@value #VERIFICATION_CODE_LENGTH} using a cryptographically strong RNG.
      *
-     * @return the newly generated code (upper-case letters and digits)
+     * <p>
+     * The generator retries until it produces a code that is not already
+     * present in the repository, guaranteeing global uniqueness across all
+     * persisted challenges.
+     *
+     * @return the newly generated, globally unique code (upper-case letters
+     *         and digits)
      */
     String generateVerificationCode() {
-        StringBuilder sb = new StringBuilder(VERIFICATION_CODE_LENGTH);
-        for (int i = 0; i < VERIFICATION_CODE_LENGTH; i++) {
-            sb.append(VERIFICATION_CODE_ALPHABET.charAt(
-                    RNG.nextInt(VERIFICATION_CODE_ALPHABET.length())));
-        }
-        return sb.toString();
+        String code;
+        do {
+            StringBuilder sb = new StringBuilder(VERIFICATION_CODE_LENGTH);
+            for (int i = 0; i < VERIFICATION_CODE_LENGTH; i++) {
+                sb.append(VERIFICATION_CODE_ALPHABET.charAt(
+                        RNG.nextInt(VERIFICATION_CODE_ALPHABET.length())));
+            }
+            code = sb.toString();
+        } while (repo.findByVerificationCodeIgnoreCase(code).isPresent());
+        return code;
     }
 
     /**
@@ -769,7 +779,6 @@ public class ChallengeService {
      * @param userPassword     password used to authenticate the user
      * @param userLatitude     current user latitude in decimal degrees
      * @param userLongitude    current user longitude in decimal degrees
-     * @param challengeId      id of the challenge to join
      * @param verificationCode verification code presented by the user
      * @return the id of the joined challenge
      * @throws RuntimeException if any of the invariants above is violated
@@ -779,7 +788,6 @@ public class ChallengeService {
             String userPassword,
             Double userLatitude,
             Double userLongitude,
-            UUID challengeId,
             String verificationCode) {
 
         // -------- validate inputs --------
@@ -788,9 +796,6 @@ public class ChallengeService {
         }
         if (userPassword == null || userPassword.trim().isEmpty()) {
             throw new RuntimeException("User password must not be empty.");
-        }
-        if (challengeId == null) {
-            throw new RuntimeException("Challenge id must be provided.");
         }
         if (verificationCode == null || verificationCode.trim().isEmpty()) {
             throw new RuntimeException("Verification code must not be empty.");
@@ -817,8 +822,9 @@ public class ChallengeService {
         }
 
         // -------- load challenge --------
-        Challenge challenge = repo.findById(challengeId)
-                .orElseThrow(() -> new RuntimeException("Challenge not found: " + challengeId));
+        Challenge challenge = repo.findByVerificationCodeIgnoreCase(verificationCode.trim())
+                .orElseThrow(
+                        () -> new RuntimeException("Challenge not found with verification code: " + verificationCode));
 
         // -------- distance check --------
         if (challenge.getLocation() == null) {

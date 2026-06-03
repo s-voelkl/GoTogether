@@ -777,13 +777,14 @@ class ChallengeServiceTest {
         User user = buildAuthUser("alice@example.com", "pw");
         Challenge challenge = buildParticipationChallenge("ABCDE", 5);
         when(userRepository.findByEmail("alice@example.com")).thenReturn(user);
-        when(challengeRepository.findById(challenge.getId())).thenReturn(Optional.of(challenge));
+        when(challengeRepository.findByVerificationCodeIgnoreCase("ABCDE"))
+                .thenReturn(Optional.of(challenge));
         when(challengeRepository.findAll()).thenReturn(List.of(challenge));
 
         UUID returned = challengeService.participateInChallenge(
                 "alice@example.com", "pw",
                 BERLIN_LAT, BERLIN_LON,
-                challenge.getId(), "ABCDE");
+                "ABCDE");
 
         assertEquals(challenge.getId(), returned);
         assertEquals(1, challenge.getUsers().size());
@@ -799,13 +800,14 @@ class ChallengeServiceTest {
         User user = buildAuthUser("alice@example.com", "pw");
         Challenge challenge = buildParticipationChallenge("AbCdE", 0); // 0 = unlimited
         when(userRepository.findByEmail("alice@example.com")).thenReturn(user);
-        when(challengeRepository.findById(challenge.getId())).thenReturn(Optional.of(challenge));
+        when(challengeRepository.findByVerificationCodeIgnoreCase("abcde"))
+                .thenReturn(Optional.of(challenge));
         when(challengeRepository.findAll()).thenReturn(List.of(challenge));
 
         UUID returned = challengeService.participateInChallenge(
                 "alice@example.com", "pw",
                 BERLIN_LAT, BERLIN_LON,
-                challenge.getId(), "  abcde  ");
+                "  abcde  ");
 
         assertEquals(challenge.getId(), returned);
     }
@@ -817,7 +819,7 @@ class ChallengeServiceTest {
         assertThrows(RuntimeException.class, () -> challengeService.participateInChallenge(
                 "ghost@example.com", "pw",
                 BERLIN_LAT, BERLIN_LON,
-                UUID.randomUUID(), "ABCDE"));
+                "ABCDE"));
         verify(challengeRepository, never()).save(any());
         verify(userRepository, never()).save(any());
     }
@@ -830,21 +832,21 @@ class ChallengeServiceTest {
         assertThrows(RuntimeException.class, () -> challengeService.participateInChallenge(
                 "alice@example.com", "wrong",
                 BERLIN_LAT, BERLIN_LON,
-                UUID.randomUUID(), "ABCDE"));
+                "ABCDE"));
         verify(challengeRepository, never()).save(any());
     }
 
     @Test
     void participateInChallenge_ChallengeNotFound_ThrowsRuntimeException() {
         User user = buildAuthUser("alice@example.com", "pw");
-        UUID missing = UUID.randomUUID();
         when(userRepository.findByEmail("alice@example.com")).thenReturn(user);
-        when(challengeRepository.findById(missing)).thenReturn(Optional.empty());
+        when(challengeRepository.findByVerificationCodeIgnoreCase("ABCDE"))
+                .thenReturn(Optional.empty());
 
         assertThrows(RuntimeException.class, () -> challengeService.participateInChallenge(
                 "alice@example.com", "pw",
                 BERLIN_LAT, BERLIN_LON,
-                missing, "ABCDE"));
+                "ABCDE"));
     }
 
     @Test
@@ -852,13 +854,14 @@ class ChallengeServiceTest {
         User user = buildAuthUser("alice@example.com", "pw");
         Challenge challenge = buildParticipationChallenge("ABCDE", 0);
         when(userRepository.findByEmail("alice@example.com")).thenReturn(user);
-        when(challengeRepository.findById(challenge.getId())).thenReturn(Optional.of(challenge));
+        when(challengeRepository.findByVerificationCodeIgnoreCase("ABCDE"))
+                .thenReturn(Optional.of(challenge));
 
         // ~111 km north of Berlin — clearly outside the 200 m threshold.
         assertThrows(RuntimeException.class, () -> challengeService.participateInChallenge(
                 "alice@example.com", "pw",
                 BERLIN_LAT + 1.0, BERLIN_LON,
-                challenge.getId(), "ABCDE"));
+                "ABCDE"));
         verify(challengeRepository, never()).save(any());
         verify(userRepository, never()).save(any());
     }
@@ -871,12 +874,13 @@ class ChallengeServiceTest {
         User existing = buildAuthUser("bob@example.com", "pw");
         challenge.getUsers().add(existing);
         when(userRepository.findByEmail("alice@example.com")).thenReturn(user);
-        when(challengeRepository.findById(challenge.getId())).thenReturn(Optional.of(challenge));
+        when(challengeRepository.findByVerificationCodeIgnoreCase("ABCDE"))
+                .thenReturn(Optional.of(challenge));
 
         assertThrows(RuntimeException.class, () -> challengeService.participateInChallenge(
                 "alice@example.com", "pw",
                 BERLIN_LAT, BERLIN_LON,
-                challenge.getId(), "ABCDE"));
+                "ABCDE"));
         verify(challengeRepository, never()).save(any());
     }
 
@@ -891,13 +895,14 @@ class ChallengeServiceTest {
         recent.setUsers(new ArrayList<>(List.of(user)));
 
         when(userRepository.findByEmail("alice@example.com")).thenReturn(user);
-        when(challengeRepository.findById(target.getId())).thenReturn(Optional.of(target));
+        when(challengeRepository.findByVerificationCodeIgnoreCase("ABCDE"))
+                .thenReturn(Optional.of(target));
         when(challengeRepository.findAll()).thenReturn(List.of(target, recent));
 
         assertThrows(RuntimeException.class, () -> challengeService.participateInChallenge(
                 "alice@example.com", "pw",
                 BERLIN_LAT, BERLIN_LON,
-                target.getId(), "ABCDE"));
+                "ABCDE"));
         verify(challengeRepository, never()).save(any());
     }
 
@@ -912,13 +917,14 @@ class ChallengeServiceTest {
         old.setUsers(new ArrayList<>(List.of(user)));
 
         when(userRepository.findByEmail("alice@example.com")).thenReturn(user);
-        when(challengeRepository.findById(target.getId())).thenReturn(Optional.of(target));
+        when(challengeRepository.findByVerificationCodeIgnoreCase("ABCDE"))
+                .thenReturn(Optional.of(target));
         when(challengeRepository.findAll()).thenReturn(List.of(target, old));
 
         UUID returned = challengeService.participateInChallenge(
                 "alice@example.com", "pw",
                 BERLIN_LAT, BERLIN_LON,
-                target.getId(), "ABCDE");
+                "ABCDE");
 
         assertEquals(target.getId(), returned);
     }
@@ -926,15 +932,14 @@ class ChallengeServiceTest {
     @Test
     void participateInChallenge_InvalidVerificationCode_ThrowsRuntimeException() {
         User user = buildAuthUser("alice@example.com", "pw");
-        Challenge challenge = buildParticipationChallenge("ABCDE", 0);
         when(userRepository.findByEmail("alice@example.com")).thenReturn(user);
-        when(challengeRepository.findById(challenge.getId())).thenReturn(Optional.of(challenge));
-        when(challengeRepository.findAll()).thenReturn(List.of(challenge));
+        when(challengeRepository.findByVerificationCodeIgnoreCase("ZZZZZ"))
+                .thenReturn(Optional.empty());
 
         assertThrows(RuntimeException.class, () -> challengeService.participateInChallenge(
                 "alice@example.com", "pw",
                 BERLIN_LAT, BERLIN_LON,
-                challenge.getId(), "ZZZZZ"));
+                "ZZZZZ"));
         verify(challengeRepository, never()).save(any());
         verify(userRepository, never()).save(any());
     }
@@ -945,12 +950,13 @@ class ChallengeServiceTest {
         Challenge challenge = buildParticipationChallenge("ABCDE", 0);
         challenge.getUsers().add(user);
         when(userRepository.findByEmail("alice@example.com")).thenReturn(user);
-        when(challengeRepository.findById(challenge.getId())).thenReturn(Optional.of(challenge));
+        when(challengeRepository.findByVerificationCodeIgnoreCase("ABCDE"))
+                .thenReturn(Optional.of(challenge));
 
         assertThrows(RuntimeException.class, () -> challengeService.participateInChallenge(
                 "alice@example.com", "pw",
                 BERLIN_LAT, BERLIN_LON,
-                challenge.getId(), "ABCDE"));
+                "ABCDE"));
         verify(challengeRepository, never()).save(any());
     }
 }

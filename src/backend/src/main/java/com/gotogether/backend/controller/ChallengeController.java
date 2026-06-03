@@ -161,7 +161,7 @@ public class ChallengeController {
      * <p>
      * The user authenticates with the credentials in
      * {@link ChallengeParticipanceDTO} and provides their current location
-     * together with the challenge's verification code. The service enforces
+     * together with a verification code. The service enforces
      * authentication, distance, capacity, cooldown and verification code
      * checks; on success the challenge's currency and experience point
      * rewards are credited to the user.
@@ -179,7 +179,6 @@ public class ChallengeController {
                     dto.getUserPassword(),
                     dto.getUserLatitude(),
                     dto.getUserLongitude(),
-                    dto.getChallengeId(),
                     dto.getVerificationCode()));
         } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
