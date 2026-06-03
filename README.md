@@ -180,6 +180,8 @@ T: Bis zur Projektabgabe im Juli des Sommersemesters 2026.
 
 13. **Authentifizierung:** Registierung und Login des Nutzers.
 
+14. **Profilansicht und -verwaltung:** Als Nutzer möchte ich mein eigenes Profil mit meinen Interessen, meinem Social Battery Index, meiner digitalen Währung und meinen Erfahrungspunkten einsehen und Einstellungen vornehmen können, um meine App-Nutzung an meine Bedürfnisse anzupassen.
+
 ## MVP
 
 - Offene, lokale Liste für Challenges inkl. Challenge-Filter, damit spontane Teilnahme möglich ist. _(User Story #2, Persona: Tom, Karin)_
