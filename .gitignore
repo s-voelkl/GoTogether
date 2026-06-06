@@ -207,3 +207,6 @@ yarn.lock
 
 # amazon corretto
 amazon-corretto-*
+
+# frontend expo
+frontend/*
