@@ -26,7 +26,7 @@ public class TopicService {
         return repo.findAll();
     }
 
-    public UUID createTopic(String name) {
+    public UUID createTopic(String name, String icon, String backgroundColor) {
         if (name == null || name.trim().isEmpty()) {
             throw new RuntimeException("Topic name cannot be empty.");
         }
@@ -38,7 +38,15 @@ public class TopicService {
             throw new RuntimeException("Topic name already exists: " + normalized);
         }
 
-        Topic topic = new Topic(normalized);
+        if (backgroundColor != null && !backgroundColor.isBlank()
+                && !backgroundColor.matches("^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{8})$")) {
+            throw new RuntimeException("Invalid background color (expected #RRGGBB or #RRGGBBAA): " + backgroundColor);
+        }
+
+        Topic topic = new Topic(
+                normalized,
+                icon == null || icon.isBlank() ? null : icon.trim(),
+                backgroundColor == null || backgroundColor.isBlank() ? null : backgroundColor.trim());
         return repo.save(topic).getId();
     }
 

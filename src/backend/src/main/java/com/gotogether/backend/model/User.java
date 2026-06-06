@@ -65,10 +65,9 @@ public class User {
     @Column(nullable = false)
     private int experiencePoints = DEFAULT_EXPERIENCE_POINTS;
 
-    @ElementCollection
-    @CollectionTable(name = "user_interests", joinColumns = @JoinColumn(name = "user_id"))
-    @Column(name = "topic_id")
-    private List<UUID> interests = new ArrayList<>();
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "user_interests", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "topic_id"))
+    private List<Topic> interests = new ArrayList<>();
 
     @Column(nullable = false)
     private LocalDateTime lastLogin = LocalDateTime.now();

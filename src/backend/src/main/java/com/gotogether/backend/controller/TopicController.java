@@ -1,5 +1,6 @@
 package com.gotogether.backend.controller;
 
+import com.gotogether.backend.dto.CreateTopicDTO;
 import com.gotogether.backend.services.TopicService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -42,9 +43,9 @@ public class TopicController {
     }
 
     @PostMapping
-    public ResponseEntity<?> createTopic(@RequestBody String name) {
+    public ResponseEntity<?> createTopic(@RequestBody CreateTopicDTO request) {
         try {
-            UUID id = service.createTopic(name);
+            UUID id = service.createTopic(request.getName(), request.getIcon(), request.getBackgroundColor());
             return ResponseEntity.status(HttpStatus.CREATED).body(id);
         } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());

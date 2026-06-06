@@ -2,8 +2,10 @@ package com.gotogether.backend.services;
 
 import com.gotogether.backend.dto.UserDTO;
 import com.gotogether.backend.mapper.UserMapper;
+import com.gotogether.backend.model.Topic;
 import com.gotogether.backend.model.User;
 import com.gotogether.backend.repository.UserRepository;
+import com.gotogether.backend.repository.CompanyRepository;
 import com.gotogether.backend.repository.TopicRepository;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.validator.routines.EmailValidator;
@@ -19,6 +21,8 @@ public class UserService {
 
     private final UserRepository repo;
     private final TopicRepository topicRepo;
+    private final CompanyRepository companyRepo;
+
     private final UserMapper userMapper;
 
     public UserDTO getUserById(UUID id) {
@@ -31,9 +35,13 @@ public class UserService {
     }
 
     public UUID createUser(String name, String password, String email) {
-        // email must be unique
+        // email must be unique in both users and companies
         if (repo.existsByEmail(email.trim().toLowerCase())) {
             throw new RuntimeException("Email already exists: " + email);
+        }
+
+        if (companyRepo.existsByEmail(email.trim().toLowerCase())) {
+            throw new RuntimeException("Email already exists at companies: " + email);
         }
 
         // email validation
@@ -92,7 +100,7 @@ public class UserService {
         return user.getId();
     }
 
-    public void setUserSocialBattery(UUID userId, int socialBattery) {
+    public int setUserSocialBattery(UUID userId, int socialBattery) {
         if (socialBattery < 0 || socialBattery > 100) {
             throw new RuntimeException("Social battery must be between 0 and 100: " + socialBattery);
         }
@@ -106,6 +114,7 @@ public class UserService {
 
         user.setSocialBattery(socialBattery);
         repo.save(user);
+        return socialBattery;
     }
 
     public List<UUID> setUserInterests(UUID userId, List<UUID> interestIds) {
@@ -120,17 +129,18 @@ public class UserService {
         // filter out duplicates (use Collectors.toList for broader Java compatibility)
         interestIds = interestIds.stream().distinct().collect(Collectors.toList());
 
-        // validate topic existence
+        // validate topic existence and resolve to entities
+        List<Topic> topics = new java.util.ArrayList<>(interestIds.size());
         for (UUID interestId : interestIds) {
-            if (!topicRepo.existsById(interestId)) {
-                throw new RuntimeException("Interest not found: " + interestId);
-            }
+            Topic topic = topicRepo.findById(interestId)
+                    .orElseThrow(() -> new RuntimeException("Interest not found: " + interestId));
+            topics.add(topic);
         }
 
         User user = repo.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found: " + userId));
 
-        user.setInterests(interestIds);
+        user.setInterests(topics);
         repo.save(user);
         return interestIds;
     }

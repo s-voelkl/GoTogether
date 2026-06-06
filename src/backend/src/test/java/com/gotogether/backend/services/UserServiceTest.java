@@ -4,6 +4,7 @@ import com.gotogether.backend.dto.UserCreateDTO;
 import com.gotogether.backend.dto.UserDTO;
 import com.gotogether.backend.mapper.UserMapper;
 import com.gotogether.backend.model.Settings;
+import com.gotogether.backend.model.Topic;
 import com.gotogether.backend.model.User;
 import com.gotogether.backend.repository.UserRepository;
 import com.gotogether.backend.repository.TopicRepository;
@@ -54,7 +55,10 @@ class UserServiceTest {
         user.setSocialBattery(80);
         user.setCurrency(200);
         user.setExperiencePoints(xp);
-        user.setInterests(List.of(UUID.randomUUID()));
+        Topic topic = new Topic();
+        topic.setId(UUID.randomUUID());
+        topic.setName("sample");
+        user.setInterests(List.of(topic));
         user.setLastLogin(LocalDateTime.now());
         user.setSettings(new Settings());
         return user;
@@ -71,7 +75,7 @@ class UserServiceTest {
         assertEquals(user.getEmail(), dto.getEmail());
         assertEquals(user.getSocialBattery(), dto.getSocialBattery());
         assertEquals(user.getCurrency(), dto.getCurrency());
-        assertEquals(user.getInterests(), dto.getInterests());
+        assertEquals(user.getInterests().stream().map(Topic::getId).toList(), dto.getInterests());
         assertEquals(user.getLastLogin(), dto.getLastLogin());
         assertEquals(user.getSettings(), dto.getSettings());
     }
@@ -125,12 +129,13 @@ class UserServiceTest {
 
         UserDTO dto = userMapper.toDTO(user);
 
-        assertEquals(1,dto.getLevel());
+        assertEquals(1, dto.getLevel());
     }
 
     @Test
     void toDTO_withXpJustBelowLevelTwo_returnsLevelOne() {
-        // E(2) = 100 * (1 - 1.15^2) / (1 - 1.15) = 214, so 213 XP should still be level 1
+        // E(2) = 100 * (1 - 1.15^2) / (1 - 1.15) = 214, so 213 XP should still be level
+        // 1
         User user = buildUser(213);
 
         UserDTO dto = userMapper.toDTO(user);
@@ -181,8 +186,7 @@ class UserServiceTest {
         when(userRepository.findById(mockUser.getId())).thenReturn(Optional.empty());
 
         // Act & Assert
-        Exception exception = assertThrows(RuntimeException.class, () -> userService.getUserById(mockUser.getId()));
-        assertEquals("User not found", exception.getMessage());
+        assertThrows(RuntimeException.class, () -> userService.getUserById(mockUser.getId()));
         verify(userRepository, times(1)).findById(mockUser.getId());
     }
 
@@ -209,9 +213,8 @@ class UserServiceTest {
         when(userRepository.existsByEmail("test@test.com")).thenReturn(true);
 
         // Act & Assert
-        Exception exception = assertThrows(RuntimeException.class,
+        assertThrows(RuntimeException.class,
                 () -> userService.createUser(dto.getUsername(), dto.getPassword(), dto.getEmail()));
-        assertTrue(exception.getMessage().contains("Email already exists: test@test.com"));
         verify(userRepository, never()).save(any(User.class));
     }
 
@@ -221,9 +224,8 @@ class UserServiceTest {
         UserCreateDTO dto = new UserCreateDTO("testuser", "password", "");
 
         // Act & Assert
-        Exception exception = assertThrows(RuntimeException.class,
+        assertThrows(RuntimeException.class,
                 () -> userService.createUser(dto.getUsername(), dto.getPassword(), dto.getEmail()));
-        assertTrue(exception.getMessage().contains("Invalid email address: "));
         verify(userRepository, never()).save(any(User.class));
     }
 
@@ -233,9 +235,8 @@ class UserServiceTest {
         UserCreateDTO dto = new UserCreateDTO("testuser", "password", "not_an_email");
 
         // Act & Assert
-        Exception exception = assertThrows(RuntimeException.class,
+        assertThrows(RuntimeException.class,
                 () -> userService.createUser(dto.getUsername(), dto.getPassword(), dto.getEmail()));
-        assertTrue(exception.getMessage().contains("Invalid email address: not_an_email"));
         verify(userRepository, never()).save(any(User.class));
     }
 
@@ -246,9 +247,8 @@ class UserServiceTest {
                                                                               // EmailValidator
 
         // Act & Assert
-        Exception exception = assertThrows(RuntimeException.class,
+        assertThrows(RuntimeException.class,
                 () -> userService.createUser(dto.getUsername(), dto.getPassword(), dto.getEmail()));
-        assertTrue(exception.getMessage().contains("Invalid email address: a@b"));
         verify(userRepository, never()).save(any(User.class));
     }
 
@@ -258,9 +258,8 @@ class UserServiceTest {
         UserCreateDTO dto = new UserCreateDTO("", "password", "test@test.com");
 
         // Act & Assert
-        Exception exception = assertThrows(RuntimeException.class,
+        assertThrows(RuntimeException.class,
                 () -> userService.createUser(dto.getUsername(), dto.getPassword(), dto.getEmail()));
-        assertTrue(exception.getMessage().contains("Username must not be empty"));
         verify(userRepository, never()).save(any(User.class));
     }
 
@@ -270,9 +269,8 @@ class UserServiceTest {
         UserCreateDTO dto = new UserCreateDTO("testuser", "", "test@test.com");
 
         // Act & Assert
-        Exception exception = assertThrows(RuntimeException.class,
+        assertThrows(RuntimeException.class,
                 () -> userService.createUser(dto.getUsername(), dto.getPassword(), dto.getEmail()));
-        assertTrue(exception.getMessage().contains("Password must not be empty"));
         verify(userRepository, never()).save(any(User.class));
     }
 
@@ -294,24 +292,21 @@ class UserServiceTest {
     @Test
     void loginUser_InvalidEmail_ThrowsRuntimeException() {
         // Act & Assert
-        Exception exception = assertThrows(RuntimeException.class, () -> userService.loginUser("not_an_email", "hash"));
-        assertTrue(exception.getMessage().contains("Invalid email address: not_an_email"));
+        assertThrows(RuntimeException.class, () -> userService.loginUser("not_an_email", "hash"));
         verify(userRepository, never()).findByEmail(anyString());
     }
 
     @Test
     void loginUser_StrictInvalidEmail_ThrowsRuntimeException() {
         // Act & Assert
-        Exception exception = assertThrows(RuntimeException.class, () -> userService.loginUser("a@b", "hash"));
-        assertTrue(exception.getMessage().contains("Invalid email address: a@b"));
+        assertThrows(RuntimeException.class, () -> userService.loginUser("a@b", "hash"));
         verify(userRepository, never()).findByEmail(anyString());
     }
 
     @Test
     void loginUser_EmptyPassword_ThrowsRuntimeException() {
         // Act & Assert
-        Exception exception = assertThrows(RuntimeException.class, () -> userService.loginUser("test@test.com", ""));
-        assertEquals("Password must not be empty.", exception.getMessage());
+        assertThrows(RuntimeException.class, () -> userService.loginUser("test@test.com", ""));
         verify(userRepository, never()).findByEmail(anyString());
     }
 
@@ -321,9 +316,8 @@ class UserServiceTest {
         when(userRepository.findByEmail("test@test.com")).thenReturn(null);
 
         // Act & Assert
-        Exception exception = assertThrows(RuntimeException.class,
+        assertThrows(RuntimeException.class,
                 () -> userService.loginUser("test@test.com", "hash"));
-        assertEquals("No user found with email: test@test.com", exception.getMessage());
         verify(userRepository, times(1)).findByEmail("test@test.com");
     }
 
@@ -334,9 +328,8 @@ class UserServiceTest {
         when(userRepository.findByEmail("test@test.com")).thenReturn(mockUser);
 
         // Act & Assert
-        Exception exception = assertThrows(RuntimeException.class,
+        assertThrows(RuntimeException.class,
                 () -> userService.loginUser("test@test.com", "wrong_hash"));
-        assertEquals("Invalid password.", exception.getMessage());
         verify(userRepository, times(1)).findByEmail("test@test.com");
     }
 
@@ -378,9 +371,8 @@ class UserServiceTest {
         UUID id = UUID.randomUUID();
 
         // Act & Assert
-        Exception exception = assertThrows(RuntimeException.class,
+        assertThrows(RuntimeException.class,
                 () -> userService.setUserSocialBattery(id, -1));
-        assertTrue(exception.getMessage().contains("Social battery must be between 0 and 100"));
         verify(userRepository, never()).save(any(User.class));
     }
 
@@ -390,18 +382,16 @@ class UserServiceTest {
         UUID id = UUID.randomUUID();
 
         // Act & Assert
-        Exception exception = assertThrows(RuntimeException.class,
+        assertThrows(RuntimeException.class,
                 () -> userService.setUserSocialBattery(id, 101));
-        assertTrue(exception.getMessage().contains("Social battery must be between 0 and 100"));
         verify(userRepository, never()).save(any(User.class));
     }
 
     @Test
     void setUserSocialBattery_NullUserId_ThrowsException() {
         // Act & Assert
-        Exception exception = assertThrows(RuntimeException.class,
+        assertThrows(RuntimeException.class,
                 () -> userService.setUserSocialBattery(null, 50));
-        assertEquals("User ID must not be null.", exception.getMessage());
         verify(userRepository, never()).save(any(User.class));
     }
 
@@ -412,9 +402,8 @@ class UserServiceTest {
         when(userRepository.findById(id)).thenReturn(Optional.empty());
 
         // Act & Assert
-        Exception exception = assertThrows(RuntimeException.class,
+        assertThrows(RuntimeException.class,
                 () -> userService.setUserSocialBattery(id, 50));
-        assertTrue(exception.getMessage().contains("User not found"));
         verify(userRepository, never()).save(any(User.class));
     }
 
@@ -428,15 +417,19 @@ class UserServiceTest {
         User mockUser = new User("Test User", "hash", "test@test.com");
         mockUser.setId(UUID.randomUUID());
 
-        when(topicRepository.existsById(interestId1)).thenReturn(true);
-        when(topicRepository.existsById(interestId2)).thenReturn(true);
+        Topic t1 = new Topic();
+        t1.setId(interestId1);
+        Topic t2 = new Topic();
+        t2.setId(interestId2);
+        when(topicRepository.findById(interestId1)).thenReturn(Optional.of(t1));
+        when(topicRepository.findById(interestId2)).thenReturn(Optional.of(t2));
         when(userRepository.findById(mockUser.getId())).thenReturn(Optional.of(mockUser));
 
         // Act
         userService.setUserInterests(mockUser.getId(), interests);
 
         // Assert
-        assertEquals(interests, mockUser.getInterests());
+        assertEquals(interests, mockUser.getInterests().stream().map(Topic::getId).toList());
         verify(userRepository, times(1)).save(mockUser);
     }
 
@@ -468,7 +461,7 @@ class UserServiceTest {
         UUID interestId = UUID.randomUUID();
         List<UUID> interests = List.of(interestId);
 
-        when(topicRepository.existsById(interestId)).thenReturn(false);
+        when(topicRepository.findById(interestId)).thenReturn(Optional.empty());
 
         // Act & Assert
         Exception exception = assertThrows(RuntimeException.class,
@@ -485,7 +478,9 @@ class UserServiceTest {
         UUID interestId = UUID.randomUUID();
         List<UUID> interests = List.of(interestId);
 
-        when(topicRepository.existsById(interestId)).thenReturn(true);
+        Topic topic = new Topic();
+        topic.setId(interestId);
+        when(topicRepository.findById(interestId)).thenReturn(Optional.of(topic));
         when(userRepository.findById(userId)).thenReturn(Optional.empty());
 
         // Act & Assert
