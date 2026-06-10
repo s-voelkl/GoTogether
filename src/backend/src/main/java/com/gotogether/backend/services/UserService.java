@@ -9,6 +9,7 @@ import com.gotogether.backend.repository.CompanyRepository;
 import com.gotogether.backend.repository.TopicRepository;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.validator.routines.EmailValidator;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -24,6 +25,7 @@ public class UserService {
     private final CompanyRepository companyRepo;
 
     private final UserMapper userMapper;
+    private final PasswordEncoder passwordEncoder;
 
     public UserDTO getUserById(UUID id) {
         return repo.findById(id).map(userMapper::toDTO)
@@ -35,15 +37,6 @@ public class UserService {
     }
 
     public UUID createUser(String name, String password, String email) {
-        // email must be unique in both users and companies
-        if (repo.existsByEmail(email.trim().toLowerCase())) {
-            throw new RuntimeException("Email already exists: " + email);
-        }
-
-        if (companyRepo.existsByEmail(email.trim().toLowerCase())) {
-            throw new RuntimeException("Email already exists at companies: " + email);
-        }
-
         // email validation
         if (email == null
                 || email.trim().isEmpty()
@@ -61,11 +54,24 @@ public class UserService {
             throw new RuntimeException("Password must not be empty.");
         }
 
+        String normalizedEmail = email.trim().toLowerCase();
+
+        // email must be unique in both users and companies
+        if (repo.existsByEmail(normalizedEmail)) {
+            throw new RuntimeException("Email already exists: " + email);
+        }
+
+        if (companyRepo.existsByEmail(normalizedEmail)) {
+            throw new RuntimeException("Email already exists at companies: " + email);
+        }
+
+        String passwordHash = passwordEncoder.encode(password);
+
         // create user
         User user = repo.save(new User(
                 name.trim(),
-                password,
-                email.trim().toLowerCase()));
+                passwordHash,
+                normalizedEmail));
 
         return user.getId();
     }
@@ -83,14 +89,16 @@ public class UserService {
             throw new RuntimeException("Password must not be empty.");
         }
 
+        String normalizedEmail = email.trim().toLowerCase();
+
         // find user by email
-        User user = repo.findByEmail(email.toLowerCase());
+        User user = repo.findByEmail(normalizedEmail);
         if (user == null) {
             throw new RuntimeException("No user found with email: " + email);
         }
 
         // check password
-        if (!user.getPassword().equals(password)) {
+        if (!passwordEncoder.matches(password, user.getPassword())) {
             throw new RuntimeException("Invalid password.");
         }
 
