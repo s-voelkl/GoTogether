@@ -98,6 +98,8 @@ Response:
 
 ### Android Setup
 
+This should not be run with WSL, but directly on Windows or MacOS. It requires the installation of Android Studio and the Android SDK, which are necessary for running the Expo app on an Android device or emulator.
+
 - Android Studio: Download and install Android Studio.
 - Android SDK: Open Android Studio, go to the ``Tools > SDK Manager`` and ensure you have installed:
   - Android SDK Platform (usually the latest, e.g., API 34 or 35)
@@ -111,7 +113,17 @@ Response:
     export PATH=$PATH:$ANDROID_HOME/platform-tools
     ```
 
-    Edit e.g. with `nano ~/.bashrc` and add the above lines at the end of the file.
-    Run `source ~/.bashrc` afterwards.
+Linux:
 
-- Be sure to have Android development options enabled on your Android device and connect it via USB and allow USB debugging. Check connection via `adb devices` in the terminal.
+- Edit e.g. with `nano ~/.bashrc` and add the above lines at the end of the file.
+- Run `source ~/.bashrc` afterwards.
+
+Windows:
+Go to System Properties > Environment Variables and add the following variables:
+
+- Variable name `ANDROID_HOME`, value `C:\Users\YourUsername\AppData\Local\Android\Sdk` (adjustment needed)
+- Edit the "Path": New `%ANDROID_HOME%\emulator` and `%ANDROID_HOME%\platform-tools`
+
+Be sure to have Android development options enabled on your Android device and connect it via USB and allow USB debugging. Check connection via `adb devices` in the Windows Powershell. Emulation is possible via Android Studio.
+
+Run via `yarn android` in `cd ./src/frontend`. On the first startup, this will install the Gradle dependencies.
