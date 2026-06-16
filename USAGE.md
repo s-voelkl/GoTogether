@@ -126,4 +126,9 @@ Go to System Properties > Environment Variables and add the following variables:
 
 Be sure to have Android development options enabled on your Android device and connect it via USB and allow USB debugging. Check connection via `adb devices` in the Windows Powershell. Emulation is possible via Android Studio.
 
-Run via `yarn android` in `cd ./src/frontend`. On the first startup, this will install the Gradle dependencies.
+Run via `yarn android` in `cd ./src/frontend`. On the first startup, this will install the Gradle dependencies. If errors occur, a system restart can help.
+
+Known Issues:
+
+- ``Class org.gradle.jvm.toolchain.JvmVendorSpec does not have member field '... IBM_SEMERU'``:
+  Downgrading the Gradle version to a stable, supported release for React Native (8.13) in your ``gradle-wrapper.properties`` is possible. Then run `yarn android` again.
