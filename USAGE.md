@@ -13,6 +13,7 @@
 2. Secrets im Backend anpassen:
 
     `src/backend/src/main/resources/application.properties`:
+
     ```properties
     spring.datasource.url=jdbc:postgresql://localhost:5432/gotogether_db
     spring.datasource.username=myUsername
@@ -20,20 +21,20 @@
     ```
 
     `src/backend/src/test/resources/application.properties`:
+
     ```properties
     spring.datasource.url=jdbc:h2:mem:gotogether_db;
     spring.datasource.username=myTestUsername
     spring.datasource.password=myTestPassword
     ```
 
-
 3. Java JDK [AWS Corretto](https://docs.aws.amazon.com/corretto/latest/corretto-21-ug/downloads-list.html) downloaden.
 
 4. yarn version 1.x installieren: [Yarn Installation](https://classic.yarnpkg.com/en/docs/install).
 
 5. Docker:
-    Für **Windows User**: Alles MUSS in wsl stattfinden, damit docker verwendet werden kann. 
-    Achtet darauf wsl genügend Speicher und RAM zuzuweisen ([WSL Installer](https://learn.microsoft.com/de-de/windows/wsl/install)). 
+    Für **Windows User**: Alles MUSS in wsl stattfinden, damit docker verwendet werden kann.
+    Achtet darauf wsl genügend Speicher und RAM zuzuweisen ([WSL Installer](https://learn.microsoft.com/de-de/windows/wsl/install)).
     WSL starten mit `wsl`.
     Teils braucht man `sudo` Rechte, um docker zu verwenden, z.B. bei ``nodemon`` unten.
 
@@ -63,7 +64,8 @@ Es befinden sich 10 sample entries im users table.
 
 Request: `curl http://localhost:8080/api/users`
 
-Response: 
+Response:
+
 ```json
 [
   {
@@ -87,6 +89,29 @@ Response:
 ]
 ```
 
-## Frontend (missing)
+## Frontend
 
-tbd
+- Install yarn version 1.x: [Yarn Installation](https://classic.yarnpkg.com/en/docs/install).
+- Typescript and Expo are already included in `src/frontend/package.json`.
+- Navigate to ``cd ./src/frontend/``
+- Install dependencies with `yarn install`
+
+### Android Setup
+
+- Android Studio: Download and install Android Studio.
+- Android SDK: Open Android Studio, go to the ``Tools > SDK Manager`` and ensure you have installed:
+  - Android SDK Platform (usually the latest, e.g., API 34 or 35)
+  - Android SDK Build-Tools
+  - Android SDK Command-line Tools (normally not automatically installed)
+- Environment Variables: Add the Android SDK paths to your shell configuration file (e.g., ~/.bashrc or ~/.zshrc):
+
+    ```bash
+    export ANDROID_HOME=$HOME/Android/Sdk
+    export PATH=$PATH:$ANDROID_HOME/emulator
+    export PATH=$PATH:$ANDROID_HOME/platform-tools
+    ```
+
+    Edit e.g. with `nano ~/.bashrc` and add the above lines at the end of the file.
+    Run `source ~/.bashrc` afterwards.
+
+- Be sure to have Android development options enabled on your Android device and connect it via USB and allow USB debugging. Check connection via `adb devices` in the terminal.
