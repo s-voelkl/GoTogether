@@ -199,7 +199,7 @@ const styles = StyleSheet.create({
   },
 
   title: {
-    fontSize: 18,
+    fontSize: 16,
     fontFamily: font.headingBold,
     fontWeight: '900',
     color: colors.black,
@@ -232,12 +232,5 @@ const styles = StyleSheet.create({
     backgroundColor: colors.black,
   },
 
-  title: {
-    fontSize: 16,
-    fontFamily: font.headingBold,
-    fontWeight: '900',
-    color: colors.black,
-    letterSpacing: -0.3,
-  },
   count: { color: colors.gray500 },
 });
