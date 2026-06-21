@@ -35,6 +35,9 @@ class UserServiceTest {
     @Mock
     private TopicRepository topicRepository;
 
+    @Mock
+    private SecurityService securityService;
+
     @InjectMocks
     private UserService userService;
 
@@ -280,6 +283,7 @@ class UserServiceTest {
         User mockUser = new User("Test User", "correct_hash", "test@test.com");
         mockUser.setId(UUID.randomUUID());
         when(userRepository.findByEmail("test@test.com")).thenReturn(mockUser);
+        when(securityService.passwordMatches("correct_hash", "correct_hash")).thenReturn(true);
 
         // Act
         UUID resultId = userService.loginUser("test@test.com", "correct_hash");
@@ -326,6 +330,7 @@ class UserServiceTest {
         // Arrange
         User mockUser = new User("Test User", "correct_hash", "test@test.com");
         when(userRepository.findByEmail("test@test.com")).thenReturn(mockUser);
+        when(securityService.passwordMatches("wrong_hash", "correct_hash")).thenReturn(false);
 
         // Act & Assert
         assertThrows(RuntimeException.class,
@@ -341,6 +346,7 @@ class UserServiceTest {
         User mockUser = new User("Test User", "correct_hash", "test@test.com");
         mockUser.setId(UUID.randomUUID());
         when(userRepository.findByEmail("test@test.com")).thenReturn(mockUser);
+        when(securityService.passwordMatches("correct_hash", "correct_hash")).thenReturn(true);
 
         // Act: last login time should be updated to now
         userService.loginUser("test@test.com", "correct_hash");
