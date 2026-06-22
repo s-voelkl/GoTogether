@@ -1,0 +1,40 @@
+{
+  "expo": {
+    "name": "GoTogether",
+    "slug": "gotogether",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "splash": {
+      "image": "./assets/splash-icon.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#FAE255"
+    },
+    "ios": {
+      "supportsTablet": false,
+      "bundleIdentifier": "com.yourteam.gotogether"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#FAE255"
+      },
+      "package": "com.yourteam.gotogether"
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "plugins": [
+      "@maplibre/maplibre-react-native",
+      [
+        "expo-camera",
+        { "cameraPermission": "Allow GoTogether to scan challenge QR codes." }
+      ],
+      [
+        "expo-location",
+        { "locationWhenInUsePermission": "Show nearby challenges and your position on the map." }
+      ]
+    ]
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "name": "GoTogether",
+  "private": true,
+  "scripts": {
+    "db": "docker compose up -d",
+    "db:stop": "docker compose stop",
+    "db:start": "docker compose start",
+    "frontend": "yarn --cwd frontend start",
+    "backend": "cd backend && ./gradlew bootRun",
+    "backend:watch": "nodemon --watch backend/src --exec 'cd backend && ./gradlew bootRun --continuous'",
+    "backend:build": "cd backend && ./gradlew clean build"
+  }
+}

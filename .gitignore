@@ -1,6 +1,16 @@
 # drawio backup files
 **/*.drawio.bkp
 
+src/frontend/node_modules/
+src/frontend/.expo/
+src/frontend/.env
+
+# Backend
+src/backend/.gradle/
+src/backend/build/
+src/backend/*.jar
+src/backend/.env
+
 # Next.js
 # dependencies
 /node_modules
@@ -194,3 +204,9 @@ yarn.lock
 *.njsproj
 *.sln
 *.sw?
+
+# amazon corretto
+amazon-corretto-*
+
+# frontend expo
+frontend/*
