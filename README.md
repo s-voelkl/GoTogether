@@ -8,6 +8,10 @@ Users are looking for real-world encounters, lasting friendships, or at least de
 The source code of this project is released under the MIT License. For more information, see the license file `src/LICENSE`.
 The documentation and all accompanying materials are released under the CC-BY 4.0 License (see `documentation/LICENSE`).
 
+## USAGE
+
+The project setup and usage can be found in the [Usage Instructions](USAGE.md) document.
+
 ## Repository Structure
 
 - `src/backend`: Java Spring Boot backend with REST API
