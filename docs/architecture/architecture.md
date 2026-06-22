@@ -1,28 +1,16 @@
 # GoTogether Architecture
 
-## Drei-Schichten-Architektur
+## Three-Tier Architecture
 
-Die Architektur folgt dem MVP und konzentriert sich auf die Kern-Use-Cases aus den Abschnitten MVP, Inhaltliche User Stories, Technische User Stories und Unternehmensbezogene User Stories.
+The architecture follows the MVP and focuses on the core use cases from the sections MVP, Content User Stories, Technical User Stories, and Business-Related User Stories.
 
-**Presentation Tier:** Die React-Native-App zeigt die offene Challenge-Liste, die Echtzeitkarte, Social-Battery, Matching und den Reward-Status. Sie kapselt nur die UI und kommuniziert über die API mit dem Backend.
+**Presentation Tier:** The React Native app displays the open challenge list, the real-time map, social battery, matching, and reward status. It encapsulates only the UI and communicates with the backend via the API.
 
-**Application Tier:** Das Java Springboot mit REST-API Schnittstelle als Backend setzt die MVP-Logik um: Challenge-Filter, Kartenabfragen, Social-Battery-Filter, Interessen-Matching, QR-Check-in, Belohnungen und Unternehmens-APIs für Events oder Challenges.
+**Application Tier:** The Java Spring Boot backend with a REST API interface implements the MVP logic: challenge filters, map queries, social battery filtering, interest matching, QR check-in, rewards, and company APIs for events or challenges.
 
-**Data Tier:** PostgreSQL speichert die dafür nötigen Daten wie Nutzer, Profile, Interessen, Quests, Events, Check-ins, Freundschaften, Rewards und Unternehmensprofile.
+**Data Tier:** PostgreSQL stores the required data, including users, profiles, interests, quests, events, check-ins, friendships, rewards, and company profiles.
 
-## Repository Structure
-
-- `src/backend`: Java Springboot Backend mit REST-API
-  - `controller`: REST-Controller für Endpunkte
-  - `services`: Geschäftslogik für Use Cases
-  - `model`: JPA-Entities und Embeddables für DB
-  - `repository`: JPA-Repositories für DB-Zugriff
-  - `dto`: Data Transfer Objects für API-Kommunikation
-- `src/frontend`: React-Native App
-  - `components`: Wiederverwendbare UI-Komponenten
-  - `screens`: Hauptbildschirme der App
-  - `services`: API-Client und Logik für Frontend
-  - `assets`: Bilder, Icons, Styles
+![Architecture Component Diagram](./component-diagram.png)
 
 ## Backend-Architecture
 
