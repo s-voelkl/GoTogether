@@ -24,6 +24,7 @@ public class CompanyService {
     private final UserRepository userRepo;
 
     private final CompanyMapper companyMapper;
+    private final SecurityService securityService;
 
     public CompanyDTO getCompanyById(UUID id) {
         return repo.findById(id)
@@ -39,20 +40,22 @@ public class CompanyService {
 
     public UUID createCompany(String name, String password, String email, String street, String houseNumber,
             String zipCode, String city, double latitude, double longitude) {
-        // email must be unique in both companies and users
-        if (repo.existsByEmail(email.trim().toLowerCase())) {
-            throw new RuntimeException("Email already exists: " + email);
-        }
-
-        if (userRepo.existsByEmail(email.trim().toLowerCase())) {
-            throw new RuntimeException("Email already exists at users: " + email);
-        }
-
         // email validation
         if (email == null
                 || email.trim().isEmpty()
                 || !EmailValidator.getInstance().isValid(email.trim().toLowerCase())) {
             throw new RuntimeException("Invalid email address: " + email);
+        }
+
+        String normalizedEmail = email.trim().toLowerCase();
+
+        // email must be unique in both companies and users
+        if (repo.existsByEmail(normalizedEmail)) {
+            throw new RuntimeException("Email already exists: " + email);
+        }
+
+        if (userRepo.existsByEmail(normalizedEmail)) {
+            throw new RuntimeException("Email already exists at users: " + email);
         }
 
         // company name
@@ -83,14 +86,16 @@ public class CompanyService {
             throw new RuntimeException("Longitude must be between -180 and 180: " + longitude);
         }
 
+        String passwordHash = securityService.hashPassword(password);
+
         Address address = new Address(street.trim(), houseNumber.trim(), zipCode.trim(), city.trim());
         Location location = new Location(latitude, longitude);
 
         // create company
         Company company = repo.save(new Company(
                 name.trim(),
-                password,
-                email.trim().toLowerCase(),
+                passwordHash,
+                normalizedEmail,
                 address,
                 location));
 
@@ -98,6 +103,13 @@ public class CompanyService {
     }
 
     public UUID loginCompany(String email, String password) {
+        Company company = authenticateCompany(email, password);
+
+        repo.save(company);
+        return company.getId();
+    }
+
+    public Company authenticateCompany(String email, String password) {
         // validate email input
         if (email == null
                 || email.trim().isEmpty()
@@ -110,25 +122,27 @@ public class CompanyService {
             throw new RuntimeException("Password must not be empty.");
         }
 
+        String normalizedEmail = email.trim().toLowerCase();
+
         // find company by email
-        Company company = repo.findByEmail(email.toLowerCase());
+        Company company = repo.findByEmail(normalizedEmail);
         if (company == null) {
             throw new RuntimeException("No company found with email: " + email);
         }
 
         // check password
-        if (!company.getPassword().equals(password)) {
+        if (!securityService.passwordMatches(password, company.getPassword())) {
             throw new RuntimeException("Invalid password.");
         }
 
-        repo.save(company);
-        return company.getId();
+        return company;
     }
 
     public int addCompanyCurrency(UUID companyId, int amount) {
         if (amount < 0) {
             throw new RuntimeException("Amount must be positive: " + amount);
         }
+        
 
         Company company = repo.findById(companyId)
                 .orElseThrow(() -> new RuntimeException("Company not found with id: " + companyId));

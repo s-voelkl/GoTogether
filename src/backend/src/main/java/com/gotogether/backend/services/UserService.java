@@ -9,7 +9,6 @@ import com.gotogether.backend.repository.CompanyRepository;
 import com.gotogether.backend.repository.TopicRepository;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.validator.routines.EmailValidator;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -25,7 +24,7 @@ public class UserService {
     private final CompanyRepository companyRepo;
 
     private final UserMapper userMapper;
-    private final PasswordEncoder passwordEncoder;
+    private final SecurityService securityService;
 
     public UserDTO getUserById(UUID id) {
         return repo.findById(id).map(userMapper::toDTO)
@@ -65,7 +64,7 @@ public class UserService {
             throw new RuntimeException("Email already exists at companies: " + email);
         }
 
-        String passwordHash = passwordEncoder.encode(password);
+        String passwordHash = securityService.hashPassword(password);
 
         // create user
         User user = repo.save(new User(
@@ -77,6 +76,15 @@ public class UserService {
     }
 
     public UUID loginUser(String email, String password) {
+        User user = authenticateUser(email, password);
+
+        user.setLastLogin(java.time.LocalDateTime.now());
+        repo.save(user);
+
+        return user.getId();
+    }
+
+    public User authenticateUser(String email, String password) {
         // validate email input
         if (email == null
                 || email.trim().isEmpty()
@@ -98,14 +106,11 @@ public class UserService {
         }
 
         // check password
-        if (!passwordEncoder.matches(password, user.getPassword())) {
+        if (!securityService.passwordMatches(password, user.getPassword())) {
             throw new RuntimeException("Invalid password.");
         }
 
-        // update last login time
-        user.setLastLogin(java.time.LocalDateTime.now());
-        repo.save(user);
-        return user.getId();
+        return user;
     }
 
     public int setUserSocialBattery(UUID userId, int socialBattery) {
