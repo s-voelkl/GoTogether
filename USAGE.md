@@ -106,11 +106,11 @@ Install the Expo Dev Client for running on the Android device: `npx install expo
 Verifiy that the Android device is connected and recognized by running `adb devices`. If the device is not listed, ensure that USB debugging is enabled on the device and that the necessary drivers are installed.
 
 Run the Expo app on the Android device with `npx expo run:android --device` and select your device.
-Alternatively, open the web client with `yarn web`.
-
-You might need to change the ``src/frontend/android/settings.gradle`` file.
+Alternatively, open the web client with `yarn web` or `yarn expo start --dev-client`.
 
 This page can help out: [https://docs.expo.dev/build/setup/#install-the-latest-eas-cli](https://docs.expo.dev/build/setup/#install-the-latest-eas-cli)
+
+You might need to change the ``src/frontend/android/settings.gradle`` file.
 
 ```gradle
 
