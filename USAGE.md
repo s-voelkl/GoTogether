@@ -100,35 +100,39 @@ Response:
 
 This should not be run with WSL, but directly on Windows or MacOS. It requires the installation of Android Studio and the Android SDK, which are necessary for running the Expo app on an Android device or emulator.
 
-- Android Studio: Download and install Android Studio.
-- Android SDK: Open Android Studio, go to the ``Tools > SDK Manager`` and ensure you have installed:
-  - Android SDK Platform (usually the latest, e.g., API 34 or 35)
-  - Android SDK Build-Tools
-  - Android SDK Command-line Tools (normally not automatically installed)
-- Environment Variables: Add the Android SDK paths to your shell configuration file (e.g., ~/.bashrc or ~/.zshrc):
+Follow this tutorial step by step: [https://reactnative.dev/docs/environment-setup](https://reactnative.dev/docs/environment-setup)
 
-    ```bash
-    export ANDROID_HOME=$HOME/Android/Sdk
-    export PATH=$PATH:$ANDROID_HOME/emulator
-    export PATH=$PATH:$ANDROID_HOME/platform-tools
-    ```
+Install the Expo Dev Client for running on the Android device: `npx install expo-dev-client`
+Verifiy that the Android device is connected and recognized by running `adb devices`. If the device is not listed, ensure that USB debugging is enabled on the device and that the necessary drivers are installed.
 
-Linux:
+Run the Expo app on the Android device with `npx expo run:android --device` and select your device.
+Alternatively, open the web client with `yarn web`.
 
-- Edit e.g. with `nano ~/.bashrc` and add the above lines at the end of the file.
-- Run `source ~/.bashrc` afterwards.
+You might need to change the ``src/frontend/android/settings.gradle`` file.
 
-Windows:
-Go to System Properties > Environment Variables and add the following variables:
+```gradle
 
-- Variable name `ANDROID_HOME`, value `C:\Users\YourUsername\AppData\Local\Android\Sdk` (adjustment needed)
-- Edit the "Path": New `%ANDROID_HOME%\emulator` and `%ANDROID_HOME%\platform-tools`
 
-Be sure to have Android development options enabled on your Android device and connect it via USB and allow USB debugging. Check connection via `adb devices` in the Windows Powershell. Emulation is possible via Android Studio.
-
-Run via `yarn android` in `cd ./src/frontend`. On the first startup, this will install the Gradle dependencies. If errors occur, a system restart can help.
-
-Known Issues:
-
-- ``Class org.gradle.jvm.toolchain.JvmVendorSpec does not have member field '... IBM_SEMERU'``:
-  Downgrading the Gradle version to a stable, supported release for React Native (8.13) in your ``gradle-wrapper.properties`` is possible. Then run `yarn android` again.
+pluginManagement {
+def utf8 = java.nio.charset.StandardCharsets.UTF_8
+  def reactNativeGradlePlugin = new File(
+  new String(providers.exec {
+      workingDir(rootDir)
+      commandLine("node", "--print", "require.resolve('@react-native/gradle-plugin/package.json', { paths: [require.resolve('react-native/package.json')] })")
+  }.standardOutput.asBytes.get(), utf8).trim()
+  ).getParentFile().absolutePath
+  includeBuild(reactNativeGradlePlugin)
+  
+  def expoPluginsPath = new File(
+  new String(providers.exec {
+      workingDir(rootDir)
+      commandLine("node", "--print", "require.resolve('expo-modules-autolinking/package.json', { paths: [require.resolve('expo/package.json')] })")
+  }.standardOutput.asBytes.get(), utf8).trim(),
+    "../android/expo-gradle-plugin"
+  ).absolutePath
+  includeBuild(expoPluginsPath)
+}
+ 
+...
+ 
+```
