@@ -13,6 +13,7 @@
 2. Secrets im Backend anpassen:
 
     `src/backend/src/main/resources/application.properties`:
+
     ```properties
     spring.datasource.url=jdbc:postgresql://localhost:5432/gotogether_db
     spring.datasource.username=myUsername
@@ -20,20 +21,20 @@
     ```
 
     `src/backend/src/test/resources/application.properties`:
+
     ```properties
     spring.datasource.url=jdbc:h2:mem:gotogether_db;
     spring.datasource.username=myTestUsername
     spring.datasource.password=myTestPassword
     ```
 
-
 3. Java JDK [AWS Corretto](https://docs.aws.amazon.com/corretto/latest/corretto-21-ug/downloads-list.html) downloaden.
 
 4. yarn version 1.x installieren: [Yarn Installation](https://classic.yarnpkg.com/en/docs/install).
 
 5. Docker:
-    Für **Windows User**: Alles MUSS in wsl stattfinden, damit docker verwendet werden kann. 
-    Achtet darauf wsl genügend Speicher und RAM zuzuweisen ([WSL Installer](https://learn.microsoft.com/de-de/windows/wsl/install)). 
+    Für **Windows User**: Alles MUSS in wsl stattfinden, damit docker verwendet werden kann.
+    Achtet darauf wsl genügend Speicher und RAM zuzuweisen ([WSL Installer](https://learn.microsoft.com/de-de/windows/wsl/install)).
     WSL starten mit `wsl`.
     Teils braucht man `sudo` Rechte, um docker zu verwenden, z.B. bei ``nodemon`` unten.
 
@@ -63,7 +64,8 @@ Es befinden sich 10 sample entries im users table.
 
 Request: `curl http://localhost:8080/api/users`
 
-Response: 
+Response:
+
 ```json
 [
   {
