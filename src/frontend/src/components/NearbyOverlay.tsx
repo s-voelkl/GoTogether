@@ -106,7 +106,7 @@ export const NearbyOverlay = forwardRef<NearbyOverlayHandle, NearbyOverlayProps>
     }
 
     return (
-      <View style={styles.wrap} pointerEvents="box-none">
+      <View style={[styles.wrap, { pointerEvents: 'box-none' }]}>
         <View style={styles.card}>
           <View style={styles.handle} />
 

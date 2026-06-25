@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 import {
   Animated,
   Linking,
+  Platform,
   StyleSheet,
   Text,
   TextInput,
@@ -60,7 +61,7 @@ export const CheckInSheet: React.FC<CheckInSheetProps> = ({
     Animated.timing(opacity, {
       toValue: open ? 1 : 0,
       duration: 200,
-      useNativeDriver: true,
+      useNativeDriver: Platform.OS !== 'web',
     }).start();
   }, [open]); // intentionally only runs when the sheet opens/closes
 
@@ -123,8 +124,7 @@ export const CheckInSheet: React.FC<CheckInSheetProps> = ({
 
   return (
     <Animated.View
-      style={[styles.sheet, { opacity }]}
-      pointerEvents={open ? 'auto' : 'none'}
+      style={[styles.sheet, { opacity, pointerEvents: open ? 'auto' : 'none' }]}
     >
       <Text style={styles.title}>Check in</Text>
 

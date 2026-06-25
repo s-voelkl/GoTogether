@@ -50,20 +50,30 @@ export const layout = {
 export const nearbyRadius = layout.cardRadius - layout.nearbyInset; // 34
 
 export const shadow = {
-  sm: {
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.08,
-    shadowRadius: 4,
-    elevation: 2,
-  },
-  md: {
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.1,
-    shadowRadius: 12,
-    elevation: 6,
-  },
+  sm: Platform.select({
+    web: {
+      boxShadow: '0px 1px 4px rgba(0, 0, 0, 0.08)',
+    },
+    default: {
+      shadowColor: '#000',
+      shadowOffset: { width: 0, height: 1 },
+      shadowOpacity: 0.08,
+      shadowRadius: 4,
+      elevation: 2,
+    },
+  }) as object,
+  md: Platform.select({
+    web: {
+      boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.10)',
+    },
+    default: {
+      shadowColor: '#000',
+      shadowOffset: { width: 0, height: 4 },
+      shadowOpacity: 0.1,
+      shadowRadius: 12,
+      elevation: 6,
+    },
+  }) as object,
 };
 
 // Unbounded loaded via expo-font in App.tsx

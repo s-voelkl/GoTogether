@@ -67,8 +67,7 @@ export const HomeScreen: React.FC = () => {
       />
 
       <View
-        pointerEvents={filterOpen ? 'auto' : 'none'}
-        style={styles.filterLayer}
+        style={[styles.filterLayer, { pointerEvents: filterOpen ? 'auto' : 'none' }]}
       >
         <FilterSheet open={filterOpen} onApply={closeFilter} />
       </View>
