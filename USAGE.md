@@ -110,6 +110,8 @@ Alternatively, open the web client with `yarn web`.
 
 You might need to change the ``src/frontend/android/settings.gradle`` file.
 
+This page can help out: [https://docs.expo.dev/build/setup/#install-the-latest-eas-cli](https://docs.expo.dev/build/setup/#install-the-latest-eas-cli)
+
 ```gradle
 
 
