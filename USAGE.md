@@ -35,6 +35,8 @@
 5. Docker:
     Für **Windows User**: Alles MUSS in wsl stattfinden, damit docker verwendet werden kann.
     Achtet darauf wsl genügend Speicher und RAM zuzuweisen ([WSL Installer](https://learn.microsoft.com/de-de/windows/wsl/install)).
+    Für **Windows User**: Alles MUSS in wsl stattfinden, damit docker verwendet werden kann.
+    Achtet darauf wsl genügend Speicher und RAM zuzuweisen ([WSL Installer](https://learn.microsoft.com/de-de/windows/wsl/install)).
     WSL starten mit `wsl`.
     Teils braucht man `sudo` Rechte, um docker zu verwenden, z.B. bei ``nodemon`` unten.
 
@@ -63,6 +65,8 @@ Mit Hilfe der swagger-ui kann man alle REST-API Endpoints anzeigen lassen: `http
 Es befinden sich 10 sample entries im users table.
 
 Request: `curl http://localhost:8080/api/users`
+
+Response:
 
 Response:
 
