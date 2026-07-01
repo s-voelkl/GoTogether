@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import {
   Animated,
+  Platform,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -32,14 +33,13 @@ export const FilterSheet: React.FC<FilterSheetProps> = ({ open, onApply }) => {
     Animated.timing(opacity, {
       toValue: open ? 1 : 0,
       duration: 200,
-      useNativeDriver: true,
+      useNativeDriver: Platform.OS !== 'web',
     }).start();
   }, [open, opacity]);
 
   return (
     <Animated.View
-      style={[styles.sheet, { opacity }]}
-      pointerEvents={open ? 'auto' : 'none'}
+      style={[styles.sheet, { opacity, pointerEvents: open ? 'auto' : 'none' }]}
     >
       <Text style={styles.title}>Challenges</Text>
       <Text style={styles.subtitle}>Pick one or more categories</Text>

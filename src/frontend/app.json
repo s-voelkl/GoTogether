@@ -20,7 +20,13 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FAE255"
       },
-      "package": "com.yourteam.gotogether"
+      "package": "com.yourteam.gotogether",
+      "permissions": [
+        "android.permission.CAMERA",
+        "android.permission.RECORD_AUDIO",
+        "android.permission.ACCESS_COARSE_LOCATION",
+        "android.permission.ACCESS_FINE_LOCATION"
+      ]
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -29,12 +35,21 @@
       "@maplibre/maplibre-react-native",
       [
         "expo-camera",
-        { "cameraPermission": "Allow GoTogether to scan challenge QR codes." }
+        {
+          "cameraPermission": "Allow GoTogether to scan challenge QR codes."
+        }
       ],
       [
         "expo-location",
-        { "locationWhenInUsePermission": "Show nearby challenges and your position on the map." }
+        {
+          "locationWhenInUsePermission": "Show nearby challenges and your position on the map."
+        }
       ]
-    ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "ac133a02-4eab-409b-86f2-32adc923b777"
+      }
+    }
   }
 }
