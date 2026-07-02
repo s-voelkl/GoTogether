@@ -3,7 +3,7 @@ import { FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native
 import { useNavigation, useRoute } from '@react-navigation/native';
 
 import { ScreenShell } from '../components/ScreenShell';
-import { FilterButton } from '../components/FilterButton';
+// import { FilterButton } from '../components/FilterButton';
 import { FilterSheet } from '../components/FilterSheet';
 import { ChallengeCard } from '../components/ChallengeCard';
 import { ChallengeDetail } from '../components/ChallengeDetail';
@@ -27,28 +27,6 @@ export const ChallengesScreen: React.FC = () => {
   const [detailOpen, setDetailOpen] = useState(false);
   const [detailInstantOpen, setDetailInstantOpen] = useState(false);
   const [selected, setSelected] = useState<Challenge | null>(null);
-
-  const anyOverlayOpen = filterOpen || checkInOpen || detailOpen;
-
-  const onHeaderRight = useCallback(() => {
-    if (checkInOpen) {
-      setCheckInOpen(false);
-      return;
-    }
-
-    if (detailOpen) {
-      setDetailOpen(false);
-      setDetailInstantOpen(false);
-      return;
-    }
-
-    if (filterOpen) {
-      setFilterOpen(false);
-      return;
-    }
-
-    setFilterOpen(true);
-  }, [checkInOpen, detailOpen, filterOpen]);
 
   const openDetail = useCallback((challenge: Challenge) => {
     setFilterOpen(false);
@@ -110,7 +88,8 @@ export const ChallengesScreen: React.FC = () => {
 
   return (
     <ScreenShell
-      rightButton={<FilterButton open={anyOverlayOpen} onPress={onHeaderRight} />}
+      // rightButton={<FilterButton open={anyOverlayOpen} onPress={onHeaderRight} />}
+      rightButton={null}
     >
       <View style={styles.scanRow}>
         <TouchableOpacity

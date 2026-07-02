@@ -66,6 +66,8 @@ export const HomeScreen: React.FC = () => {
     PLACEHOLDER_USER_INTEREST_IDS,
     mockChallenges,
   );
+  const [showAssistantGreeting, setShowAssistantGreeting] = useState(true);
+  const greetingOpacity = useRef(new Animated.Value(1)).current;
 
   const coordsRef = useRef(coords);
   coordsRef.current = coords;
@@ -217,6 +219,25 @@ export const HomeScreen: React.FC = () => {
     return unsub;
   }, [navigation]);
 
+  useEffect(() => {
+    const hideDelay = 4500;
+    const fadeDuration = 300;
+
+    const timer = setTimeout(() => {
+      Animated.timing(greetingOpacity, {
+        toValue: 0,
+        duration: fadeDuration,
+        useNativeDriver: true,
+      }).start(({ finished }) => {
+        if (finished) {
+          setShowAssistantGreeting(false);
+        }
+      });
+    }, hideDelay);
+
+    return () => clearTimeout(timer);
+  }, [greetingOpacity]);
+
   return (
     <ScreenShell
       rightButton={<FilterButton open={filterOpen} onPress={toggleFilter} />}
@@ -224,17 +245,22 @@ export const HomeScreen: React.FC = () => {
       cardStyle={styles.mapCard}
     >
       <View collapsable={false} style={styles.mapHost}>
-        <View pointerEvents="none" style={styles.greetingWrap}>
-          <View style={styles.greetingCard}>
-            <Text style={styles.greetingLabel}>KI-Nachricht</Text>
-            <Text style={styles.greetingText}>{assistantGreeting.message}</Text>
-            {assistantGreeting.suggestedChallenge && (
-              <Text style={styles.greetingHint}>
-                Passender Vorschlag: {assistantGreeting.suggestedChallenge.name}
-              </Text>
-            )}
-          </View>
-        </View>
+        {showAssistantGreeting && (
+          <Animated.View
+            pointerEvents="none"
+            style={[styles.greetingWrap, { opacity: greetingOpacity }]}
+          >
+            <View style={styles.greetingCard}>
+              <Text style={styles.greetingLabel}>KI-Nachricht</Text>
+              <Text style={styles.greetingText}>{assistantGreeting.message}</Text>
+              {assistantGreeting.suggestedChallenge && (
+                <Text style={styles.greetingHint}>
+                  Passender Vorschlag: {assistantGreeting.suggestedChallenge.name}
+                </Text>
+              )}
+            </View>
+          </Animated.View>
+        )}
 
         <Map
           androidView="texture"

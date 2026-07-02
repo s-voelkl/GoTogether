@@ -1,7 +1,7 @@
 import React, { useMemo, useState } from 'react';
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View, Linking } from 'react-native';
 import { ScreenShell } from '../components/ScreenShell';
-import { FilterButton } from '../components/FilterButton';
+// import { FilterButton } from '../components/FilterButton';
 import {
   colors,
   continuousRadius,
@@ -14,6 +14,73 @@ import {
 const DAY_MS = 24 * 60 * 60 * 1000;
 const INITIAL_BATTERY = 60;
 const QUICK_VALUES = [20, 40, 60, 80, 100];
+const FRIEND_FILTERS = ['all', 'nearby', 'active'] as const;
+
+type FriendFilter = (typeof FRIEND_FILTERS)[number];
+
+interface Friend {
+  id: string;
+  name: string;
+  initials: string;
+  status: string;
+  distance: string;
+  lastSeen: string;
+  sharedInterest: string;
+  accent: string;
+  active: boolean;
+  nearby: boolean;
+}
+
+const FRIENDS: Friend[] = [
+  {
+    id: 'lena',
+    name: 'Lena',
+    initials: 'LE',
+    status: 'Online',
+    distance: '1.2 km away',
+    lastSeen: 'Active now',
+    sharedInterest: 'Coffee walks',
+    accent: colors.blue,
+    active: true,
+    nearby: true,
+  },
+  {
+    id: 'marcel',
+    name: 'Marcel',
+    initials: 'MA',
+    status: 'Planning a meetup',
+    distance: '3.8 km away',
+    lastSeen: 'Seen 18 min ago',
+    sharedInterest: 'City quests',
+    accent: colors.primary,
+    active: true,
+    nearby: false,
+  },
+  {
+    id: 'karin',
+    name: 'Karin',
+    initials: 'KA',
+    status: 'Quiet mode',
+    distance: 'Nearby',
+    lastSeen: 'Seen yesterday',
+    sharedInterest: 'Low-pressure events',
+    accent: colors.gray200,
+    active: false,
+    nearby: true,
+  },
+  {
+    id: 'tom',
+    name: 'Tom',
+    initials: 'TO',
+    status: 'Weekend only',
+    distance: '7.4 km away',
+    lastSeen: 'Seen 2 days ago',
+    sharedInterest: 'Group challenges',
+    accent: colors.gray100,
+    active: false,
+    nearby: false,
+  },
+];
 
 const clampBattery = (value: number) => Math.min(100, Math.max(0, value));
 
@@ -53,11 +120,33 @@ export const ProfileScreen: React.FC = () => {
   const [savedBattery, setSavedBattery] = useState(INITIAL_BATTERY);
   const [draftBattery, setDraftBattery] = useState(INITIAL_BATTERY);
   const [lastCheckAt, setLastCheckAt] = useState<Date | null>(null);
+  const [friendFilter, setFriendFilter] = useState<FriendFilter>('all');
 
   const refreshNeeded = needsDailyRefresh(lastCheckAt);
   const hasUnsavedChanges = draftBattery !== savedBattery;
 
   const batteryMessage = useMemo(() => getBatteryMessage(draftBattery), [draftBattery]);
+
+  const filteredFriends = useMemo(() => {
+    if (friendFilter === 'nearby') {
+      return FRIENDS.filter(friend => friend.nearby);
+    }
+
+    if (friendFilter === 'active') {
+      return FRIENDS.filter(friend => friend.active);
+    }
+
+    return FRIENDS;
+  }, [friendFilter]);
+
+  const friendStats = useMemo(
+    () => ({
+      total: FRIENDS.length,
+      nearby: FRIENDS.filter(friend => friend.nearby).length,
+      active: FRIENDS.filter(friend => friend.active).length,
+    }),
+    [],
+  );
 
   const saveButtonDisabled = !refreshNeeded && !hasUnsavedChanges;
   const saveButtonLabel = refreshNeeded
@@ -78,7 +167,10 @@ export const ProfileScreen: React.FC = () => {
   const filledSegments = Math.round(draftBattery / 20);
 
   return (
-    <ScreenShell rightButton={<FilterButton />}>
+    <ScreenShell
+      // rightButton={<FilterButton open={friendFilter !== 'all'} onPress={cycleFriendFilter} />}
+      rightButton={null}
+    >
       <ScrollView
         style={styles.scrollView}
         contentContainerStyle={styles.content}
@@ -196,6 +288,76 @@ export const ProfileScreen: React.FC = () => {
           <View style={styles.infoRow}>
             <Text style={styles.infoLabel}>Input source today</Text>
             <Text style={styles.infoValue}>{hasUnsavedChanges ? 'Draft changed' : 'Current profile'}</Text>
+          </View>
+        </View>
+
+        <View style={styles.card}>
+          <Text style={styles.sectionEyebrow}>FRIENDS</Text>
+          <Text style={styles.sectionTitle}>People connected to your profile</Text>
+          <Text style={styles.sectionText}>
+            This view groups close contacts, active people and recent meetup matches.
+          </Text>
+
+          <View style={styles.friendStatsRow}>
+            <View style={styles.friendStat}>
+              <Text style={styles.friendStatValue}>{friendStats.total}</Text>
+              <Text style={styles.friendStatLabel}>Friends</Text>
+            </View>
+            <View style={styles.friendStat}>
+              <Text style={styles.friendStatValue}>{friendStats.nearby}</Text>
+              <Text style={styles.friendStatLabel}>Nearby</Text>
+            </View>
+            <View style={styles.friendStat}>
+              <Text style={styles.friendStatValue}>{friendStats.active}</Text>
+              <Text style={styles.friendStatLabel}>Active</Text>
+            </View>
+          </View>
+
+          <View style={styles.filterRow}>
+            {FRIEND_FILTERS.map(filter => {
+              const selected = friendFilter === filter;
+              const label =
+                filter === 'all' ? 'All' : filter === 'nearby' ? 'Nearby' : 'Active';
+
+              return (
+                <TouchableOpacity
+                  key={filter}
+                  style={[styles.filterChip, selected && styles.filterChipSelected]}
+                  onPress={() => setFriendFilter(filter)}
+                  activeOpacity={0.85}
+                >
+                  <Text style={[styles.filterChipText, selected && styles.filterChipTextSelected]}>
+                    {label}
+                  </Text>
+                </TouchableOpacity>
+              );
+            })}
+          </View>
+
+          <View style={styles.friendList}>
+            {filteredFriends.map((friend, index) => (
+              <View key={friend.id}>
+                {index > 0 && <View style={styles.divider} />}
+
+                <View style={styles.friendRow}>
+                  <View style={[styles.friendAvatar, { backgroundColor: friend.accent }]}>
+                    <Text style={styles.friendAvatarText}>{friend.initials}</Text>
+                  </View>
+
+                  <View style={styles.friendTextBlock}>
+                    <Text style={styles.friendName}>{friend.name}</Text>
+                    <Text style={styles.friendMeta} numberOfLines={1}>
+                      {friend.status} · {friend.distance}
+                    </Text>
+                    <Text style={styles.friendHint}>{friend.sharedInterest}</Text>
+                  </View>
+
+                  <View style={styles.friendState}>
+                    <Text style={styles.friendStateText}>{friend.lastSeen}</Text>
+                  </View>
+                </View>
+              </View>
+            ))}
           </View>
         </View>
 
@@ -505,6 +667,140 @@ const styles = StyleSheet.create({
   quickChipLabelSelected: {
     color: colors.black,
     opacity: 0.75,
+  },
+
+  friendStatsRow: {
+    flexDirection: 'row',
+    gap: 10,
+    marginTop: spacing.md,
+  },
+
+  friendStat: {
+    flex: 1,
+    minWidth: 0,
+    backgroundColor: colors.gray100,
+    ...continuousRadius({ borderRadius: 18 }),
+    borderWidth: 1.5,
+    borderColor: colors.cardBorder,
+    paddingVertical: 14,
+    paddingHorizontal: 12,
+  },
+
+  friendStatValue: {
+    fontSize: 18,
+    fontFamily: font.headingBold,
+    fontWeight: '800',
+    color: colors.black,
+  },
+
+  friendStatLabel: {
+    marginTop: 4,
+    fontSize: 11,
+    fontFamily: font.body,
+    color: colors.gray500,
+  },
+
+  filterRow: {
+    flexDirection: 'row',
+    gap: 8,
+    marginTop: spacing.md,
+    flexWrap: 'wrap',
+  },
+
+  filterChip: {
+    backgroundColor: colors.gray100,
+    borderRadius: radius.full,
+    borderWidth: 1.5,
+    borderColor: colors.cardBorder,
+    paddingVertical: 8,
+    paddingHorizontal: 14,
+  },
+
+  filterChipSelected: {
+    backgroundColor: colors.primary,
+    borderColor: colors.black,
+  },
+
+  filterChipText: {
+    fontSize: 12,
+    fontFamily: font.body,
+    fontWeight: '800',
+    color: colors.gray500,
+  },
+
+  filterChipTextSelected: {
+    color: colors.black,
+  },
+
+  friendList: {
+    marginTop: spacing.sm,
+  },
+
+  friendRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+    paddingVertical: 14,
+  },
+
+  friendAvatar: {
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    borderWidth: 1.5,
+    borderColor: colors.black,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+
+  friendAvatarText: {
+    fontSize: 13,
+    fontFamily: font.headingBold,
+    fontWeight: '800',
+    color: colors.black,
+  },
+
+  friendTextBlock: {
+    flex: 1,
+    minWidth: 0,
+  },
+
+  friendName: {
+    fontSize: 14,
+    fontFamily: font.headingBold,
+    fontWeight: '800',
+    color: colors.black,
+  },
+
+  friendMeta: {
+    marginTop: 3,
+    fontSize: 12,
+    fontFamily: font.body,
+    color: colors.gray500,
+    lineHeight: 16,
+  },
+
+  friendHint: {
+    marginTop: 3,
+    fontSize: 12,
+    fontFamily: font.body,
+    color: colors.black,
+    opacity: 0.7,
+    lineHeight: 16,
+  },
+
+  friendState: {
+    alignItems: 'flex-end',
+    justifyContent: 'center',
+  },
+
+  friendStateText: {
+    fontSize: 11,
+    fontFamily: font.body,
+    fontWeight: '700',
+    color: colors.black,
+    opacity: 0.7,
+    textAlign: 'right',
   },
 
   infoRow: {
