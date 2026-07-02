@@ -28,6 +28,28 @@ export const ChallengesScreen: React.FC = () => {
   const [detailInstantOpen, setDetailInstantOpen] = useState(false);
   const [selected, setSelected] = useState<Challenge | null>(null);
 
+  const anyOverlayOpen = filterOpen || checkInOpen || detailOpen;
+
+  const onHeaderRight = useCallback(() => {
+    if (checkInOpen) {
+      setCheckInOpen(false);
+      return;
+    }
+
+    if (detailOpen) {
+      setDetailOpen(false);
+      setDetailInstantOpen(false);
+      return;
+    }
+
+    if (filterOpen) {
+      setFilterOpen(false);
+      return;
+    }
+
+    setFilterOpen(true);
+  }, [checkInOpen, detailOpen, filterOpen]);
+
   const openDetail = useCallback((challenge: Challenge) => {
     setFilterOpen(false);
     setCheckInOpen(false);
