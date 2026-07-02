@@ -24,6 +24,7 @@ public class UserService {
     private final CompanyRepository companyRepo;
 
     private final UserMapper userMapper;
+    private final SecurityService securityService;
 
     public UserDTO getUserById(UUID id) {
         return repo.findById(id).map(userMapper::toDTO)
@@ -35,15 +36,6 @@ public class UserService {
     }
 
     public UUID createUser(String name, String password, String email) {
-        // email must be unique in both users and companies
-        if (repo.existsByEmail(email.trim().toLowerCase())) {
-            throw new RuntimeException("Email already exists: " + email);
-        }
-
-        if (companyRepo.existsByEmail(email.trim().toLowerCase())) {
-            throw new RuntimeException("Email already exists at companies: " + email);
-        }
-
         // email validation
         if (email == null
                 || email.trim().isEmpty()
@@ -61,16 +53,38 @@ public class UserService {
             throw new RuntimeException("Password must not be empty.");
         }
 
+        String normalizedEmail = email.trim().toLowerCase();
+
+        // email must be unique in both users and companies
+        if (repo.existsByEmail(normalizedEmail)) {
+            throw new RuntimeException("Email already exists: " + email);
+        }
+
+        if (companyRepo.existsByEmail(normalizedEmail)) {
+            throw new RuntimeException("Email already exists at companies: " + email);
+        }
+
+        String passwordHash = securityService.hashPassword(password);
+
         // create user
         User user = repo.save(new User(
                 name.trim(),
-                password,
-                email.trim().toLowerCase()));
+                passwordHash,
+                normalizedEmail));
 
         return user.getId();
     }
 
     public UUID loginUser(String email, String password) {
+        User user = authenticateUser(email, password);
+
+        user.setLastLogin(java.time.LocalDateTime.now());
+        repo.save(user);
+
+        return user.getId();
+    }
+
+    public User authenticateUser(String email, String password) {
         // validate email input
         if (email == null
                 || email.trim().isEmpty()
@@ -83,21 +97,20 @@ public class UserService {
             throw new RuntimeException("Password must not be empty.");
         }
 
+        String normalizedEmail = email.trim().toLowerCase();
+
         // find user by email
-        User user = repo.findByEmail(email.toLowerCase());
+        User user = repo.findByEmail(normalizedEmail);
         if (user == null) {
             throw new RuntimeException("No user found with email: " + email);
         }
 
         // check password
-        if (!user.getPassword().equals(password)) {
+        if (!securityService.passwordMatches(password, user.getPassword())) {
             throw new RuntimeException("Invalid password.");
         }
 
-        // update last login time
-        user.setLastLogin(java.time.LocalDateTime.now());
-        repo.save(user);
-        return user.getId();
+        return user;
     }
 
     public int setUserSocialBattery(UUID userId, int socialBattery) {

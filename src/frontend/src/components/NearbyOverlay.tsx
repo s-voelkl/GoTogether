@@ -106,7 +106,7 @@ export const NearbyOverlay = forwardRef<NearbyOverlayHandle, NearbyOverlayProps>
     }
 
     return (
-      <View style={styles.wrap} pointerEvents="box-none">
+      <View style={[styles.wrap, { pointerEvents: 'box-none' }]}>
         <View style={styles.card}>
           <View style={styles.handle} />
 
@@ -230,14 +230,6 @@ const styles = StyleSheet.create({
   dotActive: {
     width: 18,
     backgroundColor: colors.black,
-  },
-
-  title: {
-    fontSize: 16,
-    fontFamily: font.headingBold,
-    fontWeight: '900',
-    color: colors.black,
-    letterSpacing: -0.3,
   },
   count: { color: colors.gray500 },
 });

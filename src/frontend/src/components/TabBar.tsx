@@ -30,7 +30,7 @@ export const TabBar: React.FC<BottomTabBarProps> = ({ state, navigation }) => {
       toValue: targetX,
       tension: 180,
       friction: 20,
-      useNativeDriver: true,
+      useNativeDriver: Platform.OS !== 'web',
     }).start();
   }, [state.index, pillInnerW, slideX, state.routes.length]);
 

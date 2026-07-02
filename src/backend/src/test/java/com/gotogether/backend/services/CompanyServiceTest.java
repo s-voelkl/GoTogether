@@ -36,6 +36,9 @@ class CompanyServiceTest {
     @Mock
     private UserRepository userRepository;
 
+    @Mock
+    private SecurityService securityService;
+
     @Spy
     private CompanyMapper companyMapper;
 
@@ -123,6 +126,7 @@ class CompanyServiceTest {
         UUID generatedId = UUID.randomUUID();
         when(companyRepository.existsByEmail(dto.getEmail())).thenReturn(false);
         when(userRepository.existsByEmail(dto.getEmail())).thenReturn(false);
+        when(securityService.hashPassword(dto.getPassword())).thenReturn("hashed_secret");
         when(companyRepository.save(any(Company.class))).thenAnswer(invocation -> {
             Company c = invocation.getArgument(0);
             c.setId(generatedId);
@@ -356,6 +360,7 @@ class CompanyServiceTest {
         Company mockCompany = buildCompany();
         CompanyLoginDTO dto = new CompanyLoginDTO("secret", "company@example.com");
         when(companyRepository.findByEmail(dto.getEmail())).thenReturn(mockCompany);
+        when(securityService.passwordMatches(dto.getPassword(), mockCompany.getPassword())).thenReturn(true);
 
         // Act
         UUID resultId = companyService.loginCompany(dto.getEmail(), dto.getPassword());
@@ -413,6 +418,7 @@ class CompanyServiceTest {
         // Arrange
         Company mockCompany = buildCompany();
         when(companyRepository.findByEmail("company@example.com")).thenReturn(mockCompany);
+        when(securityService.passwordMatches("wrong", mockCompany.getPassword())).thenReturn(false);
 
         // Act & Assert
         assertThrows(RuntimeException.class,

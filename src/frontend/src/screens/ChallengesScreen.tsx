@@ -128,7 +128,7 @@ export const ChallengesScreen: React.FC = () => {
           </View>
         </TouchableOpacity>
 
-        <View style={styles.scanFade} pointerEvents="none">
+        <View style={[styles.scanFade, { pointerEvents: 'none' }]}>
           <FadeEdge edge="top" color={colors.white} height={18} />
         </View>
       </View>
@@ -159,8 +159,10 @@ export const ChallengesScreen: React.FC = () => {
       />
 
       <View
-        style={[styles.overlay, { zIndex: 1000, elevation: 1000 }]}
-        pointerEvents={detailOpen ? 'auto' : 'none'}
+        style={[
+          styles.overlay,
+          { zIndex: 1000, elevation: 1000, pointerEvents: detailOpen ? 'auto' : 'none' },
+        ]}
       >
         {selected && (
           <ChallengeDetail
@@ -173,8 +175,10 @@ export const ChallengesScreen: React.FC = () => {
       </View>
 
       <View
-        style={[styles.overlay, { zIndex: 2000, elevation: 2000 }]}
-        pointerEvents={checkInOpen ? 'auto' : 'none'}
+        style={[
+          styles.overlay,
+          { zIndex: 2000, elevation: 2000, pointerEvents: checkInOpen ? 'auto' : 'none' },
+        ]}
       >
         <CheckInSheet
           open={checkInOpen}
@@ -183,8 +187,10 @@ export const ChallengesScreen: React.FC = () => {
       </View>
 
       <View
-        style={[styles.overlay, { zIndex: 9999, elevation: 9999 }]}
-        pointerEvents={filterOpen ? 'auto' : 'none'}
+        style={[
+          styles.overlay,
+          { zIndex: 9999, elevation: 9999, pointerEvents: filterOpen ? 'auto' : 'none' },
+        ]}
       >
         <FilterSheet
           open={filterOpen}

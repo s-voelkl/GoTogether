@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useRef } from 'react';
-import { Animated, Easing, StyleSheet, View } from 'react-native';
+import { Animated, Easing, Platform, StyleSheet, View } from 'react-native';
 import { GeoJSONSource, Layer, ViewAnnotation } from '@maplibre/maplibre-react-native';
 import { colors } from '../theme';
 
@@ -52,7 +52,7 @@ export const UserLocationMarker: React.FC<UserLocationMarkerProps> = ({
         toValue: 1,
         duration: 2200,
         easing: Easing.out(Easing.ease),
-        useNativeDriver: true,
+        useNativeDriver: Platform.OS !== 'web',
       }),
     );
     loop.start();
@@ -88,7 +88,7 @@ export const UserLocationMarker: React.FC<UserLocationMarkerProps> = ({
       )}
 
       <ViewAnnotation id="user-location" lngLat={[longitude, latitude]} anchor="center">
-        <View style={styles.wrap} pointerEvents="none">
+        <View style={[styles.wrap, { pointerEvents: 'none' }]}>
           <Animated.View
             style={[styles.pulse, { opacity: ringOpacity, transform: [{ scale }] }]}
           />
@@ -124,10 +124,17 @@ const styles = StyleSheet.create({
     backgroundColor: colors.userDot,
     borderWidth: 3,
     borderColor: colors.white,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.25,
-    shadowRadius: 2,
-    elevation: 3,
+    ...(Platform.select({
+      web: {
+        boxShadow: '0px 1px 2px rgba(0, 0, 0, 0.25)',
+      },
+      default: {
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 1 },
+        shadowOpacity: 0.25,
+        shadowRadius: 2,
+        elevation: 3,
+      },
+    }) as object),
   },
 });

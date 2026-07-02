@@ -13,6 +13,7 @@
 2. Secrets im Backend anpassen:
 
     `src/backend/src/main/resources/application.properties`:
+
     ```properties
     spring.datasource.url=jdbc:postgresql://localhost:5432/gotogether_db
     spring.datasource.username=myUsername
@@ -20,20 +21,20 @@
     ```
 
     `src/backend/src/test/resources/application.properties`:
+
     ```properties
     spring.datasource.url=jdbc:h2:mem:gotogether_db;
     spring.datasource.username=myTestUsername
     spring.datasource.password=myTestPassword
     ```
 
-
 3. Java JDK [AWS Corretto](https://docs.aws.amazon.com/corretto/latest/corretto-21-ug/downloads-list.html) downloaden.
 
 4. yarn version 1.x installieren: [Yarn Installation](https://classic.yarnpkg.com/en/docs/install).
 
 5. Docker:
-    Für **Windows User**: Alles MUSS in wsl stattfinden, damit docker verwendet werden kann. 
-    Achtet darauf wsl genügend Speicher und RAM zuzuweisen ([WSL Installer](https://learn.microsoft.com/de-de/windows/wsl/install)). 
+    Für **Windows User**: Alles MUSS in wsl stattfinden, damit docker verwendet werden kann.
+    Achtet darauf wsl genügend Speicher und RAM zuzuweisen ([WSL Installer](https://learn.microsoft.com/de-de/windows/wsl/install)).
     WSL starten mit `wsl`.
     Teils braucht man `sudo` Rechte, um docker zu verwenden, z.B. bei ``nodemon`` unten.
 
@@ -63,7 +64,8 @@ Es befinden sich 10 sample entries im users table.
 
 Request: `curl http://localhost:8080/api/users`
 
-Response: 
+Response:
+
 ```json
 [
   {
@@ -87,6 +89,52 @@ Response:
 ]
 ```
 
-## Frontend (missing)
+## Frontend
 
-tbd
+- Install yarn version 1.x: [Yarn Installation](https://classic.yarnpkg.com/en/docs/install).
+- Typescript and Expo are already included in `src/frontend/package.json`.
+- Navigate to ``cd ./src/frontend/``
+- Install dependencies with `yarn install`
+
+### Android Setup
+
+This should not be run with WSL, but directly on Windows or MacOS. It requires the installation of Android Studio and the Android SDK, which are necessary for running the Expo app on an Android device or emulator.
+
+Follow this tutorial step by step: [https://reactnative.dev/docs/environment-setup](https://reactnative.dev/docs/environment-setup)
+
+Install the Expo Dev Client for running on the Android device: `npx install expo-dev-client`
+Verifiy that the Android device is connected and recognized by running `adb devices`. If the device is not listed, ensure that USB debugging is enabled on the device and that the necessary drivers are installed.
+
+Run the Expo app on the Android device with `npx expo run:android --device` and select your device.
+Alternatively, open the web client with `yarn web` or `yarn expo start --dev-client`.
+
+This page can help out: [https://docs.expo.dev/build/setup/#install-the-latest-eas-cli](https://docs.expo.dev/build/setup/#install-the-latest-eas-cli)
+
+You might need to change the ``src/frontend/android/settings.gradle`` file.
+
+```gradle
+
+
+pluginManagement {
+def utf8 = java.nio.charset.StandardCharsets.UTF_8
+  def reactNativeGradlePlugin = new File(
+  new String(providers.exec {
+      workingDir(rootDir)
+      commandLine("node", "--print", "require.resolve('@react-native/gradle-plugin/package.json', { paths: [require.resolve('react-native/package.json')] })")
+  }.standardOutput.asBytes.get(), utf8).trim()
+  ).getParentFile().absolutePath
+  includeBuild(reactNativeGradlePlugin)
+  
+  def expoPluginsPath = new File(
+  new String(providers.exec {
+      workingDir(rootDir)
+      commandLine("node", "--print", "require.resolve('expo-modules-autolinking/package.json', { paths: [require.resolve('expo/package.json')] })")
+  }.standardOutput.asBytes.get(), utf8).trim(),
+    "../android/expo-gradle-plugin"
+  ).absolutePath
+  includeBuild(expoPluginsPath)
+}
+ 
+...
+ 
+```

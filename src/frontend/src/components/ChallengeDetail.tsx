@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import {
   Animated,
+  Platform,
   ScrollView,
   StyleSheet,
   Text,
@@ -105,7 +106,7 @@ export const ChallengeDetail: React.FC<ChallengeDetailProps> = ({
     Animated.timing(opacity, {
       toValue: open ? 1 : 0,
       duration: 200,
-      useNativeDriver: true,
+      useNativeDriver: Platform.OS !== 'web',
     }).start();
   }, [open, opacity, disableOpenAnimation]);
 
@@ -116,8 +117,7 @@ export const ChallengeDetail: React.FC<ChallengeDetailProps> = ({
 
   return (
     <Animated.View
-      style={[styles.fill, { opacity }]}
-      pointerEvents={open ? 'auto' : 'none'}
+      style={[styles.fill, { opacity, pointerEvents: open ? 'auto' : 'none' }]}
     >
       <ScrollView
         style={styles.scrollView}
@@ -176,7 +176,7 @@ export const ChallengeDetail: React.FC<ChallengeDetailProps> = ({
       </ScrollView>
 
       <View style={styles.footer}>
-        <View style={styles.footerFade} pointerEvents="none">
+        <View style={[styles.footerFade, { pointerEvents: 'none' }]}> 
           <FadeEdge edge="bottom" color={colors.white} height={28} />
         </View>
 
