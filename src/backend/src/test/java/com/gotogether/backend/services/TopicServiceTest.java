@@ -15,6 +15,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -30,6 +31,7 @@ class TopicServiceTest {
     void getTopicById_TopicExists_ReturnsTopic() {
         // Arrange
         Topic mockTopic = new Topic("Programming");
+        mockTopic.setId(UUID.randomUUID()); // Assign an ID manually
         when(topicRepository.findById(mockTopic.getId())).thenReturn(Optional.of(mockTopic));
 
         // Act
