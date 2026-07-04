@@ -4,6 +4,10 @@
 
 The architecture follows the MVP and focuses on the core use cases from the sections MVP, Content User Stories, Technical User Stories, and Business-Related User Stories.
 
+<div style="text-align:center">
+  <img src="/docs/diagrams/out/three-tier-architecture/three-tier-architecture.png" alt="Three-Tier Architecture" width="250"/>
+</div>
+
 - **Presentation Tier:** The React Native app displays the open challenge list, the real-time map, social battery, matching, and reward status. It encapsulates only the UI and communicates with the backend via the API (see [Frontend-Architecture](#frontend-architecture)).
 - **Application Tier:** The Java Spring Boot backend with a REST API interface implements the MVP logic: challenge filters, map queries, social battery filtering, interest matching, QR check-in, rewards, and company APIs for events or challenges (see [Backend-Architecture](#backend-architecture)).
 - **Data Tier:** PostgreSQL stores the required data, including users, profiles, interests, quests, events, check-ins, friendships, rewards, and company profiles (see [Database-Architecture](#database-architecture)).
@@ -13,6 +17,10 @@ At the beginning, the architecture diagrams were made with DrawIO (diagrams.net)
 ## Database-Architecture
 
 The project uses a relational database model implemented with **PostgreSQL** in production and **H2** (in-memory) for testing. The schema is designed to support a multi-player challenge system with companies as hosts and users as participants.
+
+<div style="text-align:center">
+  <img src="/docs/diagrams/out/database-architecture/database-architecture.png" alt="Database Architecture" width="250"/>
+</div>
 
 ### Key Characteristics
 
@@ -41,6 +49,10 @@ The database manages complex interactions through the following relationships:
 ## Backend-Architecture
 
 The backend is a Spring Boot application split into the standard layers: controllers expose REST endpoints, services contain the business logic, mappers translate between entities and DTOs, and JPA entities persist to PostgreSQL. All identifiers are `UUID`s generated with `GenerationType.UUID`, and controllers consistently return `ResponseEntity<?>` while mapping `RuntimeException`s to HTTP status codes. Security is configured to permit all requests by default, with `BCrypt` used for password hashing.
+
+<div style="text-align:center">
+  <img src="/docs/diagrams/out/backend-architecture/backend-architecture.png" alt="Backend Architecture"/>
+</div>
 
 ### Security and Configuration
 
@@ -123,6 +135,10 @@ The backend ships with JUnit tests under [src/backend/src/test/java/com/gotogeth
 ## Frontend-Architecture
 
 The GoTogether frontend is a **Cross-Platform React Native** application built on the **Expo** framework. It follows a modular, component-driven architecture designed to provide a highly interactive, real-time social experience.
+
+<div style="text-align:center">
+  <img src="/docs/diagrams/out/frontend-architecture/frontend-architecture.png" alt="Frontend Architecture" width="250"/>
+</div>
 
 ### Neo Brutalist Design System
 
