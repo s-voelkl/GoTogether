@@ -1,0 +1,24 @@
+@startuml three-tier-architecture
+!theme plain
+
+skinparam componentStyle rectangle
+
+actor User
+
+package "Presentation Tier" {
+  component "React Native Frontend" as frontend
+}
+
+package "Application Tier" {
+  component "Spring Boot Backend" as backend
+}
+
+package "Data Tier" {
+  database "PostgreSQL Database" as db
+}
+
+User --> frontend : "Interacts with UI"
+frontend --> backend : "REST API Calls (HTTPS)"
+backend --> db : "JPA / Database Access"
+
+@enduml
