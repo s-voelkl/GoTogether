@@ -19,7 +19,7 @@ At the beginning, the architecture diagrams were made with DrawIO (diagrams.net)
 The project uses a relational database model implemented with **PostgreSQL** in production and **H2** (in-memory) for testing. The schema is designed to support a multi-player challenge system with companies as hosts and users as participants.
 
 <div style="text-align:center">
-  <img src="/docs/diagrams/out/database-architecture/database-architecture.png" alt="Database Architecture" width="250"/>
+  <img src="/docs/diagrams/out/database-architecture/database-architecture.png" alt="Database Architecture" width="600"/>
 </div>
 
 ### Key Characteristics
@@ -137,14 +137,14 @@ The backend ships with JUnit tests under [src/backend/src/test/java/com/gotogeth
 The GoTogether frontend is a **Cross-Platform React Native** application built on the **Expo** framework. It follows a modular, component-driven architecture designed to provide a highly interactive, real-time social experience.
 
 <div style="text-align:center">
-  <img src="/docs/diagrams/out/frontend-architecture/frontend-architecture.png" alt="Frontend Architecture" width="250"/>
+  <img src="/docs/diagrams/out/frontend-architecture/frontend-architecture.png" alt="Frontend Architecture"/>
 </div>
 
 ### Neo Brutalist Design System
 
 The UI adheres to a **Neo Brutalist** aesthetic, characterized by:
 
-- **High Contrast:** A vibrant palette anchored by `colors.primary` (#FAE255) and deep black/white tones.
+- **High Contrast:** A vibrant palette anchored by `colors.primary` and deep black/white tones.
 - **Raw Geometry:** Bold borders (`layout.border`), sharp shadows (`shadow.md`), and distinctive `continuous` border curves for a modern, tactile feel.
 - **Expressive Typography:** The `Unbounded` font family is used across all layers to emphasize the playful and energetic nature of the app.
 
