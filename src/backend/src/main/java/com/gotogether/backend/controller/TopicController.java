@@ -14,16 +14,34 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.UUID;
 
+/**
+ * REST controller for managing topics.
+ * <p>
+ * Provides endpoints for creating, retrieving, and deleting topics.
+ */
 @RestController
 @RequestMapping("/api/topics")
 public class TopicController {
 
     private final TopicService service;
 
+    /**
+     * Constructs a new TopicController with the given TopicService.
+     *
+     * @param service the service used for topic operations
+     */
     public TopicController(TopicService service) {
         this.service = service;
     }
 
+    /**
+     * Retrieves a topic by its unique identifier.
+     *
+     * @param id the UUID of the topic to retrieve
+     * @return a ResponseEntity containing the TopicDTO if found, or a 404 NOT FOUND
+     *         status with an error message
+     * @throws RuntimeException if the topic is not found
+     */
     @GetMapping("/{id}")
     public ResponseEntity<?> getTopicById(@PathVariable UUID id) {
         try {
@@ -33,6 +51,13 @@ public class TopicController {
         }
     }
 
+    /**
+     * Retrieves a list of all topics.
+     *
+     * @return a ResponseEntity containing a list of TopicDTOs, or a 500 INTERNAL
+     *         SERVER ERROR status on failure
+     * @throws RuntimeException if an error occurs during retrieval
+     */
     @GetMapping
     public ResponseEntity<?> getAllTopics() {
         try {
@@ -42,6 +67,14 @@ public class TopicController {
         }
     }
 
+    /**
+     * Creates a new topic.
+     *
+     * @param request the data transfer object containing the topic details
+     * @return a ResponseEntity containing the UUID of the newly created topic, or a
+     *         400 BAD REQUEST status on validation failure
+     * @throws RuntimeException if the topic cannot be created
+     */
     @PostMapping
     public ResponseEntity<?> createTopic(@RequestBody CreateTopicDTO request) {
         try {
@@ -52,6 +85,14 @@ public class TopicController {
         }
     }
 
+    /**
+     * Deletes a topic by its unique identifier.
+     *
+     * @param id the UUID of the topic to delete
+     * @return a ResponseEntity containing the UUID of the deleted topic, or a 404
+     *         NOT FOUND status with an error message
+     * @throws RuntimeException if the topic cannot be found or deleted
+     */
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteTopic(@PathVariable UUID id) {
         try {

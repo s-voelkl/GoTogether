@@ -28,6 +28,14 @@ public class User {
     private static final int DEFAULT_CURRENCY = 0;
     private static final int DEFAULT_EXPERIENCE_POINTS = 0;
 
+    /**
+     * Constructs a new User with default values for social battery, currency,
+     * experience points, and settings.
+     *
+     * @param name     the user's display name
+     * @param password the user's hashed password
+     * @param email    the user's unique email address
+     */
     public User(String name, String password, String email) {
         this.name = name;
         this.password = password;

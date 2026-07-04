@@ -15,6 +15,13 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+/**
+ * Company entity class representing a business partner in the system.
+ * <p>
+ * Companies can host {@link Challenge}s and provide rewards. They have
+ * physical locations, contact details, and a currency balance that they
+ * use to fund challenge rewards.
+ */
 @Entity
 @Table(name = "companies")
 @Getter
@@ -25,6 +32,15 @@ public class Company {
 
     private static final int DEFAULT_CURRENCY = 0;
 
+    /**
+     * Constructs a new Company with the specified details.
+     *
+     * @param name     the name of the company
+     * @param password the company's hashed password
+     * @param email    the company's unique email address
+     * @param address  the physical address of the company
+     * @param location the geographic location of the company
+     */
     public Company(String name, String password, String email, Address address, Location location) {
         this.name = name;
         this.password = password;
