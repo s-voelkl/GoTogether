@@ -19,7 +19,7 @@ At the beginning, the architecture diagrams were made with DrawIO (diagrams.net)
 The project uses a relational database model implemented with **PostgreSQL** in production and **H2** (in-memory) for testing. The schema is designed to support a multi-player challenge system with companies as hosts and users as participants.
 
 <div style="text-align:center">
-  <img src="/docs/diagrams/out/database-architecture/database-architecture.png" alt="Database Architecture" width="600"/>
+  <img src="/docs/diagrams/out/database-architecture/database-architecture.png" alt="Database Architecture" width="400"/>
 </div>
 
 ### Key Characteristics

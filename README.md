@@ -42,3 +42,5 @@ The **scrum notes** in `docs/scrum-notes/` contain the documentation of the firs
 **Diagrams** were first created with Draw.io (`docs/diagrams/archive`) and later with PlantUML (`docs/diagrams/src` and `docs/diagrams/out`) to better fit the rapid development and changes in the project.
 
 A **user guide** in [user-guide.md](docs/user-manual/user-guide.md) gives an overview of how to use the GoTogether app as a user.
+
+The **artifacts** in `docs/artifacts/` contain the historical development artifacts of the project, including moodboards, initially created demo apps and other early-stage design and development materials.
