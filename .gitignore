@@ -204,3 +204,9 @@ yarn.lock
 *.njsproj
 *.sln
 *.sw?
+
+# amazon corretto
+amazon-corretto-*
+
+# frontend expo
+frontend/*

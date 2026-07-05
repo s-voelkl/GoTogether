@@ -15,6 +15,7 @@ java {
 
 repositories {
 	mavenCentral()
+	maven { url 'https://jitpack.io' }
 }
 
 dependencies {
@@ -23,6 +24,10 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.8'
+    implementation 'commons-validator:commons-validator:1.8.0'
+    // QRGen: thin wrapper around ZXing for generating QR codes (PNG, SVG, ...).
+    // Distributed via JitPack; the javase module pulls in ZXing core + javase.
+    implementation 'com.github.kenglxn.QRGen:javase:3.0.1'
     compileOnly 'org.projectlombok:lombok'
 	runtimeOnly 'org.postgresql:postgresql'
 	annotationProcessor 'org.projectlombok:lombok'
@@ -37,4 +42,5 @@ dependencies {
 
 tasks.named('test') {
 	useJUnitPlatform()
+	jvmArgs("-XX:+EnableDynamicAgentLoading")
 }
