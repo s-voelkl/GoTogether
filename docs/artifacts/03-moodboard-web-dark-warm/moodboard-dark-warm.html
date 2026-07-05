@@ -1,0 +1,1344 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GoTogether — Moodboard</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg-deep:     #080112;
+      --bg-base:     #0f0220;
+      --bg-card:     #160830;
+      --bg-elevated: #1e0d40;
+      --purple-900:  #2d0a5e;
+      --purple-800:  #3d1278;
+      --purple-700:  #5521a8;
+      --purple-600:  #6d28d9;
+      --purple-500:  #7c3aed;
+      --purple-400:  #8b5cf6;
+      --purple-300:  #a78bfa;
+      --purple-200:  #c4b5fd;
+      --purple-100:  #ede9fe;
+      --pink:        #e879f9;
+      --pink-soft:   #f0abfc;
+      --gold:        #f59e0b;
+      --gold-light:  #fbbf24;
+      --teal:        #2dd4bf;
+      --text-primary: #f5f0ff;
+      --text-secondary: #c4b5fd;
+      --text-muted:  #7c6fa0;
+      --border:      rgba(139, 92, 246, 0.15);
+      --glow:        rgba(124, 58, 237, 0.4);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background-color: var(--bg-deep);
+      color: var(--text-primary);
+      font-family: 'Inter', sans-serif;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    /* ── GRID BACKGROUND ── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(124,58,237,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(124,58,237,0.04) 1px, transparent 1px);
+      background-size: 40px 40px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .wrapper {
+      position: relative;
+      z-index: 1;
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 60px 40px;
+    }
+
+    /* ── HEADER ── */
+    .header {
+      text-align: center;
+      margin-bottom: 80px;
+    }
+
+    .header-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--purple-400);
+      margin-bottom: 20px;
+    }
+
+    .header-eyebrow::before,
+    .header-eyebrow::after {
+      content: '';
+      display: block;
+      width: 32px;
+      height: 1px;
+      background: var(--purple-500);
+    }
+
+    .header h1 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: clamp(52px, 8vw, 96px);
+      font-weight: 700;
+      letter-spacing: -2px;
+      line-height: 1;
+      background: linear-gradient(135deg, #fff 0%, var(--purple-200) 40%, var(--pink) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 16px;
+    }
+
+    .header-sub {
+      font-size: 16px;
+      color: var(--text-muted);
+      letter-spacing: 0.5px;
+      max-width: 480px;
+      margin: 0 auto;
+    }
+
+    /* ── SECTION LABELS ── */
+    .section-label {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      color: var(--purple-400);
+      margin-bottom: 24px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .section-label::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(90deg, var(--border), transparent);
+    }
+
+    /* ── COLOUR PALETTE ── */
+    .palette-row {
+      display: grid;
+      grid-template-columns: repeat(10, 1fr);
+      gap: 8px;
+      margin-bottom: 80px;
+    }
+
+    .swatch {
+      aspect-ratio: 1;
+      border-radius: 12px;
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.2s;
+    }
+
+    .swatch:hover { transform: translateY(-4px); }
+
+    .swatch-label {
+      position: absolute;
+      bottom: 6px;
+      left: 0;
+      right: 0;
+      text-align: center;
+      font-size: 9px;
+      font-weight: 600;
+      opacity: 0.7;
+    }
+
+    /* ── TYPOGRAPHY SECTION ── */
+    .type-section {
+      margin-bottom: 80px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+    }
+
+    .type-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 32px;
+    }
+
+    .type-display {
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 700;
+      font-size: 48px;
+      line-height: 1;
+      background: linear-gradient(135deg, #fff, var(--purple-200));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 8px;
+    }
+
+    .type-meta {
+      font-size: 11px;
+      color: var(--text-muted);
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-bottom: 20px;
+    }
+
+    .type-sample-body {
+      font-size: 15px;
+      color: var(--text-secondary);
+      line-height: 1.7;
+    }
+
+    .type-weights {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-top: 16px;
+    }
+
+    .tw { font-family: 'Space Grotesk', sans-serif; font-size: 22px; color: var(--text-primary); }
+    .tw-300 { font-weight: 300; opacity: 0.5; }
+    .tw-400 { font-weight: 400; opacity: 0.65; }
+    .tw-500 { font-weight: 500; opacity: 0.8; }
+    .tw-700 { font-weight: 700; }
+    .tw-900 { font-weight: 900; }
+
+    /* ── MOOD GRID ── */
+    .mood-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      grid-template-rows: auto;
+      gap: 16px;
+      margin-bottom: 80px;
+    }
+
+    .mood-card {
+      border-radius: 20px;
+      padding: 32px;
+      position: relative;
+      overflow: hidden;
+      min-height: 220px;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+    }
+
+    .mood-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      opacity: 0.12;
+    }
+
+    .mood-card-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 20px;
+      font-weight: 700;
+      margin-bottom: 6px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .mood-card-desc {
+      font-size: 13px;
+      color: rgba(255,255,255,0.6);
+      position: relative;
+      z-index: 1;
+    }
+
+    .mood-card-icon {
+      font-size: 48px;
+      position: absolute;
+      top: 24px;
+      right: 24px;
+      opacity: 0.9;
+    }
+
+    .mc-quest {
+      background: linear-gradient(135deg, #1a0540 0%, #3d1278 60%, #5521a8 100%);
+      border: 1px solid rgba(138, 92, 246, 0.3);
+      grid-column: span 2;
+    }
+
+    .mc-battery {
+      background: linear-gradient(135deg, #0f1a3d 0%, #1e3a6e 100%);
+      border: 1px solid rgba(56, 189, 248, 0.2);
+    }
+
+    .mc-match {
+      background: linear-gradient(135deg, #2d0a5e 0%, #7c1fa8 100%);
+      border: 1px solid rgba(232, 121, 249, 0.3);
+    }
+
+    .mc-map {
+      background: linear-gradient(135deg, #0a1f1a 0%, #064e3b 60%, #065f46 100%);
+      border: 1px solid rgba(52, 211, 153, 0.25);
+      grid-column: span 2;
+    }
+
+    .mc-rewards {
+      background: linear-gradient(135deg, #1c1205 0%, #78350f 100%);
+      border: 1px solid rgba(245, 158, 11, 0.3);
+    }
+
+    /* ── UI COMPONENTS ── */
+    .ui-section {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 24px;
+      margin-bottom: 80px;
+      align-items: start;
+    }
+
+    .ui-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 28px;
+    }
+
+    .ui-card-title {
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--purple-400);
+      margin-bottom: 20px;
+    }
+
+    /* Buttons */
+    .btn-row { display: flex; flex-direction: column; gap: 12px; }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 12px 24px;
+      border-radius: 12px;
+      font-size: 14px;
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+      font-family: 'Inter', sans-serif;
+      letter-spacing: 0.3px;
+      transition: all 0.2s;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--purple-600), var(--purple-500));
+      color: white;
+      box-shadow: 0 4px 24px rgba(124,58,237,0.45);
+    }
+
+    .btn-secondary {
+      background: rgba(139,92,246,0.12);
+      color: var(--purple-300);
+      border: 1px solid rgba(139,92,246,0.3);
+    }
+
+    .btn-ghost {
+      background: transparent;
+      color: var(--text-muted);
+      border: 1px solid var(--border);
+    }
+
+    .btn-gold {
+      background: linear-gradient(135deg, #d97706, var(--gold));
+      color: #1a0a00;
+      box-shadow: 0 4px 20px rgba(245,158,11,0.35);
+    }
+
+    .btn-pink {
+      background: linear-gradient(135deg, #a21caf, var(--pink));
+      color: white;
+      box-shadow: 0 4px 20px rgba(232,121,249,0.35);
+    }
+
+    /* Chips/Tags */
+    .chips { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
+
+    .chip {
+      padding: 6px 14px;
+      border-radius: 100px;
+      font-size: 12px;
+      font-weight: 500;
+    }
+
+    .chip-purple  { background: rgba(124,58,237,0.2); color: var(--purple-300); border: 1px solid rgba(124,58,237,0.35); }
+    .chip-pink    { background: rgba(232,121,249,0.15); color: var(--pink-soft); border: 1px solid rgba(232,121,249,0.3); }
+    .chip-gold    { background: rgba(245,158,11,0.15); color: var(--gold-light); border: 1px solid rgba(245,158,11,0.3); }
+    .chip-teal    { background: rgba(45,212,191,0.12); color: var(--teal); border: 1px solid rgba(45,212,191,0.25); }
+    .chip-active  { background: var(--purple-600); color: white; border: 1px solid var(--purple-500); }
+
+    /* Quest Card */
+    .quest-preview {
+      background: linear-gradient(135deg, var(--bg-elevated), rgba(85,33,168,0.3));
+      border: 1px solid rgba(139,92,246,0.25);
+      border-radius: 16px;
+      padding: 20px;
+      margin-bottom: 12px;
+    }
+
+    .quest-preview-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 10px;
+    }
+
+    .quest-preview-title {
+      font-weight: 700;
+      font-size: 16px;
+    }
+
+    .quest-xp {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--gold);
+      background: rgba(245,158,11,0.12);
+      padding: 4px 10px;
+      border-radius: 8px;
+    }
+
+    .quest-preview-meta {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-bottom: 12px;
+    }
+
+    .quest-preview-bar {
+      height: 4px;
+      background: rgba(255,255,255,0.08);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    .quest-preview-fill {
+      height: 100%;
+      width: 62%;
+      background: linear-gradient(90deg, var(--purple-600), var(--pink));
+      border-radius: 4px;
+    }
+
+    /* Social Battery Widget */
+    .battery-widget {
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 20px;
+    }
+
+    .battery-label {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      margin-bottom: 14px;
+    }
+
+    .battery-bar-outer {
+      height: 20px;
+      background: rgba(255,255,255,0.06);
+      border-radius: 100px;
+      overflow: hidden;
+      position: relative;
+      margin-bottom: 10px;
+    }
+
+    .battery-bar-fill {
+      height: 100%;
+      width: 72%;
+      background: linear-gradient(90deg, #6d28d9, #8b5cf6, #c084fc);
+      border-radius: 100px;
+      box-shadow: 0 0 12px rgba(139,92,246,0.6);
+    }
+
+    .battery-levels {
+      display: flex;
+      justify-content: space-between;
+      font-size: 10px;
+      color: var(--text-muted);
+    }
+
+    .battery-state {
+      margin-top: 12px;
+      display: flex;
+      gap: 8px;
+    }
+
+    .state-chip {
+      flex: 1;
+      text-align: center;
+      padding: 8px;
+      border-radius: 10px;
+      font-size: 11px;
+      font-weight: 600;
+    }
+
+    .state-low  { background: rgba(45,212,191,0.1); color: var(--teal); border: 1px solid rgba(45,212,191,0.2); }
+    .state-mid  { background: rgba(139,92,246,0.2); color: var(--purple-300); border: 1px solid rgba(139,92,246,0.3); }
+    .state-high { background: rgba(232,121,249,0.15); color: var(--pink-soft); border: 1px solid rgba(232,121,249,0.25); }
+
+    /* Avatar / Match Card */
+    .match-card {
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 16px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 10px;
+    }
+
+    .avatar {
+      width: 44px;
+      height: 44px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      flex-shrink: 0;
+    }
+
+    .av-a { background: linear-gradient(135deg, #5521a8, #8b5cf6); }
+    .av-b { background: linear-gradient(135deg, #831843, #e879f9); }
+    .av-c { background: linear-gradient(135deg, #065f46, #2dd4bf); }
+
+    .match-info { flex: 1; }
+    .match-name { font-weight: 700; font-size: 14px; }
+    .match-interests { font-size: 11px; color: var(--text-muted); }
+
+    .match-score {
+      font-size: 13px;
+      font-weight: 800;
+      color: var(--purple-300);
+    }
+
+    /* ── MAP PREVIEW ── */
+    .map-section {
+      margin-bottom: 80px;
+    }
+
+    .map-preview {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 0;
+      overflow: hidden;
+      height: 400px;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .map-bg {
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse at 30% 60%, rgba(45,212,191,0.08) 0%, transparent 50%),
+        radial-gradient(ellipse at 70% 30%, rgba(124,58,237,0.12) 0%, transparent 40%),
+        repeating-linear-gradient(0deg, transparent, transparent 39px, rgba(139,92,246,0.06) 39px, rgba(139,92,246,0.06) 40px),
+        repeating-linear-gradient(90deg, transparent, transparent 39px, rgba(139,92,246,0.06) 39px, rgba(139,92,246,0.06) 40px);
+      background-color: #0a0118;
+    }
+
+    /* Map "roads" */
+    .map-road {
+      position: absolute;
+      background: rgba(255,255,255,0.05);
+    }
+
+    .road-h1 { top: 38%; left: 0; right: 0; height: 3px; transform: rotate(-3deg); }
+    .road-h2 { top: 62%; left: 0; right: 0; height: 2px; }
+    .road-v1 { left: 30%; top: 0; bottom: 0; width: 2px; transform: rotate(2deg); }
+    .road-v2 { left: 65%; top: 0; bottom: 0; width: 3px; }
+
+    /* Map pins */
+    .map-pin {
+      position: absolute;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      z-index: 2;
+    }
+
+    .pin-dot {
+      width: 36px;
+      height: 36px;
+      border-radius: 50% 50% 50% 0;
+      transform: rotate(-45deg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 20px var(--glow);
+    }
+
+    .pin-dot span { transform: rotate(45deg); font-size: 16px; }
+
+    .pin-purple { background: linear-gradient(135deg, var(--purple-700), var(--purple-500)); box-shadow: 0 4px 20px rgba(124,58,237,0.5); }
+    .pin-pink   { background: linear-gradient(135deg, #a21caf, var(--pink)); box-shadow: 0 4px 20px rgba(232,121,249,0.45); }
+    .pin-gold   { background: linear-gradient(135deg, #b45309, var(--gold)); box-shadow: 0 4px 20px rgba(245,158,11,0.45); }
+    .pin-teal   { background: linear-gradient(135deg, #0f766e, var(--teal)); box-shadow: 0 4px 20px rgba(45,212,191,0.4); }
+
+    .pin-label {
+      background: rgba(22,8,48,0.9);
+      border: 1px solid var(--border);
+      padding: 4px 10px;
+      border-radius: 8px;
+      font-size: 11px;
+      font-weight: 600;
+      white-space: nowrap;
+      backdrop-filter: blur(8px);
+    }
+
+    /* Radius rings */
+    .radius-ring {
+      position: absolute;
+      border-radius: 50%;
+      border: 1px dashed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+    }
+
+    .ring-sm { width: 100px; height: 100px; border-color: rgba(45,212,191,0.3); }
+    .ring-md { width: 220px; height: 220px; border-color: rgba(124,58,237,0.2); }
+    .ring-lg { width: 340px; height: 340px; border-color: rgba(139,92,246,0.12); }
+
+    /* User dot */
+    .user-dot {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 3;
+    }
+
+    .user-dot-inner {
+      width: 18px;
+      height: 18px;
+      background: #fff;
+      border-radius: 50%;
+      border: 3px solid var(--purple-500);
+      box-shadow: 0 0 0 6px rgba(124,58,237,0.2);
+    }
+
+    .map-legend {
+      position: absolute;
+      bottom: 20px;
+      right: 20px;
+      background: rgba(15,2,32,0.85);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 14px 18px;
+      backdrop-filter: blur(12px);
+      font-size: 11px;
+      z-index: 4;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 6px;
+      color: var(--text-secondary);
+    }
+
+    .legend-item:last-child { margin-bottom: 0; }
+
+    .legend-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    /* ── DESIGN PRINCIPLES ── */
+    .principles-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-bottom: 80px;
+    }
+
+    .principle-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 28px 24px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .principle-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      border-radius: 20px 20px 0 0;
+    }
+
+    .pc-1::before { background: linear-gradient(90deg, var(--purple-600), var(--purple-400)); }
+    .pc-2::before { background: linear-gradient(90deg, var(--pink), #f0abfc); }
+    .pc-3::before { background: linear-gradient(90deg, var(--gold), var(--gold-light)); }
+    .pc-4::before { background: linear-gradient(90deg, var(--teal), #5eead4); }
+
+    .principle-num {
+      font-size: 40px;
+      font-weight: 900;
+      font-family: 'Space Grotesk', sans-serif;
+      opacity: 0.12;
+      line-height: 1;
+      margin-bottom: 8px;
+    }
+
+    .principle-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .principle-desc {
+      font-size: 13px;
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
+
+    /* ── GAMIFICATION PREVIEW ── */
+    .gamification-section {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      margin-bottom: 80px;
+    }
+
+    .reward-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 28px;
+    }
+
+    /* XP Bar */
+    .xp-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+
+    .level-badge {
+      background: linear-gradient(135deg, var(--purple-700), var(--purple-500));
+      color: white;
+      font-size: 12px;
+      font-weight: 800;
+      padding: 4px 12px;
+      border-radius: 100px;
+    }
+
+    .xp-text {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .xp-bar {
+      height: 8px;
+      background: rgba(255,255,255,0.06);
+      border-radius: 100px;
+      overflow: hidden;
+      margin-bottom: 20px;
+    }
+
+    .xp-fill {
+      height: 100%;
+      width: 58%;
+      background: linear-gradient(90deg, var(--purple-600), var(--pink));
+      border-radius: 100px;
+    }
+
+    /* Badges */
+    .badges-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 12px;
+      margin-top: 8px;
+    }
+
+    .badge {
+      aspect-ratio: 1;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+    }
+
+    .badge-earned { background: var(--bg-elevated); border: 1px solid rgba(139,92,246,0.35); }
+    .badge-locked { background: rgba(255,255,255,0.03); border: 1px dashed rgba(255,255,255,0.08); filter: grayscale(1); opacity: 0.35; }
+
+    /* Currency Widget */
+    .currency-widget {
+      background: linear-gradient(135deg, #1c1205, #2d1e07);
+      border: 1px solid rgba(245,158,11,0.25);
+      border-radius: 16px;
+      padding: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+    }
+
+    .currency-amount {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 32px;
+      font-weight: 800;
+      color: var(--gold);
+    }
+
+    .currency-label {
+      font-size: 12px;
+      color: rgba(245,158,11,0.6);
+      margin-top: 2px;
+    }
+
+    .currency-icon {
+      font-size: 44px;
+      opacity: 0.85;
+    }
+
+    /* ── MOTION / TONE STRIP ── */
+    .tone-strip {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 16px;
+      margin-bottom: 80px;
+    }
+
+    .tone-item {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 20px 16px;
+      text-align: center;
+    }
+
+    .tone-emoji { font-size: 28px; margin-bottom: 10px; }
+    .tone-word { font-size: 13px; font-weight: 700; color: var(--text-primary); margin-bottom: 4px; }
+    .tone-note { font-size: 11px; color: var(--text-muted); }
+
+    /* ── GRADIENT SHOWCASE ── */
+    .gradient-row {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 12px;
+      margin-bottom: 80px;
+    }
+
+    .gradient-swatch {
+      height: 100px;
+      border-radius: 16px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .gradient-swatch-label {
+      position: absolute;
+      bottom: 10px;
+      left: 12px;
+      font-size: 10px;
+      font-weight: 600;
+      color: rgba(255,255,255,0.65);
+      letter-spacing: 0.5px;
+    }
+
+    /* ── FOOTER ── */
+    .footer {
+      text-align: center;
+      padding-top: 40px;
+      border-top: 1px solid var(--border);
+    }
+
+    .footer-logo {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 28px;
+      font-weight: 800;
+      background: linear-gradient(135deg, var(--purple-300), var(--pink));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 8px;
+    }
+
+    .footer-sub {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-bottom: 24px;
+    }
+
+    .footer-meta {
+      display: flex;
+      justify-content: center;
+      gap: 32px;
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .footer-meta span { display: flex; align-items: center; gap: 6px; }
+
+    /* ── GLOW ORBS ── */
+    .orb {
+      position: fixed;
+      border-radius: 50%;
+      filter: blur(100px);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .orb-1 {
+      width: 500px;
+      height: 500px;
+      background: radial-gradient(circle, rgba(109,40,217,0.15), transparent 70%);
+      top: -100px;
+      right: -100px;
+    }
+
+    .orb-2 {
+      width: 400px;
+      height: 400px;
+      background: radial-gradient(circle, rgba(232,121,249,0.08), transparent 70%);
+      bottom: 200px;
+      left: -100px;
+    }
+
+    .divider {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 0 0 80px;
+    }
+
+    .full-span { grid-column: 1 / -1; }
+  </style>
+</head>
+<body>
+
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+
+  <div class="wrapper">
+
+    <!-- HEADER -->
+    <div class="header">
+      <div class="header-eyebrow">Design Moodboard · 2026</div>
+      <h1>GoTogether</h1>
+      <p class="header-sub">App gegen Einsamkeit — echte Begegnungen durch spielerische lokale Challenges, Matching und KI-Begleitung.</p>
+    </div>
+
+    <!-- COLOR PALETTE -->
+    <div class="section-label">01 — Farbpalette</div>
+    <div class="palette-row">
+      <div class="swatch" style="background:#080112"><div class="swatch-label" style="color:#555">#080112</div></div>
+      <div class="swatch" style="background:#0f0220"><div class="swatch-label" style="color:#666">#0f0220</div></div>
+      <div class="swatch" style="background:#160830"><div class="swatch-label" style="color:#888">#160830</div></div>
+      <div class="swatch" style="background:#2d0a5e"><div class="swatch-label" style="color:#a78bfa">#2d0a5e</div></div>
+      <div class="swatch" style="background:#5521a8"><div class="swatch-label" style="color:#c4b5fd">#5521a8</div></div>
+      <div class="swatch" style="background:#7c3aed"><div class="swatch-label" style="color:#ede9fe">#7c3aed</div></div>
+      <div class="swatch" style="background:#a78bfa"><div class="swatch-label" style="color:#1e0d40">#a78bfa</div></div>
+      <div class="swatch" style="background:#e879f9"><div class="swatch-label" style="color:#fff">#e879f9</div></div>
+      <div class="swatch" style="background:#f59e0b"><div class="swatch-label" style="color:#1a0a00">#f59e0b</div></div>
+      <div class="swatch" style="background:#2dd4bf"><div class="swatch-label" style="color:#0a1f1a">#2dd4bf</div></div>
+    </div>
+
+    <!-- GRADIENTS -->
+    <div class="section-label">02 — Gradienten</div>
+    <div class="gradient-row">
+      <div class="gradient-swatch" style="background: linear-gradient(135deg, #2d0a5e, #7c3aed, #a78bfa)">
+        <div class="gradient-swatch-label">Primary</div>
+      </div>
+      <div class="gradient-swatch" style="background: linear-gradient(135deg, #5521a8, #a21caf, #e879f9)">
+        <div class="gradient-swatch-label">Electric</div>
+      </div>
+      <div class="gradient-swatch" style="background: linear-gradient(135deg, #7c3aed, #e879f9, #fbbf24)">
+        <div class="gradient-swatch-label">Aurora</div>
+      </div>
+      <div class="gradient-swatch" style="background: linear-gradient(135deg, #0f766e, #2dd4bf, #a78bfa)">
+        <div class="gradient-swatch-label">Map Teal</div>
+      </div>
+      <div class="gradient-swatch" style="background: linear-gradient(135deg, #78350f, #f59e0b, #fde68a)">
+        <div class="gradient-swatch-label">Reward Gold</div>
+      </div>
+    </div>
+
+    <hr class="divider" />
+
+    <!-- TYPOGRAPHY -->
+    <div class="section-label">03 — Typografie</div>
+    <div class="type-section">
+      <div class="type-card">
+        <div class="type-display">Space Grotesk</div>
+        <div class="type-meta">Headlines · Display · Brand</div>
+        <div class="type-weights">
+          <div class="tw tw-400">Regular — Aktivitäten in deiner Nähe</div>
+          <div class="tw tw-500">Medium — City Quest gestartet</div>
+          <div class="tw tw-700">Bold — GoTogether</div>
+          <div class="tw tw-900">Black — LEVEL 12</div>
+        </div>
+      </div>
+      <div class="type-card">
+        <div class="type-display" style="font-family:'Inter',sans-serif; font-size:36px;">Inter</div>
+        <div class="type-meta">Body · UI · Labels · Data</div>
+        <div class="type-sample-body">
+          Finde echte Menschen in deiner Nähe. Dein Social‑Battery‑Index passt die Vorschläge deiner aktuellen Energie an — von ruhigen 1:1‑Treffen bis zu energiegeladenen Gruppenquests mit bis zu 20 Teilnehmenden.
+        </div>
+        <div class="type-sample-body" style="margin-top:12px; font-size:12px; color:var(--text-muted); text-transform: uppercase; letter-spacing: 2px; font-weight: 600;">
+          CHALLENGE · MATCHING · SOCIAL MAP · REWARDS
+        </div>
+      </div>
+    </div>
+
+    <hr class="divider" />
+
+    <!-- MOOD CARDS -->
+    <div class="section-label">04 — Feature-Moodboard</div>
+    <div class="mood-grid">
+      <div class="mood-card mc-quest">
+        <div class="mood-card-icon">🗺️</div>
+        <div class="mood-card-title">City Quests</div>
+        <div class="mood-card-desc">Lokale Herausforderungen wie Pokémon Go — gemeinsam erkunden, treffen, erleben.</div>
+      </div>
+      <div class="mood-card mc-battery">
+        <div class="mood-card-icon">⚡</div>
+        <div class="mood-card-title">Social Battery</div>
+        <div class="mood-card-desc">Aktivitäten angepasst an deine soziale Energie — vom ruhigen 1:1 bis zum Team-Raid.</div>
+      </div>
+      <div class="mood-card mc-match">
+        <div class="mood-card-icon">✨</div>
+        <div class="mood-card-title">Interessen-Matching</div>
+        <div class="mood-card-desc">Menschen mit gemeinsamen Leidenschaften — Hunde, Wandern, Kunst, Kochen.</div>
+      </div>
+      <div class="mood-card mc-rewards">
+        <div class="mood-card-icon">🏆</div>
+        <div class="mood-card-title">Rewards & Gamification</div>
+        <div class="mood-card-desc">Abzeichen, digitale Währung, lokale Angebote — echte Erlebnisse werden belohnt.</div>
+      </div>
+      <div class="mood-card mc-map">
+        <div class="mood-card-icon">📍</div>
+        <div class="mood-card-title">Social Map</div>
+        <div class="mood-card-desc">Echtzeit-Karte mit Challenges, Events und Nutzern in der Nähe — sicher, anonym, spontan.</div>
+      </div>
+    </div>
+
+    <hr class="divider" />
+
+    <!-- UI COMPONENTS -->
+    <div class="section-label">05 — UI-Komponenten</div>
+    <div class="ui-section">
+
+      <!-- Buttons -->
+      <div class="ui-card">
+        <div class="ui-card-title">Buttons & Actions</div>
+        <div class="btn-row">
+          <button class="btn btn-primary">🗺️ Quest starten</button>
+          <button class="btn btn-pink">✨ Match finden</button>
+          <button class="btn btn-gold">🏆 Belohnung abholen</button>
+          <button class="btn btn-secondary">Challenge ansehen</button>
+          <button class="btn btn-ghost">Profil bearbeiten</button>
+        </div>
+      </div>
+
+      <!-- Tags & Quest Card -->
+      <div class="ui-card">
+        <div class="ui-card-title">Tags & Quest Card</div>
+        <div class="chips">
+          <span class="chip chip-active">Wandern</span>
+          <span class="chip chip-purple">Kunst</span>
+          <span class="chip chip-pink">Kochen</span>
+          <span class="chip chip-teal">Hunde</span>
+          <span class="chip chip-gold">Events</span>
+          <span class="chip chip-purple">Musik</span>
+          <span class="chip chip-pink">Fotografie</span>
+        </div>
+        <div class="quest-preview">
+          <div class="quest-preview-header">
+            <div class="quest-preview-title">Café-Hop Maxvorstadt</div>
+            <div class="quest-xp">+120 XP</div>
+          </div>
+          <div class="quest-preview-meta">📍 500m entfernt &nbsp;·&nbsp; 👥 4 / 8 Plätze &nbsp;·&nbsp; ⏱️ 14:00 Uhr</div>
+          <div class="chips" style="margin-bottom:8px">
+            <span class="chip chip-teal" style="font-size:11px; padding:3px 10px;">Kaffee</span>
+            <span class="chip chip-purple" style="font-size:11px; padding:3px 10px;">Sozial</span>
+          </div>
+          <div class="quest-preview-bar"><div class="quest-preview-fill"></div></div>
+        </div>
+        <div class="quest-preview" style="opacity:0.6">
+          <div class="quest-preview-header">
+            <div class="quest-preview-title">Park-Picknick Englischer Garten</div>
+            <div class="quest-xp">+200 XP</div>
+          </div>
+          <div class="quest-preview-meta">📍 1.2km entfernt &nbsp;·&nbsp; 👥 12 / 20 Plätze</div>
+        </div>
+      </div>
+
+      <!-- Social Battery + Matching -->
+      <div class="ui-card">
+        <div class="ui-card-title">Social Battery & Matching</div>
+        <div class="battery-widget" style="margin-bottom: 16px;">
+          <div class="battery-label">⚡ Dein Social Battery</div>
+          <div class="battery-bar-outer">
+            <div class="battery-bar-fill"></div>
+          </div>
+          <div class="battery-levels">
+            <span>Erschöpft</span>
+            <span>Mittel</span>
+            <span>Energiegeladen</span>
+          </div>
+          <div class="battery-state">
+            <div class="state-chip state-low">1:1 Treffen</div>
+            <div class="state-chip state-mid">Kleine Gruppe</div>
+            <div class="state-chip state-high">Team-Raid</div>
+          </div>
+        </div>
+        <div class="match-card">
+          <div class="avatar av-a">👩</div>
+          <div class="match-info">
+            <div class="match-name">Lena K., 24</div>
+            <div class="match-interests">Wandern · Fotografie · Kaffee</div>
+          </div>
+          <div class="match-score">94%</div>
+        </div>
+        <div class="match-card">
+          <div class="avatar av-b">🧑</div>
+          <div class="match-info">
+            <div class="match-name">Tom R., 29</div>
+            <div class="match-interests">Musik · Sport · Kochen</div>
+          </div>
+          <div class="match-score">87%</div>
+        </div>
+        <div class="match-card">
+          <div class="avatar av-c">👩</div>
+          <div class="match-info">
+            <div class="match-name">Karin M., 54</div>
+            <div class="match-interests">Kunst · Lesen · Hunde</div>
+          </div>
+          <div class="match-score">81%</div>
+        </div>
+      </div>
+
+    </div>
+
+    <hr class="divider" />
+
+    <!-- MAP PREVIEW -->
+    <div class="map-section">
+      <div class="section-label">06 — Social Map</div>
+      <div class="map-preview">
+        <div class="map-bg"></div>
+
+        <!-- Roads -->
+        <div class="map-road road-h1"></div>
+        <div class="map-road road-h2"></div>
+        <div class="map-road road-v1"></div>
+        <div class="map-road road-v2"></div>
+
+        <!-- Radius rings -->
+        <div class="radius-ring ring-sm"></div>
+        <div class="radius-ring ring-md"></div>
+        <div class="radius-ring ring-lg"></div>
+
+        <!-- User position -->
+        <div class="user-dot"><div class="user-dot-inner"></div></div>
+
+        <!-- Pins -->
+        <div class="map-pin" style="top:28%; left:38%">
+          <div class="pin-dot pin-purple"><span>🎯</span></div>
+          <div class="pin-label">Café-Hop Quest</div>
+        </div>
+        <div class="map-pin" style="top:55%; left:25%">
+          <div class="pin-dot pin-pink"><span>🎨</span></div>
+          <div class="pin-label">Kunstworkshop</div>
+        </div>
+        <div class="map-pin" style="top:35%; left:62%">
+          <div class="pin-dot pin-gold"><span>🏆</span></div>
+          <div class="pin-label">Team-Raid</div>
+        </div>
+        <div class="map-pin" style="top:65%; left:58%">
+          <div class="pin-dot pin-teal"><span>🌿</span></div>
+          <div class="pin-label">Park-Picknick</div>
+        </div>
+        <div class="map-pin" style="top:72%; left:35%">
+          <div class="pin-dot pin-purple" style="width:28px;height:28px"><span style="font-size:12px">👥</span></div>
+          <div class="pin-label" style="font-size:10px">3 online</div>
+        </div>
+
+        <!-- Legend -->
+        <div class="map-legend">
+          <div class="legend-item"><div class="legend-dot" style="background:#7c3aed"></div> City Quest</div>
+          <div class="legend-item"><div class="legend-dot" style="background:#e879f9"></div> Event</div>
+          <div class="legend-item"><div class="legend-dot" style="background:#f59e0b"></div> Team-Raid</div>
+          <div class="legend-item"><div class="legend-dot" style="background:#2dd4bf"></div> Treffpunkt</div>
+        </div>
+      </div>
+    </div>
+
+    <hr class="divider" />
+
+    <!-- GAMIFICATION -->
+    <div class="section-label">07 — Gamification & Rewards</div>
+    <div class="gamification-section">
+      <div class="reward-card">
+        <div class="ui-card-title">Fortschritt & Level</div>
+        <div class="xp-row">
+          <span class="level-badge">Lvl 12</span>
+          <span class="xp-text">2.340 / 4.000 XP</span>
+        </div>
+        <div class="xp-bar"><div class="xp-fill"></div></div>
+
+        <div class="ui-card-title">Abzeichen</div>
+        <div class="badges-grid">
+          <div class="badge badge-earned" title="Erster Check-in">🎯</div>
+          <div class="badge badge-earned" title="5 Quests">🗺️</div>
+          <div class="badge badge-earned" title="Team-Player">👥</div>
+          <div class="badge badge-earned" title="Stadtentdecker">🏙️</div>
+          <div class="badge badge-earned" title="Early Bird">⚡</div>
+          <div class="badge badge-locked">🏆</div>
+          <div class="badge badge-locked">🌟</div>
+          <div class="badge badge-locked">🎪</div>
+          <div class="badge badge-locked">🦋</div>
+          <div class="badge badge-locked">💎</div>
+        </div>
+      </div>
+
+      <div class="reward-card">
+        <div class="ui-card-title">Digitale Währung</div>
+        <div class="currency-widget">
+          <div>
+            <div class="currency-amount">1.250</div>
+            <div class="currency-label">GoCoins verfügbar</div>
+          </div>
+          <div class="currency-icon">🪙</div>
+        </div>
+        <div class="chips" style="flex-direction:column; gap:10px">
+          <div style="display:flex; justify-content:space-between; align-items:center; background:var(--bg-elevated); border:1px solid var(--border); border-radius:12px; padding:12px 16px;">
+            <div>
+              <div style="font-size:13px; font-weight:600;">☕ Café Muse — 10% Rabatt</div>
+              <div style="font-size:11px; color:var(--text-muted);">Lokaler Partner · Schwabing</div>
+            </div>
+            <div style="color:var(--gold); font-weight:700; font-size:14px;">−500 🪙</div>
+          </div>
+          <div style="display:flex; justify-content:space-between; align-items:center; background:var(--bg-elevated); border:1px solid var(--border); border-radius:12px; padding:12px 16px;">
+            <div>
+              <div style="font-size:13px; font-weight:600;">🎨 Avatar-Skin „Galaxy"</div>
+              <div style="font-size:11px; color:var(--text-muted);">Saisonale Edition · Limitiert</div>
+            </div>
+            <div style="color:var(--gold); font-weight:700; font-size:14px;">−300 🪙</div>
+          </div>
+          <div style="display:flex; justify-content:space-between; align-items:center; background:var(--bg-elevated); border:1px solid var(--border); border-radius:12px; padding:12px 16px; opacity:0.5">
+            <div>
+              <div style="font-size:13px; font-weight:600;">🎫 Stadtfest-Ticket</div>
+              <div style="font-size:11px; color:var(--text-muted);">Event · 15. Juni 2026</div>
+            </div>
+            <div style="color:var(--gold); font-weight:700; font-size:14px;">−800 🪙</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <hr class="divider" />
+
+    <!-- DESIGN PRINCIPLES -->
+    <div class="section-label">08 — Design-Prinzipien</div>
+    <div class="principles-grid">
+      <div class="principle-card pc-1">
+        <div class="principle-num">01</div>
+        <div class="principle-title">Real First</div>
+        <div class="principle-desc">Design motiviert zu echten Begegnungen — digital ist Brücke, nicht Ziel.</div>
+      </div>
+      <div class="principle-card pc-2">
+        <div class="principle-num">02</div>
+        <div class="principle-title">Warm & Safe</div>
+        <div class="principle-desc">Warme Akzente, weiche Kurven — trotz Dark Mode fühlt sich die App einladend an.</div>
+      </div>
+      <div class="principle-card pc-3">
+        <div class="principle-num">03</div>
+        <div class="principle-title">Playful, not Childish</div>
+        <div class="principle-desc">Gamification mit Stil — spielt für alle Altersgruppen, von 17 bis 54+.</div>
+      </div>
+      <div class="principle-card pc-4">
+        <div class="principle-num">04</div>
+        <div class="principle-title">Privacy by Default</div>
+        <div class="principle-desc">Safe Mode, anonyme Karte, klare Datenschutz-Signale im UI verankert.</div>
+      </div>
+    </div>
+
+    <hr class="divider" />
+
+    <!-- TONE & MOOD -->
+    <div class="section-label">09 — Ton & Stimmung</div>
+    <div class="tone-strip">
+      <div class="tone-item">
+        <div class="tone-emoji">🌌</div>
+        <div class="tone-word">Mystisch</div>
+        <div class="tone-note">Dunkle Tiefe, lila Glow</div>
+      </div>
+      <div class="tone-item">
+        <div class="tone-emoji">⚡</div>
+        <div class="tone-word">Energetisch</div>
+        <div class="tone-note">Neon-Akzente, Bewegung</div>
+      </div>
+      <div class="tone-item">
+        <div class="tone-emoji">🤝</div>
+        <div class="tone-word">Verbindend</div>
+        <div class="tone-note">Wärme, Nähe, Vertrauen</div>
+      </div>
+      <div class="tone-item">
+        <div class="tone-emoji">🎮</div>
+        <div class="tone-word">Spielerisch</div>
+        <div class="tone-note">Quests, XP, Rewards</div>
+      </div>
+      <div class="tone-item">
+        <div class="tone-emoji">🛡️</div>
+        <div class="tone-word">Sicher</div>
+        <div class="tone-note">Safe Spots, Privacy UI</div>
+      </div>
+      <div class="tone-item">
+        <div class="tone-emoji">🌆</div>
+        <div class="tone-word">Lokal</div>
+        <div class="tone-note">Stadtgefühl, Nähe</div>
+      </div>
+    </div>
+
+    <!-- FOOTER -->
+    <div class="footer">
+      <div class="footer-logo">GoTogether</div>
+      <div class="footer-sub">App gegen Einsamkeit — echte Begegnungen statt leere Likes</div>
+      <div class="footer-meta">
+        <span>🎨 Design Moodboard</span>
+        <span>🌑 Dark Purple Theme</span>
+        <span>📱 React Native</span>
+        <span>📅 SS 2026</span>
+      </div>
+    </div>
+
+  </div>
+</body>
+</html>
