@@ -1,0 +1,1040 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>GoTogether — Neo Brutalism</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+<style>
+:root {
+  --cream:   #FFF8EE;
+  --black:   #1A0B2E;
+  --white:   #FFFFFF;
+  --purple:  #7C3AED;
+  --purple-l:#EDE9FE;
+  --coral:   #F97316;
+  --coral-l: #FFF0E5;
+  --green:   #16A34A;
+  --green-l: #DCFCE7;
+  --gold:    #D97706;
+  --gold-l:  #FEF9C3;
+  --pink:    #DB2777;
+  --pink-l:  #FCE7F3;
+  --blue:    #2563EB;
+  --blue-l:  #DBEAFE;
+  --sh: 5px 5px 0px var(--black);
+  --sh-lg: 7px 7px 0px var(--black);
+  --sh-sm: 3px 3px 0px var(--black);
+  --border: 2.5px solid var(--black);
+  --border-sm: 2px solid var(--black);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: var(--cream);
+  color: var(--black);
+  font-family: 'Inter', sans-serif;
+  overflow-x: hidden;
+}
+
+/* dot grid bg */
+body::before {
+  content: '';
+  position: fixed; inset: 0; pointer-events: none; z-index: 0;
+  background-image: radial-gradient(circle, rgba(26,11,46,.12) 1px, transparent 1px);
+  background-size: 28px 28px;
+}
+
+.page { position: relative; z-index: 1; max-width: 1380px; margin: 0 auto; }
+
+/* ═══════════════ HEADER ═══════════════ */
+.header {
+  padding: 64px 56px 48px;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: start;
+  gap: 40px;
+}
+
+.h-eyebrow {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: var(--purple); color: #fff;
+  border: var(--border-sm); border-radius: 100px;
+  padding: 6px 16px;
+  font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase;
+  box-shadow: var(--sh-sm);
+  margin-bottom: 20px;
+}
+
+.h-title {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: clamp(64px, 9vw, 110px);
+  font-weight: 800;
+  line-height: .95;
+  letter-spacing: -4px;
+  color: var(--black);
+  margin-bottom: 20px;
+}
+
+.h-title .accent {
+  display: inline-block;
+  background: var(--purple);
+  color: #fff;
+  padding: 0 16px;
+  border-radius: 12px;
+  border: var(--border);
+  box-shadow: var(--sh);
+  transform: rotate(-1.5deg);
+}
+
+.h-sub {
+  font-size: 17px; font-weight: 500; color: var(--black);
+  max-width: 480px; line-height: 1.6; opacity: .75;
+  margin-bottom: 28px;
+}
+
+.h-tags { display: flex; flex-wrap: wrap; gap: 8px; }
+
+.h-tag {
+  padding: 8px 18px; border-radius: 100px;
+  font-size: 13px; font-weight: 700;
+  border: var(--border-sm);
+  box-shadow: var(--sh-sm);
+}
+.ht-p  { background: var(--purple-l); }
+.ht-c  { background: var(--coral-l); }
+.ht-g  { background: var(--green-l); }
+.ht-go { background: var(--gold-l); }
+.ht-pk { background: var(--pink-l); }
+
+.h-right {
+  display: flex; flex-direction: column; gap: 12px; padding-top: 12px;
+}
+
+.h-badge {
+  background: var(--white);
+  border: var(--border);
+  border-radius: 16px;
+  padding: 14px 18px;
+  box-shadow: var(--sh);
+  font-size: 13px; font-weight: 700; text-align: center;
+}
+
+.h-badge .big { font-family:'Space Grotesk',sans-serif; font-size: 28px; font-weight: 800; display: block; }
+.h-badge .big.c-p { color: var(--purple); }
+.h-badge .big.c-c { color: var(--coral); }
+.h-badge .big.c-g { color: var(--gold); }
+
+/* ═══════════════ BENTO SECTION ═══════════════ */
+.section { padding: 0 56px 72px; }
+
+.s-label {
+  font-size: 11px; font-weight: 700; letter-spacing: 4px;
+  text-transform: uppercase; color: var(--black); opacity: .45;
+  margin-bottom: 24px;
+  display: flex; align-items: center; gap: 12px;
+}
+.s-label::after { content: ''; flex: 1; height: 2px; background: var(--black); opacity: .12; }
+
+.bento {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+}
+
+/* ── NEO BRUTAL CARD ── */
+.b {
+  background: var(--white);
+  border: var(--border);
+  border-radius: 20px;
+  box-shadow: var(--sh);
+  padding: 28px;
+  position: relative;
+  overflow: hidden;
+  transition: transform .15s, box-shadow .15s;
+}
+.b:hover { transform: translate(-2px,-2px); box-shadow: var(--sh-lg); }
+.b.span2 { grid-column: span 2; }
+
+/* color fill variants */
+.b-purple { background: var(--purple); color: #fff; }
+.b-coral  { background: var(--coral);  color: #fff; }
+.b-green  { background: var(--green);  color: #fff; }
+.b-gold   { background: var(--gold);   color: #fff; }
+.b-pink   { background: var(--pink);   color: #fff; }
+.b-cream  { background: var(--cream); }
+.b-purple-l { background: var(--purple-l); }
+.b-coral-l  { background: var(--coral-l); }
+.b-green-l  { background: var(--green-l); }
+.b-gold-l   { background: var(--gold-l); }
+.b-pink-l   { background: var(--pink-l); }
+.b-blue-l   { background: var(--blue-l); }
+
+.b-chip {
+  display: inline-block;
+  border: var(--border-sm); border-radius: 100px;
+  padding: 4px 12px; font-size: 10px; font-weight: 700;
+  letter-spacing: 1px; text-transform: uppercase;
+  margin-bottom: 12px;
+  background: rgba(255,255,255,.3);
+}
+
+.b-title {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 24px; font-weight: 800; line-height: 1.1;
+  margin-bottom: 8px;
+}
+
+.b-desc { font-size: 13px; line-height: 1.6; opacity: .8; margin-bottom: 16px; }
+
+/* mini components inside cards */
+.neo-btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 9px 18px; border-radius: 100px;
+  font-size: 12px; font-weight: 700; font-family: 'Inter', sans-serif;
+  border: var(--border-sm); box-shadow: var(--sh-sm);
+  cursor: pointer; background: #fff; color: var(--black);
+  transition: transform .1s, box-shadow .1s;
+}
+.neo-btn:hover { transform: translate(-1px,-1px); box-shadow: 4px 4px 0 var(--black); }
+.neo-btn.filled { background: var(--black); color: #fff; }
+.neo-btn.inv    { background: #fff; color: var(--black); }
+
+.chip-row { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+.neo-chip {
+  padding: 5px 12px; border-radius: 100px;
+  font-size: 11px; font-weight: 700;
+  border: var(--border-sm);
+  background: rgba(255,255,255,.9);
+  color: var(--black);
+  box-shadow: 2px 2px 0 var(--black);
+}
+.neo-chip.on { background: var(--black); color: #fff; }
+
+.bar-track {
+  height: 12px; background: rgba(0,0,0,.1);
+  border: var(--border-sm); border-radius: 100px;
+  overflow: hidden; margin: 10px 0 6px;
+}
+.bar-fill { height: 100%; border-radius: 100px; border-right: 2px solid rgba(0,0,0,.2); }
+
+.mini-quest {
+  background: rgba(255,255,255,.5);
+  border: var(--border-sm); border-radius: 12px;
+  padding: 8px 12px; margin-bottom: 7px;
+  display: flex; align-items: center; gap: 10px;
+}
+.mq-icon {
+  width: 32px; height: 32px; border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 15px; background: rgba(255,255,255,.6);
+  border: var(--border-sm); flex-shrink: 0;
+}
+.mq-name { font-size: 12px; font-weight: 700; }
+.mq-meta { font-size: 10px; opacity: .7; }
+.mq-xp   { margin-left: auto; font-size: 11px; font-weight: 800; flex-shrink: 0; background: rgba(0,0,0,.12); padding: 3px 8px; border-radius: 8px; border: 1px solid rgba(0,0,0,.15); }
+
+.av-row { display: flex; align-items: center; margin-top: 10px; }
+.neo-av {
+  width: 32px; height: 32px; border-radius: 10px;
+  border: var(--border-sm); margin-left: -6px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 15px; flex-shrink: 0;
+}
+.neo-av:first-child { margin-left: 0; }
+.av-more { background: rgba(255,255,255,.6); font-size: 10px; font-weight: 800; }
+
+.mini-badge-row { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
+.neo-badge {
+  width: 44px; height: 44px; border-radius: 14px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 20px;
+  border: var(--border-sm); background: rgba(255,255,255,.5);
+  box-shadow: 2px 2px 0 var(--black);
+}
+.neo-badge.locked { filter: grayscale(1); opacity: .35; }
+
+/* mini chat bubble */
+.chat-bubble {
+  padding: 10px 14px; border-radius: 14px 14px 14px 4px;
+  font-size: 12px; font-weight: 500; line-height: 1.4;
+  border: var(--border-sm); margin-bottom: 6px;
+  max-width: 90%;
+  box-shadow: 2px 2px 0 var(--black);
+}
+.cb-right { border-radius: 14px 14px 4px 14px; margin-left: auto; }
+
+/* mini map */
+.mini-map {
+  border: var(--border);
+  border-radius: 14px; overflow: hidden;
+  height: 130px; position: relative;
+  background: var(--green-l);
+  box-shadow: var(--sh-sm);
+  margin-top: 10px;
+}
+.mm-grid {
+  position: absolute; inset: 0;
+  background-image:
+    repeating-linear-gradient(0deg, transparent, transparent 19px, rgba(0,0,0,.07) 19px, rgba(0,0,0,.07) 20px),
+    repeating-linear-gradient(90deg, transparent, transparent 19px, rgba(0,0,0,.07) 19px, rgba(0,0,0,.07) 20px);
+}
+.mm-road-h { position: absolute; left:0; right:0; height:3px; background: rgba(255,255,255,.7); }
+.mm-road-v { position: absolute; top:0; bottom:0; width:3px; background: rgba(255,255,255,.7); }
+.mm-block   { position: absolute; background: rgba(255,255,255,.55); border: 1px solid rgba(0,0,0,.1); border-radius: 4px; }
+.mm-pin {
+  position: absolute; transform: translate(-50%,-100%);
+  width: 24px; height: 24px; border-radius: 50% 50% 50% 0;
+  transform-origin: center bottom;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 11px; border: 2px solid var(--black);
+  box-shadow: 2px 2px 0 var(--black);
+}
+.mm-user {
+  position: absolute; width: 12px; height: 12px;
+  border-radius: 50%; background: var(--purple);
+  border: 2px solid #fff; box-shadow: 0 0 0 3px rgba(124,58,237,.3);
+  transform: translate(-50%,-50%);
+}
+
+/* ═══════════════ PHONES SECTION ═══════════════ */
+.phones-wrap {
+  padding: 0 56px 80px;
+}
+
+.phones-panel {
+  background: var(--purple-l);
+  border: var(--border);
+  border-radius: 24px;
+  box-shadow: var(--sh-lg);
+  padding: 48px 40px 40px;
+  position: relative;
+  overflow: hidden;
+}
+
+/* decorative circles behind phones */
+.deco-circle {
+  position: absolute; border-radius: 50%;
+  border: var(--border); pointer-events: none;
+}
+
+.phones-row {
+  display: flex; justify-content: center;
+  align-items: flex-end; gap: 18px;
+  flex-wrap: wrap;
+}
+
+.p-wrap {
+  display: flex; flex-direction: column; align-items: center; gap: 12px;
+}
+
+.p-label {
+  font-size: 11px; font-weight: 700; letter-spacing: 2px;
+  text-transform: uppercase; opacity: .55;
+}
+
+/* NEO BRUTAL PHONE SHELL */
+.phone {
+  width: 280px;
+  background: var(--white);
+  border: var(--border);
+  border-radius: 40px;
+  box-shadow: var(--sh-lg);
+  overflow: hidden;
+  transition: transform .2s, box-shadow .2s;
+}
+.phone:hover { transform: translate(-3px,-3px); box-shadow: 10px 10px 0 var(--black); }
+
+.phone.center {
+  width: 298px;
+  box-shadow: 8px 8px 0 var(--black);
+}
+
+/* notch */
+.p-notch {
+  height: 26px; background: var(--white);
+  display: flex; align-items: center; justify-content: center;
+}
+.p-notch-pill {
+  width: 80px; height: 22px; background: #F3F4F6;
+  border-radius: 0 0 14px 14px;
+  border: 1.5px solid #E5E7EB; border-top: none;
+  display: flex; align-items: center; justify-content: center; gap: 4px;
+}
+.p-cam { width: 7px; height: 7px; border-radius: 50%; background: #D1D5DB; }
+
+.p-status {
+  display: flex; justify-content: space-between; padding: 4px 18px 6px;
+  font-size: 10px; font-weight: 800; color: var(--black);
+}
+
+.p-screen { padding: 0 12px 14px; background: var(--cream); }
+.p-screen-white { background: #fff; }
+
+/* phone nav */
+.p-nav {
+  display: flex; justify-content: space-around;
+  padding: 8px 8px 14px;
+  background: var(--white);
+  border-top: var(--border-sm);
+}
+.p-nav-item {
+  display: flex; flex-direction: column; align-items: center; gap: 3px;
+  font-size: 8px; font-weight: 700; letter-spacing: .5px; text-transform: uppercase;
+  color: rgba(26,11,46,.4); cursor: pointer;
+}
+.p-nav-item.on { color: var(--purple); }
+.p-nav-icon { font-size: 17px; }
+
+/* phone card (neo brutal inside phone) */
+.p-card {
+  background: var(--white);
+  border: var(--border-sm);
+  border-radius: 16px;
+  padding: 12px;
+  box-shadow: var(--sh-sm);
+  margin-bottom: 8px;
+}
+.p-card.c-purple { background: var(--purple); color: #fff; }
+.p-card.c-purple-l { background: var(--purple-l); }
+.p-card.c-coral  { background: var(--coral);  color: #fff; }
+.p-card.c-coral-l { background: var(--coral-l); }
+.p-card.c-green  { background: var(--green);  color: #fff; }
+.p-card.c-green-l { background: var(--green-l); }
+.p-card.c-gold   { background: var(--gold);   color: #fff; }
+.p-card.c-gold-l  { background: var(--gold-l); }
+.p-card.c-pink   { background: var(--pink);   color: #fff; }
+.p-card.c-pink-l { background: var(--pink-l); }
+.p-card.c-cream  { background: var(--cream); }
+
+.p-label-sm { font-size: 9px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; opacity: .7; margin-bottom: 3px; }
+.p-title     { font-family: 'Space Grotesk', sans-serif; font-size: 15px; font-weight: 800; line-height: 1.1; margin-bottom: 4px; }
+.p-sub       { font-size: 10px; opacity: .75; }
+.p-val       { font-family: 'Space Grotesk', sans-serif; font-size: 22px; font-weight: 900; line-height: 1; }
+
+.p-bar-track { height: 8px; background: rgba(0,0,0,.1); border: 1.5px solid rgba(0,0,0,.15); border-radius: 100px; overflow: hidden; margin: 6px 0 4px; }
+.p-bar-fill  { height: 100%; border-radius: 100px; }
+
+.p-header    { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+.p-avatar    { width: 36px; height: 36px; border-radius: 12px; border: var(--border-sm); display: flex; align-items: center; justify-content: center; font-size: 18px; background: var(--purple-l); }
+
+.p-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 7px; margin-bottom: 8px; }
+.p-grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px; margin-bottom: 8px; }
+
+.p-stat {
+  background: var(--white); border: var(--border-sm);
+  border-radius: 12px; padding: 8px 6px; text-align: center;
+  box-shadow: 2px 2px 0 var(--black);
+}
+.p-stat-val { font-family:'Space Grotesk',sans-serif; font-size: 17px; font-weight: 900; }
+.p-stat-key { font-size: 8px; font-weight: 700; text-transform: uppercase; letter-spacing: .5px; opacity: .6; margin-top: 1px; }
+
+.p-quest-row {
+  display: flex; align-items: center; gap: 8px;
+  background: var(--white); border: var(--border-sm);
+  border-radius: 12px; padding: 8px 10px;
+  box-shadow: 2px 2px 0 var(--black); margin-bottom: 6px;
+}
+.pqr-icon { width: 28px; height: 28px; border-radius: 9px; border: var(--border-sm); display: flex; align-items: center; justify-content: center; font-size: 13px; flex-shrink: 0; }
+.pqr-name { font-size: 11px; font-weight: 700; }
+.pqr-meta { font-size: 9px; opacity: .6; }
+.pqr-xp   { margin-left: auto; font-size: 10px; font-weight: 800; background: var(--gold-l); padding: 2px 7px; border-radius: 7px; border: 1px solid rgba(0,0,0,.15); flex-shrink: 0; }
+
+.p-neo-btn {
+  display: flex; align-items: center; justify-content: center; gap: 5px;
+  border: var(--border-sm); border-radius: 100px;
+  padding: 8px 14px; font-size: 11px; font-weight: 800;
+  box-shadow: 2px 2px 0 var(--black); cursor: pointer;
+  font-family: 'Inter', sans-serif;
+}
+
+.p-match-card {
+  display: flex; align-items: center; gap: 8px;
+  background: var(--white); border: var(--border-sm);
+  border-radius: 14px; padding: 10px;
+  box-shadow: 2px 2px 0 var(--black); margin-bottom: 7px;
+}
+.pmc-av  { width: 38px; height: 38px; border-radius: 12px; border: var(--border-sm); display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
+.pmc-name{ font-size: 12px; font-weight: 800; }
+.pmc-int { font-size: 9px; opacity: .65; margin: 2px 0 4px; }
+.pmc-chips { display: flex; gap: 3px; }
+.pmc-chip { padding: 2px 7px; border-radius: 100px; font-size: 9px; font-weight: 700; border: 1px solid rgba(0,0,0,.15); }
+.pmc-score { margin-left: auto; font-family:'Space Grotesk',sans-serif; font-size: 17px; font-weight: 900; color: var(--purple); flex-shrink: 0; }
+
+/* phone map */
+.p-map {
+  border: var(--border-sm); border-radius: 14px; height: 220px;
+  overflow: hidden; position: relative;
+  background: var(--green-l); margin-bottom: 8px;
+  box-shadow: 2px 2px 0 var(--black);
+}
+.p-map-grid {
+  position: absolute; inset: 0;
+  background-image:
+    repeating-linear-gradient(0deg, transparent, transparent 19px, rgba(0,0,0,.06) 19px, rgba(0,0,0,.06) 20px),
+    repeating-linear-gradient(90deg, transparent, transparent 19px, rgba(0,0,0,.06) 19px, rgba(0,0,0,.06) 20px);
+}
+.p-road-h { position:absolute; left:0; right:0; height:3px; background: rgba(255,255,255,.8); }
+.p-road-v { position:absolute; top:0; bottom:0; width:3px; background: rgba(255,255,255,.8); }
+.p-block  { position:absolute; background: rgba(255,255,255,.55); border: 1px solid rgba(0,0,0,.1); border-radius: 3px; }
+.p-pin {
+  position: absolute; transform: translate(-50%,-100%);
+  display: flex; flex-direction: column; align-items: center; gap: 2px; z-index: 3;
+}
+.p-pin-dot {
+  width: 26px; height: 26px; border-radius: 50% 50% 50% 0; transform: rotate(-45deg);
+  display: flex; align-items: center; justify-content: center;
+  border: 2px solid var(--black); box-shadow: 2px 2px 0 var(--black);
+}
+.p-pin-dot span { transform: rotate(45deg); font-size: 11px; }
+.p-pin-label { background: #fff; border: 1.5px solid var(--black); border-radius: 6px; padding: 1px 6px; font-size: 8px; font-weight: 700; white-space: nowrap; box-shadow: 1px 1px 0 var(--black); }
+.p-user { position: absolute; width: 12px; height: 12px; border-radius: 50%; background: var(--purple); border: 2px solid #fff; box-shadow: 0 0 0 4px rgba(124,58,237,.25), 2px 2px 0 var(--black); transform: translate(-50%,-50%); z-index: 4; }
+
+/* ═══════════════ DESIGN SYSTEM ═══════════════ */
+.ds-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px;
+}
+
+.ds-card {
+  background: var(--white);
+  border: var(--border);
+  border-radius: 20px;
+  box-shadow: var(--sh);
+  padding: 28px;
+}
+
+.ds-title {
+  font-size: 10px; font-weight: 700; letter-spacing: 3px;
+  text-transform: uppercase; opacity: .4; margin-bottom: 20px;
+}
+
+.sw-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; }
+.sw-item { display: flex; flex-direction: column; align-items: center; gap: 6px; }
+.sw-dot {
+  width: 100%; aspect-ratio: 1; border-radius: 12px;
+  border: var(--border-sm); box-shadow: var(--sh-sm);
+}
+.sw-name { font-size: 9px; font-weight: 700; text-align: center; opacity: .7; }
+
+.type-rows { display: flex; flex-direction: column; gap: 10px; }
+.tr-tag { font-size: 9px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; opacity: .4; margin-bottom: 2px; }
+.tr-d1  { font-family:'Space Grotesk',sans-serif; font-size: 36px; font-weight: 800; line-height: 1; }
+.tr-d2  { font-family:'Space Grotesk',sans-serif; font-size: 22px; font-weight: 700; }
+.tr-d3  { font-size: 15px; font-weight: 600; }
+.tr-d4  { font-size: 13px; opacity: .65; line-height: 1.6; }
+
+.radius-demos { display: flex; gap: 12px; align-items: flex-end; flex-wrap: wrap; margin-top: 4px; }
+.rd {
+  display: flex; flex-direction: column; align-items: center; gap: 6px;
+  font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: .5px; opacity: .6;
+}
+.rd-box { background: var(--purple-l); border: var(--border-sm); box-shadow: var(--sh-sm); }
+
+.btn-demos { display: flex; flex-direction: column; gap: 8px; margin-top: 8px; }
+
+/* ═══════════════ FOOTER ═══════════════ */
+.footer {
+  text-align: center; padding: 48px 56px;
+  border-top: var(--border);
+  margin: 0 56px 56px;
+  border-radius: 0 0 24px 24px;
+  background: var(--purple);
+  color: #fff;
+  box-shadow: var(--sh-lg);
+}
+.f-title { font-family:'Space Grotesk',sans-serif; font-size: 40px; font-weight: 800; letter-spacing: -1px; margin-bottom: 8px; }
+.f-sub   { font-size: 14px; opacity: .75; margin-bottom: 20px; }
+.f-tags  { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; }
+.f-tag   { background: rgba(255,255,255,.15); border: 2px solid rgba(255,255,255,.4); border-radius: 100px; padding: 6px 16px; font-size: 12px; font-weight: 700; }
+</style>
+</head>
+<body>
+<div class="page">
+
+<!-- ═══════════════ HEADER ═══════════════ -->
+<div class="header">
+  <div>
+    <div class="h-eyebrow">✦ Design Concept · Neo Brutalism</div>
+    <h1 class="h-title">Go<span class="accent">Together</span></h1>
+    <p class="h-sub">App gegen Einsamkeit — echte Begegnungen durch spielerische lokale Challenges, Matching und KI-Begleitung.</p>
+    <div class="h-tags">
+      <div class="h-tag ht-p">🗺️ City Quests</div>
+      <div class="h-tag ht-c">⚡ Social Battery</div>
+      <div class="h-tag ht-g">📍 Social Map</div>
+      <div class="h-tag ht-go">🏆 Gamification</div>
+      <div class="h-tag ht-pk">✨ Matching</div>
+    </div>
+  </div>
+  <div class="h-right">
+    <div class="h-badge">
+      <span class="big c-p">24+</span>
+      Quests absolviert
+    </div>
+    <div class="h-badge">
+      <span class="big c-c">1.2k</span>
+      GoCoins
+    </div>
+    <div class="h-badge">
+      <span class="big c-g">Lvl 12</span>
+      Dein Level
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════ BENTO FEATURES ═══════════════ -->
+<div class="section">
+  <div class="s-label">01 — Features</div>
+  <div class="bento">
+
+    <!-- CITY QUESTS span2 -->
+    <div class="b b-purple span2">
+      <div class="b-chip">Feature 01</div>
+      <div style="display:flex;gap:28px;align-items:flex-start;">
+        <div style="flex:1;">
+          <div class="b-title" style="font-size:28px;">🗺️ City Quests</div>
+          <p class="b-desc">Inspiriert von Pokémon Go — spielerische lokale Challenges, Team-Raids und zeitlich begrenzte Events, die echte Begegnungen fördern.</p>
+          <div class="mini-quest">
+            <div class="mq-icon">🎯</div>
+            <div><div class="mq-name">Café-Hop Maxvorstadt</div><div class="mq-meta">📍 380m · 👥 4/8</div></div>
+            <div class="mq-xp">+120 XP</div>
+          </div>
+          <div class="mini-quest">
+            <div class="mq-icon">🎨</div>
+            <div><div class="mq-name">Kunstworkshop Schwabing</div><div class="mq-meta">📍 0.8km · 👥 6/12</div></div>
+            <div class="mq-xp">+200 XP</div>
+          </div>
+          <div class="mini-quest">
+            <div class="mq-icon">🌿</div>
+            <div><div class="mq-name">Park-Picknick Englischer G.</div><div class="mq-meta">📍 1.2km · 👥 11/20</div></div>
+            <div class="mq-xp">+80 XP</div>
+          </div>
+          <div style="margin-top:14px;">
+            <button class="neo-btn inv">🗺️ Karte öffnen</button>
+          </div>
+        </div>
+        <div style="flex:1;">
+          <div class="mini-map" style="height:170px;">
+            <div class="mm-grid"></div>
+            <div class="mm-block" style="top:8%;left:5%;width:55px;height:35px;"></div>
+            <div class="mm-block" style="top:8%;left:44%;width:48px;height:50px;"></div>
+            <div class="mm-block" style="top:8%;left:72%;width:60px;height:30px;"></div>
+            <div class="mm-block" style="top:52%;left:5%;width:44px;height:55px;"></div>
+            <div class="mm-block" style="top:58%;left:60%;width:55px;height:42px;"></div>
+            <div class="mm-road-h" style="top:46%;"></div>
+            <div class="mm-road-h" style="top:74%;"></div>
+            <div class="mm-road-v" style="left:36%;"></div>
+            <div class="mm-road-v" style="left:66%;"></div>
+            <div class="mm-user" style="top:55%;left:50%;"></div>
+            <div class="mm-pin" style="top:34%;left:40%;background:var(--purple-l);transform:translate(-50%,-100%) rotate(-45deg);"><span style="transform:rotate(45deg);">🎯</span></div>
+            <div class="mm-pin" style="top:47%;left:22%;background:var(--coral-l);transform:translate(-50%,-100%) rotate(-45deg);"><span style="transform:rotate(45deg);">🎨</span></div>
+            <div class="mm-pin" style="top:26%;left:74%;background:var(--gold-l);transform:translate(-50%,-100%) rotate(-45deg);"><span style="transform:rotate(45deg);">🏆</span></div>
+            <div class="mm-pin" style="top:65%;left:64%;background:var(--green-l);transform:translate(-50%,-100%) rotate(-45deg);"><span style="transform:rotate(45deg);">🌿</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SOCIAL BATTERY -->
+    <div class="b b-coral-l">
+      <div class="b-chip" style="border-color:var(--black);background:var(--coral);color:#fff;">Feature 02</div>
+      <div class="b-title">⚡ Social Battery</div>
+      <p class="b-desc">Aktivitäten angepasst an deine soziale Energie — von ruhig bis Team-Raid.</p>
+      <div style="background:var(--white);border:var(--border-sm);border-radius:12px;padding:12px;box-shadow:var(--sh-sm);">
+        <div style="font-size:10px;font-weight:700;margin-bottom:6px;">Aktuell: 72% — Gut aufgeladen</div>
+        <div class="bar-track"><div class="bar-fill" style="width:72%;background:var(--coral);"></div></div>
+        <div style="display:flex;gap:6px;margin-top:8px;">
+          <div style="flex:1;text-align:center;padding:7px 4px;background:#F3F4F6;border:var(--border-sm);border-radius:10px;font-size:9px;font-weight:700;">🤫 1:1</div>
+          <div style="flex:1;text-align:center;padding:7px 4px;background:var(--coral);color:#fff;border:var(--border-sm);border-radius:10px;font-size:9px;font-weight:800;box-shadow:2px 2px 0 var(--black);">👥 Gruppe ✓</div>
+          <div style="flex:1;text-align:center;padding:7px 4px;background:#F3F4F6;border:var(--border-sm);border-radius:10px;font-size:9px;font-weight:700;">🔥 Raid</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MATCHING -->
+    <div class="b b-pink-l">
+      <div class="b-chip" style="border-color:var(--black);background:var(--pink);color:#fff;">Feature 03</div>
+      <div class="b-title">✨ Matching</div>
+      <p class="b-desc">Menschen mit gemeinsamen Leidenschaften finden.</p>
+      <div class="chip-row">
+        <div class="neo-chip on">Wandern</div>
+        <div class="neo-chip">Kunst</div>
+        <div class="neo-chip">Kochen</div>
+        <div class="neo-chip">Hunde</div>
+        <div class="neo-chip">Musik</div>
+        <div class="neo-chip">Events</div>
+      </div>
+      <div class="av-row" style="margin-top:14px;">
+        <div class="neo-av" style="background:var(--purple-l);">👩</div>
+        <div class="neo-av" style="background:var(--coral-l);">🧑</div>
+        <div class="neo-av" style="background:var(--green-l);">👩</div>
+        <div class="neo-av" style="background:var(--gold-l);">🧑</div>
+        <div class="neo-av av-more">+8</div>
+        <span style="margin-left:10px;font-size:12px;font-weight:700;">12 Matches</span>
+      </div>
+    </div>
+
+    <!-- AI ASSISTANT -->
+    <div class="b b-blue-l">
+      <div class="b-chip" style="border-color:var(--black);background:var(--blue);color:#fff;">Feature 04</div>
+      <div class="b-title">🤖 KI-Assistent</div>
+      <p class="b-desc">Empathisches Coaching und Aktivitätsvorschläge.</p>
+      <div style="margin-top:4px;">
+        <div class="chat-bubble" style="background:var(--blue-l);border-color:var(--black);">👋 Heute gibt es ein Café-Hop 400m von dir!</div>
+        <div class="chat-bubble cb-right" style="background:var(--white);">Zeig mir mehr! 🗺️</div>
+      </div>
+    </div>
+
+    <!-- GAMIFICATION span2 -->
+    <div class="b b-gold-l span2">
+      <div class="b-chip" style="border-color:var(--black);background:var(--gold);color:#fff;">Feature 05</div>
+      <div style="display:flex;gap:28px;">
+        <div style="flex:1;">
+          <div class="b-title">🏆 Gamification & Rewards</div>
+          <p class="b-desc">Abzeichen, GoCoins, lokale Partnerangebote und Avatar-Items — nur für echte Check-ins vor Ort.</p>
+          <div class="mini-badge-row">
+            <div class="neo-badge">🎯</div>
+            <div class="neo-badge">🗺️</div>
+            <div class="neo-badge">👥</div>
+            <div class="neo-badge">🏙️</div>
+            <div class="neo-badge">⚡</div>
+            <div class="neo-badge locked">🏆</div>
+            <div class="neo-badge locked">💎</div>
+          </div>
+        </div>
+        <div style="flex:1;">
+          <div style="background:var(--white);border:var(--border-sm);border-radius:16px;padding:14px;box-shadow:var(--sh-sm);">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+              <div>
+                <div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:1px;opacity:.5;">Level</div>
+                <div style="font-family:'Space Grotesk',sans-serif;font-size:20px;font-weight:900;">12 ⚡</div>
+              </div>
+              <div style="text-align:right;">
+                <div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:1px;opacity:.5;">GoCoins</div>
+                <div style="font-family:'Space Grotesk',sans-serif;font-size:20px;font-weight:900;color:var(--gold);">1.250 🪙</div>
+              </div>
+            </div>
+            <div style="font-size:9px;opacity:.5;margin-bottom:4px;">2.340 / 4.000 XP</div>
+            <div class="bar-track"><div class="bar-fill" style="width:58%;background:var(--gold);"></div></div>
+            <div style="display:flex;flex-direction:column;gap:5px;margin-top:10px;">
+              <div style="display:flex;justify-content:space-between;align-items:center;background:var(--cream);border:1.5px solid rgba(0,0,0,.1);border-radius:10px;padding:7px 10px;font-size:11px;font-weight:700;">
+                <span>☕ Café Muse 10% Rabatt</span><span style="color:var(--gold);font-weight:800;">−500 🪙</span>
+              </div>
+              <div style="display:flex;justify-content:space-between;align-items:center;background:var(--cream);border:1.5px solid rgba(0,0,0,.1);border-radius:10px;padding:7px 10px;font-size:11px;font-weight:700;">
+                <span>🎨 Avatar „Galaxy"</span><span style="color:var(--gold);font-weight:800;">−300 🪙</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════ PHONES ═══════════════ -->
+<div class="phones-wrap">
+  <div class="s-label" style="margin-bottom:24px;">02 — App Screens</div>
+
+  <div class="phones-panel">
+    <!-- deco circles -->
+    <div class="deco-circle" style="width:220px;height:220px;top:-60px;left:-60px;background:rgba(124,58,237,.08);"></div>
+    <div class="deco-circle" style="width:160px;height:160px;bottom:-40px;right:10%;background:rgba(249,115,22,.1);"></div>
+    <div class="deco-circle" style="width:100px;height:100px;top:30%;right:-20px;background:rgba(16,163,74,.1);"></div>
+
+    <div class="phones-row">
+
+      <!-- PHONE 1: HOME -->
+      <div class="p-wrap">
+        <div class="phone">
+          <div class="p-notch"><div class="p-notch-pill"><div class="p-cam"></div></div></div>
+          <div class="p-status"><span>09:41</span><span>▲ WiFi 🔋</span></div>
+          <div class="p-screen">
+            <!-- header -->
+            <div class="p-header">
+              <div>
+                <div class="p-label-sm">Willkommen 👋</div>
+                <div style="font-family:'Space Grotesk',sans-serif;font-size:18px;font-weight:800;">Hallo, Tom</div>
+              </div>
+              <div class="p-avatar">🧑</div>
+            </div>
+
+            <!-- Battery card -->
+            <div class="p-card c-purple" style="margin-bottom:8px;">
+              <div class="p-label-sm" style="color:rgba(255,255,255,.7);">⚡ Social Battery</div>
+              <div style="font-family:'Space Grotesk',sans-serif;font-size:14px;font-weight:800;margin-bottom:6px;">Gut aufgeladen</div>
+              <div class="p-bar-track"><div class="p-bar-fill" style="width:72%;background:rgba(255,255,255,.85);"></div></div>
+              <div style="display:flex;gap:5px;margin-top:6px;">
+                <div style="flex:1;text-align:center;padding:5px 2px;background:rgba(255,255,255,.15);border:1.5px solid rgba(255,255,255,.3);border-radius:8px;font-size:8px;font-weight:700;">🤫 1:1</div>
+                <div style="flex:1;text-align:center;padding:5px 2px;background:rgba(255,255,255,.9);border:1.5px solid rgba(255,255,255,.9);border-radius:8px;font-size:8px;font-weight:800;color:var(--purple);box-shadow:1px 1px 0 rgba(0,0,0,.2);">👥 ✓</div>
+                <div style="flex:1;text-align:center;padding:5px 2px;background:rgba(255,255,255,.15);border:1.5px solid rgba(255,255,255,.3);border-radius:8px;font-size:8px;font-weight:700;">🔥 Raid</div>
+              </div>
+            </div>
+
+            <!-- Stats -->
+            <div class="p-grid-3" style="margin-bottom:8px;">
+              <div class="p-stat"><div class="p-stat-val">24</div><div class="p-stat-key">Quests</div></div>
+              <div class="p-stat" style="background:var(--purple-l);"><div class="p-stat-val" style="color:var(--purple);">12</div><div class="p-stat-key">Level</div></div>
+              <div class="p-stat" style="background:var(--gold-l);"><div class="p-stat-val" style="color:var(--gold);">1.2k</div><div class="p-stat-key">🪙</div></div>
+            </div>
+
+            <!-- Quests -->
+            <div style="display:flex;justify-content:space-between;font-size:11px;font-weight:800;margin-bottom:6px;">
+              Quests in der Nähe <span style="color:var(--purple);">Alle →</span>
+            </div>
+            <div class="p-quest-row">
+              <div class="pqr-icon" style="background:var(--purple-l);">🎯</div>
+              <div><div class="pqr-name">Café-Hop Maxvorstadt</div><div class="pqr-meta">📍 380m · 👥 4/8</div></div>
+              <div class="pqr-xp">+120 XP</div>
+            </div>
+            <div class="p-quest-row">
+              <div class="pqr-icon" style="background:var(--coral-l);">🎨</div>
+              <div><div class="pqr-name">Kunstworkshop</div><div class="pqr-meta">📍 0.8km · 👥 6/12</div></div>
+              <div class="pqr-xp">+200 XP</div>
+            </div>
+            <div style="display:flex;gap:6px;margin-top:8px;">
+              <div class="p-neo-btn" style="flex:1;background:var(--purple);color:#fff;">🗺️ Karte</div>
+              <div class="p-neo-btn" style="flex:1;background:var(--cream);">✨ Match</div>
+            </div>
+          </div>
+          <div class="p-nav">
+            <div class="p-nav-item on"><div class="p-nav-icon">🏠</div>Home</div>
+            <div class="p-nav-item"><div class="p-nav-icon">🗺️</div>Karte</div>
+            <div class="p-nav-item"><div class="p-nav-icon">✨</div>Match</div>
+            <div class="p-nav-item"><div class="p-nav-icon">🏆</div>Rewards</div>
+            <div class="p-nav-item"><div class="p-nav-icon">👤</div>Profil</div>
+          </div>
+        </div>
+        <div class="p-label">Home</div>
+      </div>
+
+      <!-- PHONE 2: MAP (center) -->
+      <div class="p-wrap">
+        <div class="phone center">
+          <div class="p-notch"><div class="p-notch-pill"><div class="p-cam"></div></div></div>
+          <div class="p-status"><span>09:41</span><span>▲ WiFi 🔋</span></div>
+          <div class="p-screen p-screen-white">
+            <!-- search -->
+            <div style="display:flex;align-items:center;gap:8px;background:var(--cream);border:var(--border-sm);border-radius:100px;padding:9px 14px;margin-bottom:8px;box-shadow:2px 2px 0 var(--black);">
+              <span style="font-size:12px;opacity:.5;">🔍</span>
+              <span style="font-size:11px;font-weight:600;opacity:.5;flex:1;">Quests, Events, Orte...</span>
+              <div style="width:24px;height:24px;border-radius:8px;background:var(--purple);border:1.5px solid var(--black);display:flex;align-items:center;justify-content:center;font-size:11px;box-shadow:1px 1px 0 var(--black);">⚙</div>
+            </div>
+            <!-- chips -->
+            <div style="display:flex;gap:5px;overflow-x:auto;padding-bottom:8px;scrollbar-width:none;">
+              <div style="padding:4px 11px;border-radius:100px;font-size:10px;font-weight:700;background:var(--purple);color:#fff;border:var(--border-sm);box-shadow:2px 2px 0 var(--black);white-space:nowrap;flex-shrink:0;">🗺️ Quests</div>
+              <div style="padding:4px 11px;border-radius:100px;font-size:10px;font-weight:700;background:var(--cream);border:var(--border-sm);box-shadow:2px 2px 0 var(--black);white-space:nowrap;flex-shrink:0;">🎉 Events</div>
+              <div style="padding:4px 11px;border-radius:100px;font-size:10px;font-weight:700;background:var(--cream);border:var(--border-sm);box-shadow:2px 2px 0 var(--black);white-space:nowrap;flex-shrink:0;">✨ Match</div>
+              <div style="padding:4px 11px;border-radius:100px;font-size:10px;font-weight:700;background:var(--cream);border:var(--border-sm);box-shadow:2px 2px 0 var(--black);white-space:nowrap;flex-shrink:0;">🏆 Raids</div>
+            </div>
+            <!-- map -->
+            <div class="p-map">
+              <div class="p-map-grid"></div>
+              <div class="p-block" style="top:7%;left:4%;width:52px;height:36px;"></div>
+              <div class="p-block" style="top:7%;left:42%;width:48px;height:52px;"></div>
+              <div class="p-block" style="top:7%;left:72%;width:58px;height:32px;"></div>
+              <div class="p-block" style="top:46%;left:4%;width:44px;height:60px;"></div>
+              <div class="p-block" style="top:57%;left:58%;width:52px;height:44px;"></div>
+              <div class="p-block" style="top:72%;left:22%;width:68px;height:34px;"></div>
+              <div class="p-road-h" style="top:40%;"></div>
+              <div class="p-road-h" style="top:67%;"></div>
+              <div class="p-road-v" style="left:33%;"></div>
+              <div class="p-road-v" style="left:65%;"></div>
+              <div class="p-user" style="top:55%;left:50%;"></div>
+              <div class="p-pin" style="top:30%;left:40%;">
+                <div class="p-pin-dot" style="background:var(--purple-l);"><span>🎯</span></div>
+                <div class="p-pin-label">Café-Hop</div>
+              </div>
+              <div class="p-pin" style="top:45%;left:20%;">
+                <div class="p-pin-dot" style="background:var(--coral-l);"><span>🎨</span></div>
+                <div class="p-pin-label">Workshop</div>
+              </div>
+              <div class="p-pin" style="top:22%;left:73%;">
+                <div class="p-pin-dot" style="background:var(--gold-l);"><span>🏆</span></div>
+                <div class="p-pin-label">Raid</div>
+              </div>
+              <div class="p-pin" style="top:62%;left:63%;">
+                <div class="p-pin-dot" style="background:var(--green-l);"><span>🌿</span></div>
+                <div class="p-pin-label">Picknick</div>
+              </div>
+            </div>
+            <!-- nearby -->
+            <div style="display:flex;justify-content:space-between;font-size:11px;font-weight:800;margin-bottom:6px;">
+              In der Nähe <span style="color:var(--purple);">Alle →</span>
+            </div>
+            <div class="p-quest-row" style="background:var(--purple-l);">
+              <div class="pqr-icon" style="background:#fff;">🎯</div>
+              <div><div class="pqr-name">Café-Hop Maxvorstadt</div><div class="pqr-meta">📍 380m · 👥 4/8 · 14:00</div></div>
+              <div class="pqr-xp">+120 XP</div>
+            </div>
+            <div class="p-quest-row" style="background:var(--green-l);">
+              <div class="pqr-icon" style="background:#fff;">🌿</div>
+              <div><div class="pqr-name">Park-Picknick</div><div class="pqr-meta">📍 1.2km · 👥 11/20</div></div>
+              <div class="pqr-xp">+80 XP</div>
+            </div>
+          </div>
+          <div class="p-nav">
+            <div class="p-nav-item"><div class="p-nav-icon">🏠</div>Home</div>
+            <div class="p-nav-item on"><div class="p-nav-icon">🗺️</div>Karte</div>
+            <div class="p-nav-item"><div class="p-nav-icon">✨</div>Match</div>
+            <div class="p-nav-item"><div class="p-nav-icon">🏆</div>Rewards</div>
+            <div class="p-nav-item"><div class="p-nav-icon">👤</div>Profil</div>
+          </div>
+        </div>
+        <div class="p-label">Social Map</div>
+      </div>
+
+      <!-- PHONE 3: MATCHING -->
+      <div class="p-wrap">
+        <div class="phone">
+          <div class="p-notch"><div class="p-notch-pill"><div class="p-cam"></div></div></div>
+          <div class="p-status"><span>09:41</span><span>▲ WiFi 🔋</span></div>
+          <div class="p-screen p-screen-white">
+            <div style="font-family:'Space Grotesk',sans-serif;font-size:18px;font-weight:800;margin-bottom:2px;">✨ Matching</div>
+            <div style="font-size:11px;opacity:.55;margin-bottom:10px;">Nach Interessen &amp; Energie</div>
+            <!-- filter chips -->
+            <div style="display:flex;gap:5px;flex-wrap:wrap;margin-bottom:10px;">
+              <div style="padding:4px 11px;border-radius:100px;font-size:10px;font-weight:700;background:var(--purple);color:#fff;border:var(--border-sm);box-shadow:2px 2px 0 var(--black);">Alle</div>
+              <div style="padding:4px 11px;border-radius:100px;font-size:10px;font-weight:700;background:var(--cream);border:var(--border-sm);box-shadow:2px 2px 0 var(--black);">Wandern</div>
+              <div style="padding:4px 11px;border-radius:100px;font-size:10px;font-weight:700;background:var(--cream);border:var(--border-sm);box-shadow:2px 2px 0 var(--black);">Kunst</div>
+              <div style="padding:4px 11px;border-radius:100px;font-size:10px;font-weight:700;background:var(--cream);border:var(--border-sm);box-shadow:2px 2px 0 var(--black);">Hunde</div>
+            </div>
+            <!-- match cards -->
+            <div class="p-match-card">
+              <div class="pmc-av" style="background:var(--purple-l);">👩</div>
+              <div class="pmc-info" style="flex:1;">
+                <div class="pmc-name">Lena K., 24</div>
+                <div class="pmc-int">📍 0.5km · München</div>
+                <div class="pmc-chips">
+                  <div class="pmc-chip" style="background:var(--purple-l);">Wandern</div>
+                  <div class="pmc-chip" style="background:var(--pink-l);">Foto</div>
+                </div>
+              </div>
+              <div class="pmc-score">94%</div>
+            </div>
+            <div class="p-match-card">
+              <div class="pmc-av" style="background:var(--coral-l);">🧑</div>
+              <div class="pmc-info" style="flex:1;">
+                <div class="pmc-name">Marcel R., 34</div>
+                <div class="pmc-int">📍 1.1km · München</div>
+                <div class="pmc-chips">
+                  <div class="pmc-chip" style="background:var(--coral-l);">Musik</div>
+                  <div class="pmc-chip" style="background:var(--gold-l);">Events</div>
+                </div>
+              </div>
+              <div class="pmc-score">87%</div>
+            </div>
+            <div class="p-match-card">
+              <div class="pmc-av" style="background:var(--green-l);">👩</div>
+              <div class="pmc-info" style="flex:1;">
+                <div class="pmc-name">Karin M., 54</div>
+                <div class="pmc-int">📍 0.8km · München</div>
+                <div class="pmc-chips">
+                  <div class="pmc-chip" style="background:var(--blue-l);">Kunst</div>
+                  <div class="pmc-chip" style="background:var(--green-l);">Hunde</div>
+                </div>
+              </div>
+              <div class="pmc-score">81%</div>
+            </div>
+            <!-- actions -->
+            <div style="background:var(--purple-l);border:var(--border-sm);border-radius:16px;padding:12px;margin-top:4px;box-shadow:2px 2px 0 var(--black);">
+              <div style="font-size:10px;font-weight:800;margin-bottom:8px;">🌟 Lena K. — Top Match</div>
+              <div style="display:flex;gap:7px;">
+                <div class="p-neo-btn" style="flex:1;background:var(--cream);font-size:11px;">👋 Weiter</div>
+                <div class="p-neo-btn" style="flex:1;background:var(--purple);color:#fff;font-size:11px;">✨ Connect</div>
+              </div>
+            </div>
+          </div>
+          <div class="p-nav">
+            <div class="p-nav-item"><div class="p-nav-icon">🏠</div>Home</div>
+            <div class="p-nav-item"><div class="p-nav-icon">🗺️</div>Karte</div>
+            <div class="p-nav-item on"><div class="p-nav-icon">✨</div>Match</div>
+            <div class="p-nav-item"><div class="p-nav-icon">🏆</div>Rewards</div>
+            <div class="p-nav-item"><div class="p-nav-icon">👤</div>Profil</div>
+          </div>
+        </div>
+        <div class="p-label">Matching</div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════ DESIGN SYSTEM ═══════════════ -->
+<div class="section">
+  <div class="s-label">03 — Design System</div>
+  <div class="ds-grid">
+
+    <div class="ds-card">
+      <div class="ds-title">Farbpalette</div>
+      <div class="sw-grid">
+        <div class="sw-item"><div class="sw-dot" style="background:var(--purple);"></div><div class="sw-name">Purple</div></div>
+        <div class="sw-item"><div class="sw-dot" style="background:var(--coral);"></div><div class="sw-name">Coral</div></div>
+        <div class="sw-item"><div class="sw-dot" style="background:var(--green);"></div><div class="sw-name">Green</div></div>
+        <div class="sw-item"><div class="sw-dot" style="background:var(--gold);"></div><div class="sw-name">Gold</div></div>
+        <div class="sw-item"><div class="sw-dot" style="background:var(--pink);"></div><div class="sw-name">Pink</div></div>
+        <div class="sw-item"><div class="sw-dot" style="background:var(--purple-l);border-color:rgba(0,0,0,.15);"></div><div class="sw-name">Purple L</div></div>
+        <div class="sw-item"><div class="sw-dot" style="background:var(--coral-l);border-color:rgba(0,0,0,.15);"></div><div class="sw-name">Coral L</div></div>
+        <div class="sw-item"><div class="sw-dot" style="background:var(--green-l);border-color:rgba(0,0,0,.15);"></div><div class="sw-name">Green L</div></div>
+        <div class="sw-item"><div class="sw-dot" style="background:var(--gold-l);border-color:rgba(0,0,0,.15);"></div><div class="sw-name">Gold L</div></div>
+        <div class="sw-item"><div class="sw-dot" style="background:var(--cream);border-color:rgba(0,0,0,.15);"></div><div class="sw-name">Cream</div></div>
+      </div>
+      <div style="margin-top:20px;">
+        <div class="ds-title">Hard Shadows</div>
+        <div style="display:flex;gap:12px;flex-wrap:wrap;">
+          <div style="width:50px;height:50px;border-radius:10px;background:var(--purple-l);border:var(--border-sm);box-shadow:3px 3px 0 var(--black);"></div>
+          <div style="width:50px;height:50px;border-radius:10px;background:var(--coral-l);border:var(--border-sm);box-shadow:5px 5px 0 var(--black);"></div>
+          <div style="width:50px;height:50px;border-radius:10px;background:var(--gold-l);border:var(--border-sm);box-shadow:7px 7px 0 var(--black);"></div>
+        </div>
+        <div style="font-size:9px;font-weight:700;opacity:.4;margin-top:8px;text-transform:uppercase;letter-spacing:1px;">3px · 5px · 7px offset — kein blur</div>
+      </div>
+    </div>
+
+    <div class="ds-card">
+      <div class="ds-title">Typografie</div>
+      <div class="type-rows">
+        <div><div class="tr-tag">Display — Space Grotesk 800</div><div class="tr-d1">GoTogether</div></div>
+        <div><div class="tr-tag">Heading — Space Grotesk 700</div><div class="tr-d2">City Quest gestartet</div></div>
+        <div><div class="tr-tag">Body — Inter 600</div><div class="tr-d3">Aktivitäten in deiner Nähe</div></div>
+        <div><div class="tr-tag">Copy — Inter 400</div><div class="tr-d4">Echte Begegnungen statt leere Likes. Der Social-Battery-Index passt alles an.</div></div>
+      </div>
+    </div>
+
+    <div class="ds-card">
+      <div class="ds-title">Buttons &amp; Border Radius</div>
+      <div class="btn-demos">
+        <button class="neo-btn filled" style="align-self:flex-start;">🗺️ Quest starten</button>
+        <button class="neo-btn" style="align-self:flex-start;background:var(--purple);color:#fff;border-color:var(--black);">✨ Match finden</button>
+        <button class="neo-btn" style="align-self:flex-start;background:var(--gold-l);">🏆 Belohnung</button>
+        <button class="neo-btn" style="align-self:flex-start;">Challenge ansehen</button>
+      </div>
+      <div style="margin-top:20px;">
+        <div class="ds-title">Border Radius</div>
+        <div class="radius-demos">
+          <div class="rd"><div class="rd-box" style="width:44px;height:44px;border-radius:8px;"></div>8px</div>
+          <div class="rd"><div class="rd-box" style="width:44px;height:44px;border-radius:16px;"></div>16px</div>
+          <div class="rd"><div class="rd-box" style="width:44px;height:44px;border-radius:20px;"></div>20px</div>
+          <div class="rd"><div class="rd-box" style="width:70px;height:38px;border-radius:100px;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:800;">Pill</div>∞</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════ FOOTER ═══════════════ -->
+<div class="footer">
+  <div class="f-title">GoTogether 🗺️</div>
+  <div class="f-sub">Neo Brutalism Design Concept · App gegen Einsamkeit · SS 2026</div>
+  <div class="f-tags">
+    <div class="f-tag">Hard Shadows</div>
+    <div class="f-tag">Thick Borders</div>
+    <div class="f-tag">Flat Colors</div>
+    <div class="f-tag">Bold Type</div>
+    <div class="f-tag">React Native</div>
+  </div>
+</div>
+
+</div>
+</body>
+</html>

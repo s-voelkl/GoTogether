@@ -1,140 +1,111 @@
-# Startanleitung
+# Usage Guide
 
-## Voraussetzungen
+This usage guide provides instructions for setting up the GoTogether project, including backend and frontend configurations, database setup, and running the application.
 
-1. .env-Datei im Ordner `src` anlegen und folgende Secrets hinzufügen (secret value ist frei wählbar)
+Start with the general setup, then continue either with the database and backend setup or the frontend setup, depending on your needs.
 
-    ```yaml
-    POSTGRES_USER: meinBenutzername
-    POSTGRES_PASSWORD: meinPasswort
-    POSTGRES_DB: gotogether_db
-    ```
+## General Setup
 
-2. Secrets im Backend anpassen:
+Create a `.env` file in the `src` directory and add the following secrets (values are customizable):
 
-    `src/backend/src/main/resources/application.properties`:
+```yaml
+POSTGRES_USER: yourUsername
+POSTGRES_PASSWORD: yourPassword
+POSTGRES_DB: gotogether_db
+```
+
+> Do not commit the `.env` file to version control, to prevent leaking sensitive information!
+
+## Database Setup
+
+1. Open a terminal (e.g., in VS Code) and navigate to the `src` folder: `cd ./src`
+2. All commands are defined in [src/package.json](src/package.json).
+3. To start the database, run: `yarn db`
+
+## Backend Setup
+
+1. Configure secrets in the backend:
+
+    [src/backend/src/main/resources/application.properties](src/backend/src/main/resources/application.properties):
 
     ```properties
     spring.datasource.url=jdbc:postgresql://localhost:5432/gotogether_db
-    spring.datasource.username=myUsername
-    spring.datasource.password=myPassword
+    spring.datasource.username=yourUsername
+    spring.datasource.password=yourPassword
     ```
 
-    `src/backend/src/test/resources/application.properties`:
+    [src/backend/src/test/resources/application.properties](src/backend/src/test/resources/application.properties):
 
     ```properties
     spring.datasource.url=jdbc:h2:mem:gotogether_db;
-    spring.datasource.username=myTestUsername
-    spring.datasource.password=myTestPassword
+    spring.datasource.username=yourTestUsername
+    spring.datasource.password=yourTestPassword
     ```
 
-3. Java JDK [AWS Corretto](https://docs.aws.amazon.com/corretto/latest/corretto-21-ug/downloads-list.html) downloaden.
+    > Do not commit the authentication credentials to version control, to prevent leaking sensitive information!
 
-4. yarn version 1.x installieren: [Yarn Installation](https://classic.yarnpkg.com/en/docs/install).
+2. Download the Java JDK [AWS Corretto](https://docs.aws.amazon.com/corretto/latest/corretto-21-ug/downloads-list.html).
 
-5. Docker:
-    Für **Windows User**: Alles MUSS in wsl stattfinden, damit docker verwendet werden kann.
-    Achtet darauf wsl genügend Speicher und RAM zuzuweisen ([WSL Installer](https://learn.microsoft.com/de-de/windows/wsl/install)).
-    WSL starten mit `wsl`.
-    Teils braucht man `sudo` Rechte, um docker zu verwenden, z.B. bei ``nodemon`` unten.
+3. Install Yarn version 1.x: [Yarn Installation Guide](https://classic.yarnpkg.com/en/docs/install).
 
-    Für **Mac User**: Docker installieren mit (``brew install --cask docker``)
+4. Docker:
 
-6. Nodemon für automatischen Neustart des Backends installieren: `npm install -g nodemon`
+    - **For Windows Users**: Everything MUST be executed within WSL for Docker to function correctly. Ensure WSL has sufficient memory and RAM allocated ([WSL Installation Guide](https://learn.microsoft.com/en-us/windows/wsl/install)). Start WSL using the `wsl` command. `sudo` privileges may be required for certain Docker operations, such as running `nodemon` as described below.
+    - **For Mac Users**: Install Docker using `brew install --cask docker`.
 
-7. VS Code Extensions: Docker, Java Extension Pack, Test Runner for Java (für Unit Tests)
+5. Install Nodemon for automatic backend restarts: `npm install -g nodemon`.
 
-## Terminal
+6. VS Code Extensions: Docker, Java Extension Pack, and Test Runner for Java (for unit tests).
 
-Starte ein Terminal (z.B. in VSCode) und navigiere zu `GoTogether/src`: `cd ./src`
+7. Backend starting:
 
-## Datenbank
+    - Start the backend server (REST API on port 8080) with: `yarn backend`
+    - All REST API endpoints can be viewed via Swagger UI at: `http://localhost:8080/swagger-ui/index.html`
+    - The user table comes pre-populated with 10 sample entries.
 
-Alle commands sind zentral in `src/package.json` zu finden.
+    Example Request: `curl http://localhost:8080/api/users`
 
-Für die Datenbank muss `yarn db` ausgeführt werden.
+    Example Response:
 
-## Backend
+    ```json
+    [
+      {
+        "id": "a9c632aa-4124-4760-9746-770a9b7fd30d",
+        "name": "Alice Johnson",
+        "password": "$2a$10$hash1",
+        "email": "alice@example.com",
+        "socialBattery": 80,
+        "currency": 0,
+        "experiencePoints": 0,
+        "interests": [
+          "cd00e5c8-c255-49c0-a6ab-4b3fe35e84bf",
+          "43028bcf-8a21-4c3c-a779-2564c3b1c85b",
+          "43aed8eb-61bf-4b2c-b64f-530cb617c33e"
+        ],
+        "lastLogin": "2026-05-27T21:09:16.326146",
+        "settings": {
+          "setting": "default"
+        }
+      }, ...
+    ]
+    ```
 
-Mit `yarn backend` wird das backend (REST API auf Port 8080) gestartet.
+## Frontend Setup
 
-Mit Hilfe der swagger-ui kann man alle REST-API Endpoints anzeigen lassen: `http://localhost:8080/swagger-ui/index.html/`
+1. Ensure Yarn version 1.x is installed: [Yarn Installation](https://classic.yarnpkg.com/en/docs/install).
+2. TypeScript and Expo are already included in [src/frontend/package.json](src/frontend/package.json).
+3. Navigate to the frontend directory: `cd ./src/frontend/`
+4. Install dependencies: `yarn install`
 
-Es befinden sich 10 sample entries im users table.
+### Frontend Android Setup
 
-Request: `curl http://localhost:8080/api/users`
+This should be run directly on Windows or macOS, **not** within WSL. It requires Android Studio and the Android SDK to run the Expo app on an Android device or emulator.
 
-Response:
+1. Follow the [React Native Environment Setup](https://reactnative.dev/docs/environment-setup) tutorial step by step.
+2. Install the Expo Dev Client for the Android device: `npx install expo-dev-client`.
+3. Verify the device connection: `adb devices`. If the device is not listed, ensure USB debugging is enabled and drivers are installed.
+4. Run the app on the device: `npx expo run:android --device` and select your device.
+5. Alternatively, open the web client with `yarn web` or `yarn expo start --dev-client`.
+6. You might need to modify [src/frontend/android/settings.gradle](src/frontend/android/settings.gradle).
 
-```json
-[
-  {
-    "id": "a9c632aa-4124-4760-9746-770a9b7fd30d",
-    "name": "Alice Johnson",
-    "password": "$2a$10$hash1",
-    "email": "alice@example.com",
-    "socialBattery": 80,
-    "currency": 0,
-    "experiencePoints": 0,
-    "interests": [
-      "cd00e5c8-c255-49c0-a6ab-4b3fe35e84bf",
-      "43028bcf-8a21-4c3c-a779-2564c3b1c85b",
-      "43aed8eb-61bf-4b2c-b64f-530cb617c33e"
-    ],
-    "lastLogin": "2026-05-27T21:09:16.326146",
-    "settings": {
-      "setting": "default"
-    }
-   }, ...
-]
-```
-
-## Frontend
-
-- Install yarn version 1.x: [Yarn Installation](https://classic.yarnpkg.com/en/docs/install).
-- Typescript and Expo are already included in `src/frontend/package.json`.
-- Navigate to ``cd ./src/frontend/``
-- Install dependencies with `yarn install`
-
-### Android Setup
-
-This should not be run with WSL, but directly on Windows or MacOS. It requires the installation of Android Studio and the Android SDK, which are necessary for running the Expo app on an Android device or emulator.
-
-Follow this tutorial step by step: [https://reactnative.dev/docs/environment-setup](https://reactnative.dev/docs/environment-setup)
-
-Install the Expo Dev Client for running on the Android device: `npx install expo-dev-client`
-Verifiy that the Android device is connected and recognized by running `adb devices`. If the device is not listed, ensure that USB debugging is enabled on the device and that the necessary drivers are installed.
-
-Run the Expo app on the Android device with `npx expo run:android --device` and select your device.
-Alternatively, open the web client with `yarn web` or `yarn expo start --dev-client`.
-
-This page can help out: [https://docs.expo.dev/build/setup/#install-the-latest-eas-cli](https://docs.expo.dev/build/setup/#install-the-latest-eas-cli)
-
-You might need to change the ``src/frontend/android/settings.gradle`` file.
-
-```gradle
-
-
-pluginManagement {
-def utf8 = java.nio.charset.StandardCharsets.UTF_8
-  def reactNativeGradlePlugin = new File(
-  new String(providers.exec {
-      workingDir(rootDir)
-      commandLine("node", "--print", "require.resolve('@react-native/gradle-plugin/package.json', { paths: [require.resolve('react-native/package.json')] })")
-  }.standardOutput.asBytes.get(), utf8).trim()
-  ).getParentFile().absolutePath
-  includeBuild(reactNativeGradlePlugin)
-  
-  def expoPluginsPath = new File(
-  new String(providers.exec {
-      workingDir(rootDir)
-      commandLine("node", "--print", "require.resolve('expo-modules-autolinking/package.json', { paths: [require.resolve('expo/package.json')] })")
-  }.standardOutput.asBytes.get(), utf8).trim(),
-    "../android/expo-gradle-plugin"
-  ).absolutePath
-  includeBuild(expoPluginsPath)
-}
- 
-...
- 
-```
+Refer to the [Expo Setup Guide](https://docs.expo.dev/build/setup/#install-the-latest-eas-cli) for additional help.
