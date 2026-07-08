@@ -28,7 +28,7 @@ class ChallengeDetailBottomSheet : BottomSheetDialogFragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val v = inflater.inflate(R.layout.bottomsheet_challenge_detail, container, false)
         
-        val challenge = mockChallenges.find { it.id == challengeId } ?: return v
+        val challenge = ChallengeRepository.findById(challengeId ?: "") ?: return v
         
         bindData(v, challenge)
         

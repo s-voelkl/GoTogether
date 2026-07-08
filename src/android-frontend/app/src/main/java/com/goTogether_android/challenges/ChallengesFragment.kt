@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.goTogether_android.R
 import com.goTogether_android.data.Challenge
-import com.goTogether_android.data.mockChallenges
+import com.goTogether_android.data.ChallengeRepository
 import com.goTogether_android.home.FilterBottomSheet
 
 class ChallengesFragment : Fragment() {
@@ -37,16 +37,14 @@ class ChallengesFragment : Fragment() {
         }
         
         recycler.adapter = adapter
-        updateList(mockChallenges)
+        updateList(ChallengeRepository.mockChallenges)
     }
 
     private fun setupListeners(view: View) {
         view.findViewById<View>(R.id.headerRightSlot).setOnClickListener {
-            FilterBottomSheet { filters ->
-                val filtered = if (filters.isEmpty()) {
-                    mockChallenges
-                } else {
-                    mockChallenges.filter { it.category in filters }
+            FilterBottomSheet(listOf(), 100) { filters, minBattery ->
+                val filtered = ChallengeRepository.mockChallenges.filter {
+                    (filters.isEmpty() || it.category in filters) && it.minSocialBattery <= minBattery
                 }
                 updateList(filtered)
             }.show(parentFragmentManager, "filter")

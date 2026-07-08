@@ -59,8 +59,14 @@
                     android:layout_weight="1"
                     android:layout_margin="0dp"
                     android:minHeight="280dp">
+                    <androidx.camera.view.PreviewView
+                        android:id="@+id/previewView"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent" />
+
                     <!-- Camera View Placeholder -->
                     <TextView
+                        android:id="@+id/cameraPlaceholder"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"

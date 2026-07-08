@@ -8,26 +8,28 @@ import android.provider.Settings
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.GridLayout
 import android.widget.LinearLayout
 import android.widget.TextView
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.goTogether_android.R
+import com.google.android.material.slider.Slider
 import java.text.SimpleDateFormat
 import java.util.*
 
+/**
+ * Fragment that displays the user's profile and social battery settings.
+ * Allows users to manually adjust their social battery level.
+ */
 class ProfileFragment : Fragment() {
 
-    private val PREFS_NAME = "profile_prefs"
-    private val KEY_SAVED_BATTERY = "saved_battery"
-    private val KEY_LAST_CHECK_AT = "last_check_at"
-    private val INITIAL_BATTERY = 60
-    private val QUICK_VALUES = listOf(20, 40, 60, 80, 100)
+    companion object {
+        private const val PREFS_NAME = "profile_prefs"
+        private const val KEY_SAVED_BATTERY = "saved_battery"
+        private const val KEY_LAST_CHECK_AT = "last_check_at"
+        private const val INITIAL_BATTERY = 60
+    }
 
     private var savedBattery: Int = INITIAL_BATTERY
-    private var draftBattery: Int = INITIAL_BATTERY
     private var lastCheckAt: Long = 0
 
     private lateinit var statusChip: TextView
@@ -35,18 +37,18 @@ class ProfileFragment : Fragment() {
     private lateinit var batteryValueText: TextView
     private lateinit var batteryMessageText: TextView
     private lateinit var segmentContainer: LinearLayout
-    private lateinit var savedValueText: TextView
-    private lateinit var refreshStatusText: TextView
-    private lateinit var inputSourceText: TextView
-    private lateinit var saveButton: Button
-    private lateinit var quickGrid: GridLayout
+    private lateinit var batterySlider: Slider
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         val view = inflater.inflate(R.layout.activity_profile, container, false)
         
         initViews(view)
         loadData()
-        setupListeners(view)
+        setupListeners()
         updateUI()
         
         return view
@@ -58,112 +60,61 @@ class ProfileFragment : Fragment() {
         batteryValueText = view.findViewById(R.id.batteryValueText)
         batteryMessageText = view.findViewById(R.id.batteryMessageText)
         segmentContainer = view.findViewById(R.id.segmentContainer)
-        savedValueText = view.findViewById(R.id.savedValueText)
-        refreshStatusText = view.findViewById(R.id.refreshStatusText)
-        inputSourceText = view.findViewById(R.id.inputSourceText)
-        saveButton = view.findViewById(R.id.saveButton)
-        quickGrid = view.findViewById(R.id.quickGrid)
-
-        setupQuickSelectGrid()
+        batterySlider = view.findViewById(R.id.batterySlider)
     }
 
     private fun loadData() {
         val prefs = requireContext().getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
         savedBattery = prefs.getInt(KEY_SAVED_BATTERY, INITIAL_BATTERY)
-        lastCheckAt = prefs.getLong(KEY_LAST_CHECK_AT, 0)
-        draftBattery = savedBattery
+        lastCheckAt = prefs.getLong(KEY_LAST_CHECK_AT, 0L)
+        
+        batterySlider.value = savedBattery.toFloat()
     }
 
     private fun saveData() {
         val prefs = requireContext().getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+        val currentTime = System.currentTimeMillis()
         prefs.edit().apply {
-            putInt(KEY_SAVED_BATTERY, draftBattery)
-            putLong(KEY_LAST_CHECK_AT, System.currentTimeMillis())
+            putInt(KEY_SAVED_BATTERY, savedBattery)
+            putLong(KEY_LAST_CHECK_AT, currentTime)
             apply()
         }
-        loadData()
+        lastCheckAt = currentTime
         updateUI()
     }
 
-    private fun setupListeners(view: View) {
-        view.findViewById<Button>(R.id.decrementButton).setOnClickListener { adjustBattery(-10) }
-        view.findViewById<Button>(R.id.incrementButton).setOnClickListener { adjustBattery(10) }
-        view.findViewById<View>(R.id.appSettingsRow).setOnClickListener { openSettings() }
-        saveButton.setOnClickListener { saveData() }
-    }
-
-    private fun setupQuickSelectGrid() {
-        val inflater = LayoutInflater.from(requireContext())
-        quickGrid.removeAllViews()
-        QUICK_VALUES.forEach { value ->
-            val chipView = inflater.inflate(R.layout.item_quick_chip, quickGrid, false)
-            val valueText = chipView.findViewById<TextView>(R.id.quickChipValue)
-            val labelText = chipView.findViewById<TextView>(R.id.quickChipLabel)
-            
-            valueText.text = "$value%"
-            labelText.text = getBatteryLabel(value)
-            
-            chipView.setOnClickListener {
-                draftBattery = value
-                updateUI()
+    private fun setupListeners() {
+        batterySlider.addOnChangeListener { _, value, fromUser ->
+            if (fromUser) {
+                savedBattery = value.toInt()
+                saveData()
             }
-            
-            val params = GridLayout.LayoutParams()
-            params.width = 0
-            params.columnSpec = GridLayout.spec(GridLayout.UNDEFINED, 1f)
-            params.setMargins(8, 8, 8, 8)
-            chipView.layoutParams = params
-            
-            quickGrid.addView(chipView)
         }
-    }
-
-    private fun adjustBattery(delta: Int) {
-        draftBattery = (draftBattery + delta).coerceIn(0, 100)
-        updateUI()
+        
+        view?.findViewById<View>(R.id.appSettingsRow)?.setOnClickListener { openSettings() }
     }
 
     private fun updateUI() {
         val refreshNeeded = needsDailyRefresh(lastCheckAt)
-        val hasUnsavedChanges = draftBattery != savedBattery
 
-        // Status Chip
+        // Update status chip appearance based on refresh need
         if (refreshNeeded) {
-            statusChip.text = "Daily update needed"
+            statusChip.text = getString(R.string.status_update_needed)
             statusChip.setBackgroundResource(R.drawable.bg_status_chip_alert)
         } else {
-            statusChip.text = "Checked in"
+            statusChip.text = getString(R.string.status_checked_in)
             statusChip.setBackgroundResource(R.drawable.bg_status_chip_ready)
         }
 
-        // Hero Info
         lastUpdateText.text = formatLastCheck(lastCheckAt)
-        batteryValueText.text = "$draftBattery%"
-        batteryMessageText.text = getBatteryMessage(draftBattery)
+        batteryValueText.text = "$savedBattery%"
+        batteryMessageText.text = getBatteryMessage(savedBattery)
 
-        // Segments
         updateSegments()
-
-        // Quick Select Selection
-        updateQuickSelectSelection()
-
-        // Profile Use
-        savedValueText.text = "$savedBattery%"
-        refreshStatusText.text = if (refreshNeeded) "Needed" else "Done"
-        inputSourceText.text = if (hasUnsavedChanges) "Draft changed" else "Current profile"
-
-        // Save Button
-        saveButton.isEnabled = refreshNeeded || hasUnsavedChanges
-        saveButton.alpha = if (saveButton.isEnabled) 1.0f else 0.35f
-        saveButton.text = when {
-            refreshNeeded -> "Save today's battery"
-            hasUnsavedChanges -> "Update battery"
-            else -> "Battery checked today"
-        }
     }
 
     private fun updateSegments() {
-        val filledSegments = Math.round(draftBattery / 20f)
+        val filledSegments = Math.round(savedBattery / 20f)
         for (i in 0 until segmentContainer.childCount) {
             val segment = segmentContainer.getChildAt(i)
             if (i < filledSegments) {
@@ -171,24 +122,6 @@ class ProfileFragment : Fragment() {
             } else {
                 segment.setBackgroundResource(R.drawable.bg_segment_empty)
             }
-        }
-    }
-
-    private fun updateQuickSelectSelection() {
-        for (i in 0 until quickGrid.childCount) {
-            val child = quickGrid.getChildAt(i)
-            val value = QUICK_VALUES[i]
-            val isSelected = value == draftBattery
-            
-            child.setBackgroundResource(if (isSelected) R.drawable.bg_quick_chip_selected else R.drawable.bg_quick_chip)
-            
-            val valueText = child.findViewById<TextView>(R.id.quickChipValue)
-            val labelText = child.findViewById<TextView>(R.id.quickChipLabel)
-            
-            val color = ContextCompat.getColor(requireContext(), R.color.black)
-            valueText.setTextColor(color)
-            labelText.setTextColor(if (isSelected) ContextCompat.getColor(requireContext(), R.color.black) else ContextCompat.getColor(requireContext(), R.color.gray500))
-            labelText.alpha = if (isSelected) 0.75f else 1.0f
         }
     }
 
@@ -202,30 +135,20 @@ class ProfileFragment : Fragment() {
     }
 
     private fun formatLastCheck(lastCheck: Long): String {
-        if (lastCheck == 0L) return "No daily check-in yet"
-        if (!needsDailyRefresh(lastCheck)) return "Updated today"
+        if (lastCheck == 0L) return getString(R.string.no_daily_checkin)
+        if (!needsDailyRefresh(lastCheck)) return getString(R.string.updated_today)
         
-        val df = SimpleDateFormat("dd MMM", Locale.UK)
+        val df = SimpleDateFormat("dd MMM", Locale.US)
         return "Last updated ${df.format(Date(lastCheck))}"
     }
 
     private fun getBatteryMessage(battery: Int): String {
         return when {
-            battery >= 80 -> "Perfect for big social plans and busy group activities."
-            battery >= 60 -> "A solid day for balanced plans and casual meetups."
-            battery >= 40 -> "Better for lighter challenges and smaller groups."
-            battery >= 20 -> "Good moment for low-pressure plans and short activities."
-            else -> "Best to keep recommendations calm, short and easy today."
-        }
-    }
-
-    private fun getBatteryLabel(battery: Int): String {
-        return when {
-            battery <= 20 -> "Low-key"
-            battery <= 40 -> "Light"
-            battery <= 60 -> "Balanced"
-            battery <= 80 -> "Open"
-            else -> "Full send"
+            battery >= 80 -> getString(R.string.battery_msg_high)
+            battery >= 60 -> getString(R.string.battery_msg_mid_high)
+            battery >= 40 -> getString(R.string.battery_msg_mid)
+            battery >= 20 -> getString(R.string.battery_msg_mid_low)
+            else -> getString(R.string.battery_msg_low)
         }
     }
 

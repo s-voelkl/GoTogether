@@ -1,3 +1,16 @@
 <resources>
     <string name="app_name">GoTogether</string>
+    <string name="points_format">%1$d pts</string>
+    <string name="ai_greeting_format">Hello! Based on your %1$d%% social battery, the %2$s challenge might be suitable for you today.</string>
+
+    <string name="status_update_needed">Daily update needed</string>
+    <string name="status_checked_in">Checked in</string>
+    <string name="no_daily_checkin">No daily check-in yet</string>
+    <string name="updated_today">Updated today</string>
+
+    <string name="battery_msg_high">Perfect for big social plans and busy group activities.</string>
+    <string name="battery_msg_mid_high">A solid day for balanced plans and casual meetups.</string>
+    <string name="battery_msg_mid">Better for lighter challenges and smaller groups.</string>
+    <string name="battery_msg_mid_low">Good moment for low-pressure plans and short activities.</string>
+    <string name="battery_msg_low">Best to keep recommendations calm, short and easy today.</string>
 </resources>

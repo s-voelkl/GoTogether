@@ -29,15 +29,61 @@
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="250dp"
+        android:layout_height="wrap_content"
         android:layout_marginTop="24dp">
 
         <LinearLayout
-            android:id="@+id/filterChipsContainer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
-            <!-- Filter items will be added here -->
+
+            <LinearLayout
+                android:id="@+id/filterChipsContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+                <!-- Filter items will be added here -->
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:text="Min. Social Battery"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                android:textColor="@color/black"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+
+                <com.google.android.material.slider.Slider
+                    android:id="@+id/socialBatterySlider"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:valueFrom="0.0"
+                    android:valueTo="100.0"
+                    android:stepSize="20.0"
+                    app:thumbColor="@color/black"
+                    app:trackColorActive="@color/black"
+                    app:trackColorInactive="@color/white"
+                    app:tickVisible="false"/>
+
+                <TextView
+                    android:id="@+id/socialBatteryValueText"
+                    android:layout_width="48dp"
+                    android:layout_height="wrap_content"
+                    android:text="60%"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/black"
+                    android:gravity="end"/>
+            </LinearLayout>
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 
@@ -48,12 +94,12 @@
         android:orientation="horizontal">
 
         <Button
-            android:id="@+id/clearFiltersBtn"
+            android:id="@+id/setAllFiltersBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingHorizontal="22dp"
             android:paddingVertical="14dp"
-            android:text="Clear"
+            android:text="Set All"
             android:textAllCaps="false"
             android:textColor="@color/black"
             android:textStyle="bold"

@@ -24,7 +24,7 @@ class GamificationFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_gamification, container, false)
 
-        val recentChallenges = mockChallenges.take(4)
+        val recentChallenges = ChallengeRepository.mockChallenges.take(4)
         val totalXP = recentChallenges.sumOf { it.experiencePoints }
         val totalGbucks = recentChallenges.sumOf { it.points }
         

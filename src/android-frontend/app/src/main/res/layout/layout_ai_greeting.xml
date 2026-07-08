@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/aiGreetingCard"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="16dp"
+    app:cardCornerRadius="24dp"
+    app:cardBackgroundColor="@color/black"
+    app:cardElevation="12dp"
+    android:visibility="gone">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="20dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="AI ASSISTANT"
+            android:textSize="10sp"
+            android:textStyle="bold"
+            android:textColor="@color/white"
+            android:alpha="0.6"
+            android:letterSpacing="0.1"/>
+
+        <TextView
+            android:id="@+id/aiGreetingText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="Hello! Based on your 60% social battery, the Café Baroco challenge might be suitable for you today."
+            android:textColor="@color/white"
+            android:textSize="15sp"
+            android:lineSpacingExtra="4dp"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:orientation="horizontal"
+            android:gravity="end">
+
+            <Button
+                android:id="@+id/aiOkBtn"
+                style="@style/Widget.Material3.Button.TextButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Ok"
+                android:textColor="@color/white"/>
+
+            <Button
+                android:id="@+id/aiSeeChallengeBtn"
+                style="@style/Widget.Material3.Button.TonalButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:text="See challenge"
+                android:textColor="@color/black"
+                app:backgroundTint="@color/white"/>
+        </LinearLayout>
+    </LinearLayout>
+</com.google.android.material.card.MaterialCardView>

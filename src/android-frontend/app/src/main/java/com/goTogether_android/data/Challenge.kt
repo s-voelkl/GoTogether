@@ -1,9 +1,31 @@
 package com.goTogether_android.data
 
+/**
+ * Represents the difficulty level of a challenge based on social battery requirements.
+ */
 enum class Difficulty {
     EASY, MEDIUM, HARD
 }
 
+/**
+ * Data model for a Challenge in the GoTogether app.
+ *
+ * @property id Unique identifier for the challenge.
+ * @property name Display name of the challenge.
+ * @property category The category this challenge belongs to (e.g., Food, Sport).
+ * @property lat Latitude coordinate.
+ * @property lng Longitude coordinate.
+ * @property points Reward points for completion.
+ * @property description Detailed description of the activity.
+ * @property host The organization or entity hosting the challenge.
+ * @property startTime ISO format start time.
+ * @property durationMinutes Estimated duration of the activity.
+ * @property experiencePoints Leveling experience gained.
+ * @property minSocialBattery Required minimum social energy (0-100).
+ * @property maxPlayers Maximum number of participants (0 for unlimited).
+ * @property participants Current number of joined users.
+ * @property verificationCode Unique code used for check-in.
+ */
 data class Challenge(
     val id: String,
     val name: String,
@@ -13,83 +35,41 @@ data class Challenge(
     val points: Int,
     val description: String,
     val host: String,
-    val startTime: String, // ISO
+    val startTime: String,
     val durationMinutes: Int,
     val experiencePoints: Int,
-    val minSocialBattery: Int, // 1–5 (difficulty is derived from this)
-    val maxPlayers: Int, // 0 = unlimited
+    val minSocialBattery: Int,
+    val maxPlayers: Int,
     val participants: Int,
     val verificationCode: String
 )
 
+/**
+ * Extension function to determine the difficulty based on the social battery requirement.
+ */
 fun Challenge.getDifficulty(): Difficulty {
     return when {
-        minSocialBattery <= 2 -> Difficulty.EASY
-        minSocialBattery == 3 -> Difficulty.MEDIUM
+        minSocialBattery <= 33 -> Difficulty.EASY
+        minSocialBattery <= 66 -> Difficulty.MEDIUM
         else -> Difficulty.HARD
     }
 }
 
+/**
+ * Extension function to check if the challenge has reached its maximum capacity.
+ */
 fun Challenge.isFull(): Boolean {
     return maxPlayers != 0 && participants >= maxPlayers
 }
 
-val mockChallenges = listOf(
-    Challenge(
-        id = "1", name = "Café Baroco", category = "Food",
-        lat = 49.4452, lng = 11.8572, points = 150,
-        description = "Visit the historic Café Baroco in the old town and try their signature cake.",
-        host = "Café Baroco GmbH", startTime = "2026-06-06T15:00:00",
-        durationMinutes = 90, experiencePoints = 150, minSocialBattery = 2,
-        maxPlayers = 0, participants = 12, verificationCode = "K7M2Q"
-    ),
-    Challenge(
-        id = "2", name = "TV 1861 Amberg", category = "Sport",
-        lat = 49.4389, lng = 11.8698, points = 300,
-        description = "Attend a home match at the TV 1861 Amberg sports club.",
-        host = "TV 1861 Amberg e.V.", startTime = "2026-06-07T16:30:00",
-        durationMinutes = 120, experiencePoints = 300, minSocialBattery = 4,
-        maxPlayers = 30, participants = 30, verificationCode = "H5J1W"
-    ),
-    Challenge(
-        id = "3", name = "Stadtmuseum", category = "Culture",
-        lat = 49.4431, lng = 11.8615, points = 200,
-        description = "Explore Amberg's city museum and discover 1000 years of local history.",
-        host = "Stadt Amberg", startTime = "2026-06-08T10:00:00",
-        durationMinutes = 60, experiencePoints = 200, minSocialBattery = 2,
-        maxPlayers = 25, participants = 9, verificationCode = "R3T8N"
-    ),
-    Challenge(
-        id = "4", name = "Vils Promenade", category = "Nature",
-        lat = 49.4478, lng = 11.8602, points = 100,
-        description = "Take a 3 km walk along the scenic Vils river promenade.",
-        host = "Amberg Tourismus", startTime = "2026-06-06T09:00:00",
-        durationMinutes = 45, experiencePoints = 100, minSocialBattery = 1,
-        maxPlayers = 0, participants = 5, verificationCode = "P9X4L"
-    ),
-    Challenge(
-        id = "5", name = "Marktplatz Brunch", category = "Social",
-        lat = 49.4461, lng = 11.8630, points = 250,
-        description = "Meet up with locals for Sunday brunch at the market square.",
-        host = "Local Friends Amberg", startTime = "2026-06-08T11:00:00",
-        durationMinutes = 120, experiencePoints = 250, minSocialBattery = 3,
-        maxPlayers = 12, participants = 12, verificationCode = "B2D6V"
-    ),
-    Challenge(
-        id = "6", name = "Kurfürstenbad", category = "Sport",
-        lat = 49.4410, lng = 11.8550, points = 200,
-        description = "Do 10 laps at the historic Kurfürstenbad indoor swimming pool.",
-        host = "Kurfürstenbad Amberg", startTime = "2026-06-09T18:00:00",
-        durationMinutes = 60, experiencePoints = 200, minSocialBattery = 3,
-        maxPlayers = 20, participants = 14, verificationCode = "M8K3Z"
-    )
-)
+/**
+ * Information about a challenge category for UI display.
+ */
+data class CategoryInfo(val id: String, val label: String, val emoji: String, val color: String)
 
-fun findChallengeByCode(code: String): Challenge? {
-    val v = code.trim().uppercase()
-    return mockChallenges.find { it.verificationCode == v }
-}
-
+/**
+ * Global configuration for filter categories.
+ */
 val FILTER_CATEGORIES = listOf(
     CategoryInfo("Food", "Food", "☕", "#FF6B6B"),
     CategoryInfo("Sport", "Sport", "⚽", "#4ECDC4"),
@@ -98,8 +78,9 @@ val FILTER_CATEGORIES = listOf(
     CategoryInfo("Social", "Social", "🎉", "#F59E0B")
 )
 
-data class CategoryInfo(val id: String, val label: String, val emoji: String, val color: String)
-
+/**
+ * Map of difficulty levels to their associated UI colors.
+ */
 val DIFFICULTY_COLORS = mapOf(
     Difficulty.EASY to "#10B981",
     Difficulty.MEDIUM to "#F59E0B",
