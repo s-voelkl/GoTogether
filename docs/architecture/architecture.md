@@ -8,7 +8,7 @@ The architecture follows the MVP and focuses on the core use cases from the sect
   <img src="/docs/diagrams/out/three-tier-architecture/three-tier-architecture.png" alt="Three-Tier Architecture" width="250"/>
 </div>
 
-- **Presentation Tier:** The React Native app displays the open challenge list, the real-time map, social battery, matching, and reward status. It encapsulates only the UI and communicates with the backend via the API (see [Frontend-Architecture](#frontend-architecture)).
+- **Presentation Tier:** The React Native app displays the open challenge list, the real-time map, social battery, matching, and reward status. It encapsulates only the UI and communicates with the backend via the API (see [Frontend-Architecture](#frontend-architecture)). A migration to a native Android app is currently in progress but not finished, so the React Native app is still the main presentation tier.
 - **Application Tier:** The Java Spring Boot backend with a REST API interface implements the MVP logic: challenge filters, map queries, social battery filtering, interest matching, QR check-in, rewards, and company APIs for events or challenges (see [Backend-Architecture](#backend-architecture)).
 - **Data Tier:** PostgreSQL stores the required data, including users, profiles, interests, quests, events, check-ins, friendships, rewards, and company profiles (see [Database-Architecture](#database-architecture)).
 
@@ -162,3 +162,11 @@ The frontend logic is organized into specialized modules:
 
 - **MapLibre SDK:** Handles the real-time geographic visualization of challenges and user positions.
 - **Reanimated & Gesture Handler:** Provides smooth, physics-based interactions for bottom sheets and overlays.
+
+### Problems with React Native
+
+- **Incompatibility with Android Devices:** The app often works on iOS but faces issues on various Android devices.
+- **Setup Failures:** Team members cannot setup or start the Expo project consistently due to dependency and configuration issues.
+- **Configuration Complexity:** The React Native environment requires frequent updates and adjustments, leading to a fragile development setup.
+
+This led to the decision to migrate to a native Android application using **Kotlin** in **Android Studio**, leveraging the existing Java backend. This transition aims to provide a more stable development environment and better performance on Android devices. Existing React Native components will be gradually replaced with native Android components, ensuring a smooth transition while maintaining the core functionality of the app. The Android Studio project is located in the `src/android-frontend` directory, and the migration is ongoing.

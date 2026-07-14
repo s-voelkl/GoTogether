@@ -13,7 +13,7 @@ Willkommen bei **GoTogether**. Diese Anleitung führt dich durch alle Funktionen
 5. [Challenges – Alle Aktivitäten im Überblick](#5-challenges--alle-aktivitäten-im-überblick)
 6. [Check-in – Teilnahme bestätigen](#6-check-in--teilnahme-bestätigen)
 7. [Gamification – Level, G-Bucks & Rewards](#7-gamification--level-g-bucks--rewards)
-8. [Profil – Social Battery, Freunde & Einstellungen](#8-profil--social-battery-freunde--einstellungen)
+8. [8. Profile – Social Battery, Freunde & Einstellungen](#8-profile--social-battery-freunde--einstellungen)
 9. [Der KI-Assistent](#9-der-ki-assistent)
 10. [Datenschutz und Sicherheit](#10-datenschutz-und-sicherheit)
 11. [Häufige Fragen (FAQ)](#11-häufige-fragen-faq)
@@ -74,7 +74,7 @@ Der Home-Bildschirm zeigt eine interaktive Karte deiner Umgebung.
 - **Challenge-Marker** zeigen die Orte, an denen Aktivitäten stattfinden. Farbe und Symbol entsprechen der Kategorie:
 
   | Symbol | Kategorie |
-  |--------|-----------|
+  | ------ | --------- |
   | ☕ | Food |
   | ⚽ | Sport |
   | 🏛️ | Culture |
@@ -166,12 +166,14 @@ Oben im **Challenges-Tab** befindet sich der große blaue Button **„Scan to ch
 Das Check-in-Sheet startet standardmäßig im **Scan-Modus**. Alternativ kannst du in den manuellen Eingabemodus wechseln.
 
 **QR-Code scannen:**
+
 - Am Veranstaltungsort findest du einen QR-Code (z. B. an einer Tafel, auf einem Flyer oder digital auf dem Bildschirm der Veranstalter:innen).
 - Das Kamerabild wird mit einer Zielrahmen-Markierung (vier Ecken) angezeigt.
 - Sobald der QR-Code erkannt wurde, erfolgt der Check-in automatisch.
 - Beim ersten Aufruf wird die **Kamera-Berechtigung** angefragt. Wurde sie zuvor abgelehnt, kannst du sie über den **„Enable camera"**- bzw. **„Open settings"**-Button aktivieren.
 
 **Code manuell eingeben:**
+
 - Tippe auf **„Enter code manually"**.
 - Gib den **5-stelligen Code** (A–Z und 0–9, z. B. `K7M2Q`) in das Eingabefeld ein.
 - Die Eingabe wird automatisch in Großbuchstaben umgewandelt.
@@ -303,6 +305,7 @@ Prüfe unter **Profile → Settings → App settings**, ob die Standortberechtig
 
 **Warum sind keine Challenges in meiner Nähe zu sehen?**
 Mögliche Ursachen:
+
 - Ein aktiver Filter schränkt die Auswahl ein – prüfe das Filter-Sheet.
 - In deiner Region sind aktuell keine Challenges verfügbar.
 

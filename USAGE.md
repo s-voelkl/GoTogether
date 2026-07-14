@@ -99,7 +99,7 @@ As the React frontend was nearly impossible to set up for developing and buildin
 3. Navigate to the frontend directory: `cd ./src/frontend/`
 4. Install dependencies: `yarn install`
 
-### Frontend Android Setup
+### Frontend Setup: React Native on Android
 
 This should be run directly on Windows or macOS, **not** within WSL. It requires Android Studio and the Android SDK to run the Expo app on an Android device or emulator.
 
@@ -111,6 +111,10 @@ This should be run directly on Windows or macOS, **not** within WSL. It requires
 6. You might need to modify [src/frontend/android/settings.gradle](src/frontend/android/settings.gradle).
 
 Refer to the [Expo Setup Guide](https://docs.expo.dev/build/setup/#install-the-latest-eas-cli) for additional help.
+
+### Frontend Setup: React Native on iOS
+
+Documentation not provided, as movement to Android Studio was prioritized due to difficulties in building and running the React Native frontend.
 
 ## Frontend Setup for Android Studio (new)
 
