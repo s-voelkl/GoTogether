@@ -90,7 +90,9 @@ POSTGRES_DB: gotogether_db
     ]
     ```
 
-## Frontend Setup
+## Frontend Setup for React Native (obsolete)
+
+As the React frontend was nearly impossible to set up for developing and building, a migration to Android was conducted. The frontend is now built using Android Studio, as explained [below](#frontend-setup-for-android-studio-new).
 
 1. Ensure Yarn version 1.x is installed: [Yarn Installation](https://classic.yarnpkg.com/en/docs/install).
 2. TypeScript and Expo are already included in [src/frontend/package.json](src/frontend/package.json).
@@ -109,3 +111,15 @@ This should be run directly on Windows or macOS, **not** within WSL. It requires
 6. You might need to modify [src/frontend/android/settings.gradle](src/frontend/android/settings.gradle).
 
 Refer to the [Expo Setup Guide](https://docs.expo.dev/build/setup/#install-the-latest-eas-cli) for additional help.
+
+## Frontend Setup for Android Studio (new)
+
+A migration was done from React Native to Android Studio due to difficulties in building and running the React Native frontend. The new frontend is built using Android Studio, which provides a more stable development environment using mobile device emulators or real physical devices.
+
+1. Install Android Studio, Open the folder `src/android-frontend` in Android Studio.
+2. Ensure the Android SDK is installed and configured properly.
+3. Connect a physical Android device or set up an Android emulator.
+4. Gradle sync the project to download dependencies.
+5. Run the application on the connected device or emulator.
+
+*Happy coding!*
