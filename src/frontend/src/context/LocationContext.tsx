@@ -15,7 +15,7 @@ export interface UserLocation {
   coords: { latitude: number; longitude: number } | null;
   /** Horizontal accuracy radius in meters, or null if unknown. */
   accuracy: number | null;
-  /** Human-readable location label when available. */
+  /** Reverse-geocoded "City, Country", or null if it couldn't be resolved. */
   label: string | null;
 }
 
@@ -54,8 +54,16 @@ export const LocationProvider: React.FC<{ children: React.ReactNode }> = ({ chil
         const accuracy =
           typeof pos.coords.accuracy === 'number' ? pos.coords.accuracy : null;
 
-        // Expo SDK 49+ removed geocoding APIs from expo-location.
-        const label: string | null = null;
+        let label: string | null = null;
+        try {
+          const [place] = await Location.reverseGeocodeAsync(coords);
+          if (place) {
+            const city = place.city ?? place.subregion ?? place.region ?? null;
+            label = [city, place.country].filter(Boolean).join(', ') || null;
+          }
+        } catch {
+          // Reverse geocoding failed — we still have coordinates.
+        }
 
         if (!cancelled) setState({ status: 'ready', coords, accuracy, label });
       } catch {
