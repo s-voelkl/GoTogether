@@ -1,5 +1,9 @@
 # GoTogether
 
+<div align="left">
+    <img src="docs/artifacts/06-corporate-design/app-logo.png" alt="App Logo" width="150"/>
+</div>
+
 Social networks connect people digitally, but rarely foster genuine relationships. Users are looking for real-world encounters, lasting friendships, or at least deeper social interactions.
 
 We present **GoTogether**, a real-world social networking app that helps users find like-minded people nearby for shared activities. The app is designed to facilitate meaningful connections and enhance social experiences.
@@ -44,3 +48,26 @@ The **scrum notes** in `docs/scrum-notes/` contain the documentation of the firs
 A **user guide** in [user-guide.md](docs/user-manual/user-guide.md) gives an overview of how to use the GoTogether app as a user.
 
 The **artifacts** in `docs/artifacts/` contain the historical development artifacts of the project, including moodboards, initially created demo apps and other early-stage design and development materials.
+
+## Development Showcase
+
+**Design Phase**: Moodboard (`docs/artifacts/04-moodboard-web-neo-brutalism`)
+
+<div align="center">
+    <img src="docs/artifacts/04-moodboard-web-neo-brutalism/MoodboardHeader.png" alt="Moodboard Header" width="800"/>
+    <img src="docs/artifacts/04-moodboard-web-neo-brutalism/MoodboardAppScreens.png" alt="Moodboard App Screens" width="800"/>
+    <img src="docs/artifacts/04-moodboard-web-neo-brutalism/MoodboardDesignSystem.png" alt="Moodboard Design System" width="800"/>
+</div>
+
+**Design Phase**: Initial Demo App (`docs/artifacts/05-demo-mobile-vanillaJS`)
+
+<div align="center">
+    <img src="docs/artifacts/05-demo-mobile-vanillaJS/DemoProfile.png" alt="Demo App Profile" width="300"/>
+    <img src="docs/artifacts/05-demo-mobile-vanillaJS/DemoMap.png" alt="Demo App Map" width="300"/>
+</div>
+
+**Backend Development**: Backend API with routes for Challenges, Users, Companies and Topics (`src/backend/src/main`)
+
+**Frontend Development**: Frontend with React Native (`src/frontend/src`)
+
+**Android Development**: Android App with Kotlin (`src/android-frontend/app/src/main`)
