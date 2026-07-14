@@ -17,5 +17,12 @@ jobs:
         env:
           GITLAB_PAT: ${{ secrets.GITLAB_PAT }}
         run: |
+          # 1. Add the GitLab remote
           git remote add gitlab https://oauth2:${GITLAB_PAT}@git.oth-aw.de/6565/GoTogether.git
-          git push gitlab --prune +refs/heads/*:refs/heads/* +refs/tags/*:refs/tags/*
+
+          # 2. Delete the origin/HEAD reference so Git does not try to push it as a branch name
+          git update-ref -d refs/remotes/origin/HEAD || true
+
+          # 3. Push remote-tracking branches to GitLab's heads, and prune truly deleted branches.
+          # Note: We omitted the '+' force flag on the branches to prevent accidental forced overrides on protected branches.
+          git push gitlab --prune refs/remotes/origin/*:refs/heads/* +refs/tags/*:refs/tags/*
