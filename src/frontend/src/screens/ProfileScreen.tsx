@@ -1,5 +1,13 @@
 import React, { useMemo, useState } from 'react';
-import { ScrollView, StyleSheet, Text, TouchableOpacity, View, Linking } from 'react-native';
+import {
+  LayoutChangeEvent,
+  Linking,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import { ScreenShell } from '../components/ScreenShell';
 // import { FilterButton } from '../components/FilterButton';
 import {
@@ -13,9 +21,11 @@ import {
 
 const DAY_MS = 24 * 60 * 60 * 1000;
 const INITIAL_BATTERY = 60;
-const QUICK_VALUES = [20, 40, 60, 80, 100];
+const BATTERY_STEPS = [0, 20, 40, 60, 80, 100] as const;
+const THUMB_SIZE = 28;
 const FRIEND_FILTERS = ['all', 'nearby', 'active'] as const;
 
+type BatteryStep = (typeof BATTERY_STEPS)[number];
 type FriendFilter = (typeof FRIEND_FILTERS)[number];
 
 interface Friend {
@@ -82,9 +92,12 @@ const FRIENDS: Friend[] = [
   },
 ];
 
-const clampBattery = (value: number) => Math.min(100, Math.max(0, value));
-
 const startOfDay = (date: Date) => new Date(date.getFullYear(), date.getMonth(), date.getDate());
+
+const getClosestBatteryStep = (value: number): BatteryStep =>
+  BATTERY_STEPS.reduce<BatteryStep>((closest, step) => {
+    return Math.abs(step - value) < Math.abs(closest - value) ? step : closest;
+  }, BATTERY_STEPS[0]);
 
 const needsDailyRefresh = (lastCheckAt: Date | null) => {
   if (!lastCheckAt) return true;
@@ -117,10 +130,11 @@ export const ProfileScreen: React.FC = () => {
     void Linking.openSettings();
   };
 
-  const [savedBattery, setSavedBattery] = useState(INITIAL_BATTERY);
-  const [draftBattery, setDraftBattery] = useState(INITIAL_BATTERY);
+  const [savedBattery, setSavedBattery] = useState<BatteryStep>(INITIAL_BATTERY);
+  const [draftBattery, setDraftBattery] = useState<BatteryStep>(INITIAL_BATTERY);
   const [lastCheckAt, setLastCheckAt] = useState<Date | null>(null);
   const [friendFilter, setFriendFilter] = useState<FriendFilter>('all');
+  const [sliderWidth, setSliderWidth] = useState(0);
 
   const refreshNeeded = needsDailyRefresh(lastCheckAt);
   const hasUnsavedChanges = draftBattery !== savedBattery;
@@ -160,8 +174,17 @@ export const ProfileScreen: React.FC = () => {
     setLastCheckAt(new Date());
   };
 
-  const adjustBattery = (delta: number) => {
-    setDraftBattery(prev => clampBattery(prev + delta));
+  const handleSliderLayout = (event: LayoutChangeEvent) => {
+    setSliderWidth(event.nativeEvent.layout.width);
+  };
+
+  const updateBatteryFromLocation = (locationX: number) => {
+    if (sliderWidth <= 0) return;
+
+    const clampedLocation = Math.min(sliderWidth, Math.max(0, locationX));
+    const rawValue = (clampedLocation / sliderWidth) * 100;
+
+    setDraftBattery(getClosestBatteryStep(rawValue));
   };
 
   const filledSegments = Math.round(draftBattery / 20);
@@ -209,61 +232,74 @@ export const ProfileScreen: React.FC = () => {
             ))}
           </View>
 
-          <View style={styles.stepperRow}>
-            <TouchableOpacity
-              style={styles.stepperButton}
-              onPress={() => adjustBattery(-10)}
-              activeOpacity={0.85}
-            >
-              <Text style={styles.stepperButtonText}>-10</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              style={styles.stepperButton}
-              onPress={() => adjustBattery(10)}
-              activeOpacity={0.85}
-            >
-              <Text style={styles.stepperButtonText}>+10</Text>
-            </TouchableOpacity>
-          </View>
         </View>
 
         <View style={styles.card}>
-          <Text style={styles.sectionEyebrow}>QUICK SELECT</Text>
+          <Text style={styles.sectionEyebrow}>TODAY'S INPUT</Text>
           <Text style={styles.sectionTitle}>How social do you feel today?</Text>
           <Text style={styles.sectionText}>
             Pick a value that matches your current energy. The app can use this to
             suggest more suitable challenges.
           </Text>
 
-          <View style={styles.quickGrid}>
-            {QUICK_VALUES.map(value => {
-              const selected = value === draftBattery;
+          <View style={styles.sliderBlock}>
+            <View
+              style={styles.sliderTouchArea}
+              onLayout={handleSliderLayout}
+              onStartShouldSetResponder={() => true}
+              onMoveShouldSetResponder={() => true}
+              onStartShouldSetResponderCapture={() => true}
+              onMoveShouldSetResponderCapture={() => true}
+              onResponderTerminationRequest={() => false}
+              onResponderGrant={event => updateBatteryFromLocation(event.nativeEvent.locationX)}
+              onResponderMove={event => updateBatteryFromLocation(event.nativeEvent.locationX)}
+            >
+              <View style={styles.sliderTrack}>
+                <View style={[styles.sliderFill, { width: `${draftBattery}%` }]} />
 
-              return (
+                {BATTERY_STEPS.map(stepValue => (
+                  <View
+                    key={stepValue}
+                    style={[styles.sliderDotWrap, { left: `${stepValue}%` }]}
+                  >
+                    <View
+                      style={[
+                        styles.sliderDot,
+                        draftBattery >= stepValue && styles.sliderDotActive,
+                        draftBattery === stepValue && styles.sliderDotSelected,
+                      ]}
+                    />
+                  </View>
+                ))}
+
+                <View
+                  style={[
+                    styles.sliderThumb,
+                    { left: `${draftBattery}%`, marginLeft: -THUMB_SIZE / 2 },
+                  ]}
+                />
+              </View>
+            </View>
+
+            <View style={styles.sliderLabels}>
+              {BATTERY_STEPS.map(stepValue => (
                 <TouchableOpacity
-                  key={value}
-                  style={[styles.quickChip, selected && styles.quickChipSelected]}
-                  onPress={() => setDraftBattery(value)}
+                  key={stepValue}
+                  style={styles.sliderLabelButton}
+                  onPress={() => setDraftBattery(stepValue)}
                   activeOpacity={0.85}
                 >
-                  <Text style={[styles.quickChipValue, selected && styles.quickChipValueSelected]}>
-                    {value}%
-                  </Text>
-                  <Text style={[styles.quickChipLabel, selected && styles.quickChipLabelSelected]}>
-                    {value <= 20
-                      ? 'Low-key'
-                      : value <= 40
-                      ? 'Light'
-                      : value <= 60
-                      ? 'Balanced'
-                      : value <= 80
-                      ? 'Open'
-                      : 'Full send'}
+                  <Text
+                    style={[
+                      styles.sliderLabel,
+                      draftBattery === stepValue && styles.sliderLabelSelected,
+                    ]}
+                  >
+                    {stepValue}
                   </Text>
                 </TouchableOpacity>
-              );
-            })}
+              ))}
+            </View>
           </View>
         </View>
 
@@ -529,30 +565,6 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(255,255,255,0.55)',
   },
 
-  stepperRow: {
-    flexDirection: 'row',
-    gap: 10,
-    marginTop: spacing.md,
-  },
-
-  stepperButton: {
-    flex: 1,
-    backgroundColor: colors.white,
-    borderRadius: radius.full,
-    borderWidth: layout.border,
-    borderColor: colors.black,
-    paddingVertical: 14,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-
-  stepperButtonText: {
-    fontSize: 15,
-    fontFamily: font.headingBold,
-    fontWeight: '800',
-    color: colors.black,
-  },
-
   sectionTitle: {
     marginTop: 6,
     fontSize: 20,
@@ -623,50 +635,91 @@ const styles = StyleSheet.create({
     color: colors.gray500,
   },
 
-  quickGrid: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: 10,
+  sliderBlock: {
     marginTop: spacing.md,
+    gap: 12,
   },
 
-  quickChip: {
-    width: '48%',
-    minWidth: 120,
-    backgroundColor: colors.gray100,
-    ...continuousRadius({ borderRadius: 20 }),
+  sliderTouchArea: {
+    paddingVertical: 20,
+    paddingHorizontal: 6,
+  },
+
+  sliderTrack: {
+    height: 10,
+    backgroundColor: colors.gray200,
+    borderRadius: radius.full,
+    position: 'relative',
+  },
+
+  sliderFill: {
+    position: 'absolute',
+    top: 0,
+    bottom: 0,
+    left: 0,
+    backgroundColor: colors.primary,
+    borderRadius: radius.full,
+  },
+
+  sliderDotWrap: {
+    position: 'absolute',
+    top: '50%',
+    marginTop: -10,
+    marginLeft: -10,
+    width: 20,
+    height: 20,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+
+  sliderDot: {
+    width: 10,
+    height: 10,
+    borderRadius: radius.full,
+    backgroundColor: colors.white,
     borderWidth: 1.5,
-    borderColor: colors.cardBorder,
-    paddingVertical: 14,
-    paddingHorizontal: 14,
-  },
-
-  quickChipSelected: {
-    backgroundColor: colors.blue,
     borderColor: colors.black,
   },
 
-  quickChipValue: {
-    fontSize: 18,
-    fontFamily: font.headingBold,
-    fontWeight: '800',
-    color: colors.black,
+  sliderDotActive: {
+    backgroundColor: colors.black,
   },
 
-  quickChipValueSelected: {
-    color: colors.black,
+  sliderDotSelected: {
+    width: 12,
+    height: 12,
   },
 
-  quickChipLabel: {
-    marginTop: 4,
-    fontSize: 12,
+  sliderThumb: {
+    position: 'absolute',
+    top: '50%',
+    marginTop: -THUMB_SIZE / 2,
+    width: THUMB_SIZE,
+    height: THUMB_SIZE,
+    borderRadius: radius.full,
+    backgroundColor: colors.blue,
+    borderWidth: layout.border,
+    borderColor: colors.black,
+  },
+
+  sliderLabels: {
+    flexDirection: 'row',
+  },
+
+  sliderLabelButton: {
+    flex: 1,
+    alignItems: 'center',
+  },
+
+  sliderLabel: {
+    fontSize: 11,
     fontFamily: font.body,
     color: colors.gray500,
   },
 
-  quickChipLabelSelected: {
+  sliderLabelSelected: {
     color: colors.black,
-    opacity: 0.75,
+    fontWeight: '800',
   },
 
   friendStatsRow: {
