@@ -9,18 +9,30 @@ import java.util.UUID;
 
 /**
  * Repository interface for Challenge entity.
- * ChallengeRepository is a Spring Data JPA repository for the Challenge entity.
- * It provides basic CRUD operations and custom query methods.
- * The repository is annotated with [at]Repository, which allows Spring to
- * detect it during component scanning and handle exceptions appropriately.
- * The ChallengeRepository extends JpaRepository, which provides methods like
+ * <p>
+ * ChallengeRepository is a Spring Data JPA repository for the {@link Challenge}
+ * entity.
+ * It provides basic CRUD operations and custom query methods for managing
+ * challenges
+ * in the underlying database.
+ * The repository extends JpaRepository, which provides methods like
  * findById, findAll, save, delete, etc.
- * Additionally, custom query methods can be defined by following Spring Data
- * JPA's method naming conventions.
  */
 @Repository
 public interface ChallengeRepository extends JpaRepository<Challenge, UUID> {
 
+    /**
+     * Retrieves a {@link Challenge} by its verification code, ignoring case.
+     * <p>
+     * Searches the database for a challenge entity matching the provided
+     * verification
+     * code. The lookup is case-insensitive to ensure robust verification regardless
+     * of user input styling.
+     * 
+     * @param verificationCode the code used to verify the challenge
+     * @return an {@link Optional} containing the found challenge, or an empty
+     *         Optional if none found
+     */
     Optional<Challenge> findByVerificationCodeIgnoreCase(String verificationCode);
     // findById(UUID) is inherited for free
 }

@@ -16,6 +16,11 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.UUID;
 
+/**
+ * Service for managing company-related operations such as creation,
+ * authentication,
+ * and currency modifications.
+ */
 @Service
 @RequiredArgsConstructor
 public class CompanyService {
@@ -26,18 +31,50 @@ public class CompanyService {
     private final CompanyMapper companyMapper;
     private final SecurityService securityService;
 
+    /**
+     * Retrieves a company by its unique identifier.
+     *
+     * @param id the UUID of the company to retrieve
+     * @return the company data transfer object
+     * @throws RuntimeException if the company is not found
+     */
     public CompanyDTO getCompanyById(UUID id) {
+        if (id == null) {
+            throw new RuntimeException("Company ID must not be null.");
+        }
+
         return repo.findById(id)
                 .map(companyMapper::toDTO)
                 .orElseThrow(() -> new RuntimeException("Company not found"));
     }
 
+    /**
+     * Retrieves a list of all registered companies.
+     *
+     * @return a list of company data transfer objects
+     */
     public List<CompanyDTO> getAllCompanies() {
         return repo.findAll().stream()
                 .map(companyMapper::toDTO)
                 .toList();
     }
 
+    /**
+     * Creates a new company record after validating all input data.
+     * Ensure the email is unique across both companies and users before creating.
+     *
+     * @param name        the name of the company
+     * @param password    the unhashed password
+     * @param email       an email address, which must be unique
+     * @param street      the street of the company address
+     * @param houseNumber the house number of the company address
+     * @param zipCode     the zip code of the company address
+     * @param city        the city of the company address
+     * @param latitude    the latitude coordinate for the company location
+     * @param longitude   the longitude coordinate for the company location
+     * @return the UUID of the newly created company
+     * @throws RuntimeException if inputs are invalid or the email is already taken
+     */
     public UUID createCompany(String name, String password, String email, String street, String houseNumber,
             String zipCode, String city, double latitude, double longitude) {
         // email validation
@@ -102,13 +139,36 @@ public class CompanyService {
         return company.getId();
     }
 
+    /**
+     * Logs in a company using email and password, returning their ID.
+     * Authenticates the credentials and updates the company record.
+     *
+     * @param email    the email of the company to log in
+     * @param password the password associated with the email
+     * @return the UUID of the authenticated company
+     * @throws RuntimeException if authentication fails
+     */
     public UUID loginCompany(String email, String password) {
         Company company = authenticateCompany(email, password);
+
+        if (company == null) {
+            throw new RuntimeException("Company not found with email: " + email);
+        }
 
         repo.save(company);
         return company.getId();
     }
 
+    /**
+     * Authenticates a company by validating its email format, verifying existence,
+     * and checking the password against the stored hash.
+     *
+     * @param email    the company's email
+     * @param password the company's plain text password
+     * @return the authenticated company entity
+     * @throws RuntimeException if the email is invalid, the company doesn't exist,
+     *                          or the password is incorrect
+     */
     public Company authenticateCompany(String email, String password) {
         // validate email input
         if (email == null
@@ -138,11 +198,22 @@ public class CompanyService {
         return company;
     }
 
+    /**
+     * Adds currency to the specific company's balance.
+     *
+     * @param companyId the UUID of the company to update
+     * @param amount    the positive amount of currency to add
+     * @return the new total currency balance
+     * @throws RuntimeException if the amount is negative or company not found
+     */
     public int addCompanyCurrency(UUID companyId, int amount) {
         if (amount < 0) {
             throw new RuntimeException("Amount must be positive: " + amount);
         }
-        
+
+        if (companyId == null) {
+            throw new RuntimeException("Company ID must not be null.");
+        }
 
         Company company = repo.findById(companyId)
                 .orElseThrow(() -> new RuntimeException("Company not found with id: " + companyId));

@@ -14,16 +14,35 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.UUID;
 
+/**
+ * REST controller for managing companies.
+ * <p>
+ * Provides endpoints for company signup, login, retrieval, and currency
+ * management.
+ */
 @RestController
 @RequestMapping("/api/companies")
 public class CompanyController {
 
     private final CompanyService service;
 
+    /**
+     * Constructs a new CompanyController with the given CompanyService.
+     *
+     * @param service the service used for company operations
+     */
     public CompanyController(CompanyService service) {
         this.service = service;
     }
 
+    /**
+     * Retrieves a company by its unique identifier.
+     *
+     * @param id the UUID of the company to retrieve
+     * @return a ResponseEntity containing the CompanyDTO if found, or a 404 NOT
+     *         FOUND status with an error message
+     * @throws RuntimeException if the company is not found
+     */
     @GetMapping("/{id}")
     public ResponseEntity<?> getById(@PathVariable UUID id) {
         try {
@@ -33,6 +52,13 @@ public class CompanyController {
         }
     }
 
+    /**
+     * Retrieves a list of all companies.
+     *
+     * @return a ResponseEntity containing a list of CompanyDTOs, or a 500 INTERNAL
+     *         SERVER ERROR status on failure
+     * @throws RuntimeException if an error occurs during retrieval
+     */
     @GetMapping()
     public ResponseEntity<?> getAllCompanies() {
         try {
@@ -42,6 +68,14 @@ public class CompanyController {
         }
     }
 
+    /**
+     * Creates a new company account (signup).
+     *
+     * @param dto the data transfer object containing the company details
+     * @return a ResponseEntity containing the UUID of the newly created company, or
+     *         a 400 BAD REQUEST status on validation failure
+     * @throws RuntimeException if the validation fails or creation errors occur
+     */
     @PostMapping("/signup")
     public ResponseEntity<?> createCompany(@RequestBody CompanyCreateDTO dto) {
         try {
@@ -54,6 +88,14 @@ public class CompanyController {
         }
     }
 
+    /**
+     * Authenticates a company and logs them in.
+     *
+     * @param dto the data transfer object containing login credentials
+     * @return a ResponseEntity containing the UUID of the logged-in company, or a
+     *         401 UNAUTHORIZED status if authentication fails
+     * @throws RuntimeException if the authentication fails
+     */
     @PostMapping("/login")
     public ResponseEntity<?> loginCompany(@RequestBody CompanyLoginDTO dto) {
         try {
@@ -64,6 +106,15 @@ public class CompanyController {
         }
     }
 
+    /**
+     * Adds currency to a company's account.
+     *
+     * @param companyId the UUID of the company
+     * @param currency  the amount of currency to add
+     * @return a ResponseEntity containing the updated currency balance, or a 400
+     *         BAD REQUEST status on failure
+     * @throws RuntimeException if the operation fails
+     */
     @PostMapping("/currency/{companyId}")
     public ResponseEntity<?> addCurrency(@PathVariable UUID companyId, @RequestBody int currency) {
         try {

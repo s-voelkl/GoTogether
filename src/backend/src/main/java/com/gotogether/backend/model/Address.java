@@ -7,6 +7,13 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+/**
+ * Address embeddable class representing a physical address.
+ * <p>
+ * This class is used to store street, house number, zip code, and city
+ * information as an embedded component within other entities like
+ * {@link Company}.
+ */
 @Embeddable
 @Getter
 @Setter
