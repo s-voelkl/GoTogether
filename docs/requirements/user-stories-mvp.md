@@ -31,11 +31,11 @@
 
 ## MVP
 
-- Open local list of challenges including challenge filter to enable spontaneous participation. _(User Story #2, Persona: Tom, Karin)_
+- Open local **list of challenges** including challenge filter to enable spontaneous participation. _(User Story #2, Persona: Tom, Karin)_
 <!-- - Real-time map with personal location marker and dynamic challenges (coordinates, nearest address, interest keyword, name, description, date, topics/interests (e.g., café, politics, ...), start time, estimated end time, experience points, digital currency amount, social effort). _(User Story #6, Persona: Karin, Tom)_ -->
 <!-- - Event/Challenge creation via API by business profiles including interest keywords. _(User Story #11, #12)_ -->
 <!-- - Social Battery input field with visual status and filter logic for suitable activity suggestions. _(User Story #1, Persona: Karin, Tom)_ -->
-- Interest matching via selectable interest keywords from a predefined list, combined with challenge filter. _(User Story #3, Persona: Lena, Tom, Marcel)_
+- **Interest matching** via selectable interest keywords from a predefined list, combined with challenge filter. _(User Story #3, Persona: Lena, Tom, Marcel)_
 <!-- - Participation verification via [QR code and] 5-digit code (challenge-specific) including on-site check-in. _(User Story #9)_ -->
-- Reward system with experience points and digital currency for completed activities. _(User Story #7, Persona: Lena, Marcel)_
-- AI chatbot message upon app login with challenge suggestion based on interest matching. _(User Story #5, #3)_
+- **Reward system** with experience points and digital currency for completed activities. _(User Story #7, Persona: Lena, Marcel)_
+- **AI chatbot message** upon app login with challenge suggestion based on interest matching. _(User Story #5, #3)_
