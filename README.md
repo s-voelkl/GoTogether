@@ -62,12 +62,38 @@ The **artifacts** in `docs/artifacts/` contain the historical development artifa
 **Design Phase**: Initial Demo App (`docs/artifacts/05-demo-mobile-vanillaJS`)
 
 <div align="center">
-    <img src="docs/artifacts/05-demo-mobile-vanillaJS/DemoProfile.png" alt="Demo App Profile" width="300"/>
-    <img src="docs/artifacts/05-demo-mobile-vanillaJS/DemoMap.png" alt="Demo App Map" width="300"/>
+    <img src="docs/artifacts/05-demo-mobile-vanillaJS/DemoProfile.png" alt="Demo App Profile" width="250"/>
+    <img src="docs/artifacts/05-demo-mobile-vanillaJS/DemoMap.png" alt="Demo App Map" width="250"/>
 </div>
 
 **Backend Development**: Backend API with routes for Challenges, Users, Companies and Topics (`src/backend/src/main`)
 
 **Frontend Development**: Frontend with React Native (`src/frontend/src`)
+
+Home screen with AI message and social battery startup and live map:
+
+<div align="center">
+    <img src="docs/screenshots/ai-message-popup-ios.png" alt="iOS AI Message Popup Screenshot" width="250"/>
+    <img src="docs/screenshots/battery-popup-ios.png" alt="iOS Social Battery Popup Screenshot" width="250"/>
+    <img src="docs/screenshots/home-ios.png" alt="iOS Home Map Screenshot" width="250"/>
+</div>
+
+Challenge list, individual challenges and challenge check-in screens:
+
+<div align="center">
+    <img src="docs/screenshots/challenges-ios.png" alt="iOS Challenge List Screenshot" width="250"/>
+    <img src="docs/screenshots/challenge-ios.png" alt="iOS Single Challenge Screenshot" width="250"/>
+    <img src="docs/screenshots/manual-checkin-ios.png" alt="iOS Manual Check-in Screenshot" width="250"/>
+    <img src="docs/screenshots/qr-checkin-ios.png" alt="iOS QR Check-in Screenshot" width="250"/>
+    <img src="docs/screenshots/successful-checkin-ios.png" alt="iOS Successful Check-in Screenshot" width="250"/>
+</div>
+
+Gamification and user profile screens:
+
+<div align="center">
+    <img src="docs/screenshots/gamification-ios.png" alt="iOS Gamification Screenshot" width="250"/>
+    <img src="docs/screenshots/profile-ios.png" alt="iOS Profile Screenshot" width="250"/>
+
+</div>
 
 **Android Development**: Android App with Kotlin (`src/android-frontend/app/src/main`)
