@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>GoTogether — Prototyp</title>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@600;700;800&family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="css/styles.css"/>
+</head>
+<body>
+
+<div class="app-shell">
+
+  <!-- Status Bar -->
+  <div class="status-bar">
+    <span style="font-family:'Space Grotesk',sans-serif;">09:41</span>
+    <div style="display:flex;align-items:center;gap:6px;">
+      <span>▲</span><span>WiFi</span><span>🔋</span>
+    </div>
+  </div>
+
+  <!-- Toast Container -->
+  <div class="toast-container" id="toast-container"></div>
+
+  <!-- Screens -->
+  <div class="screen-wrap">
+
+    <!-- ════════════════════════════
+         HOME SCREEN
+    ════════════════════════════ -->
+    <section class="screen" id="screen-home">
+
+      <!-- Header -->
+      <div class="home-header">
+        <div>
+          <div class="label-sm">Guten Tag 👋</div>
+          <div style="font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:800;">Hallo, Tom!</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;">
+          <div class="live-coins" style="background:var(--gold-l);border:var(--border-xs);border-radius:100px;padding:5px 12px;font-size:12px;font-weight:800;box-shadow:var(--sh-xs);color:var(--black);">1.250 🪙</div>
+          <div class="avatar av-md" style="background:var(--purple-l);">🧑</div>
+        </div>
+      </div>
+
+      <!-- Battery Card -->
+      <div class="battery-card">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
+          <div class="label-sm" style="color:rgba(255,255,255,.7);">⚡ Social Battery</div>
+          <div id="home-battery-val" style="font-size:13px;font-weight:900;background:rgba(255,255,255,.2);padding:3px 10px;border-radius:100px;border:var(--border-xs);border-color:rgba(255,255,255,.4);">72%</div>
+        </div>
+        <div id="home-battery-text" style="font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:800;margin-bottom:2px;">Gut aufgeladen 👥</div>
+        <div id="home-battery-rec" style="font-size:11px;opacity:.75;margin-bottom:10px;">→ Kleine Gruppen-Quests</div>
+        <input type="range" id="home-battery-slider" min="0" max="100" value="72"
+               oninput="onBatteryChange(this.value)"/>
+        <div class="battery-states" style="margin-top:10px;">
+          <div class="bat-state off" id="bat-1">😴 Wenig</div>
+          <div class="bat-state on"  id="bat-2">👥 Gruppe</div>
+          <div class="bat-state off" id="bat-3">🔥 Raid</div>
+        </div>
+      </div>
+
+      <!-- Recommended -->
+      <div class="section-head">
+        <span>Für dich empfohlen</span>
+        <span class="see-all" onclick="setHomeFilter('all')">Alle →</span>
+      </div>
+      <div id="home-rec" style="display:flex;flex-direction:column;gap:8px;"></div>
+
+      <!-- Filter Chips -->
+      <div class="section-head" style="margin-top:4px;">
+        <span>Quests entdecken</span>
+      </div>
+      <div class="tag-row" id="home-filters"></div>
+
+      <!-- Quest List -->
+      <div id="home-quests" style="display:flex;flex-direction:column;gap:8px;"></div>
+
+    </section>
+
+    <!-- ════════════════════════════
+         MAP SCREEN
+    ════════════════════════════ -->
+    <section class="screen" id="screen-map">
+
+      <!-- Search -->
+      <div class="map-search">
+        <span style="font-size:14px;opacity:.5;">🔍</span>
+        <input type="text" placeholder="Quests, Events, Orte..."
+               oninput="handleMapSearch(this.value)"/>
+        <div style="width:28px;height:28px;border-radius:10px;background:var(--purple);border:var(--border-xs);display:flex;align-items:center;justify-content:center;font-size:12px;color:#fff;box-shadow:var(--sh-xs);">⚙</div>
+      </div>
+
+      <!-- Filter Chips -->
+      <div class="tag-row" id="map-filters"></div>
+
+      <!-- Map -->
+      <div class="map-container">
+        <div class="map-grid-bg"></div>
+
+        <!-- City Blocks -->
+        <div class="map-block" style="top:6%;left:4%;width:58px;height:42px;"></div>
+        <div class="map-block" style="top:6%;left:38%;width:54px;height:62px;"></div>
+        <div class="map-block" style="top:6%;left:70%;width:72px;height:38px;"></div>
+        <div class="map-block" style="top:42%;left:4%;width:50px;height:72px;"></div>
+        <div class="map-block" style="top:52%;left:55%;width:68px;height:50px;"></div>
+        <div class="map-block" style="top:68%;left:18%;width:80px;height:36px;"></div>
+        <div class="map-block" style="top:74%;left:72%;width:58px;height:42px;"></div>
+        <div class="map-block" style="top:78%;left:38%;width:46px;height:30px;"></div>
+
+        <!-- Roads -->
+        <div class="map-road-h" style="top:37%;"></div>
+        <div class="map-road-h" style="top:64%;"></div>
+        <div class="map-road-v" style="left:31%;"></div>
+        <div class="map-road-v" style="left:63%;"></div>
+
+        <!-- Radius rings -->
+        <div style="position:absolute;top:54%;left:50%;width:80px;height:80px;border-radius:50%;border:1.5px dashed rgba(124,58,237,.4);transform:translate(-50%,-50%);pointer-events:none;"></div>
+        <div style="position:absolute;top:54%;left:50%;width:180px;height:180px;border-radius:50%;border:1.5px dashed rgba(124,58,237,.2);transform:translate(-50%,-50%);pointer-events:none;"></div>
+
+        <!-- User dot -->
+        <div class="user-dot" style="top:54%;left:50%;"></div>
+
+        <!-- Dynamic pins -->
+        <div id="map-pins"></div>
+      </div>
+
+      <!-- Nearby -->
+      <div class="section-head">
+        <span>In der Nähe</span>
+        <span class="see-all">Alle →</span>
+      </div>
+      <div id="map-cards" style="display:flex;flex-direction:column;gap:8px;"></div>
+
+    </section>
+
+    <!-- ════════════════════════════
+         MATCHING SCREEN
+    ════════════════════════════ -->
+    <section class="screen" id="screen-matching">
+
+      <!-- Header -->
+      <div style="display:flex;justify-content:space-between;align-items:center;">
+        <div>
+          <div style="font-family:'Space Grotesk',sans-serif;font-size:20px;font-weight:800;">✨ Matching</div>
+          <div style="font-size:11px;opacity:.6;margin-top:2px;">Basierend auf deinen Interessen</div>
+        </div>
+        <div style="position:relative;">
+          <div class="avatar av-md" style="background:var(--pink-l);">✨</div>
+          <div id="match-count" style="position:absolute;top:-4px;right:-4px;background:var(--purple);color:#fff;border:var(--border-xs);border-radius:100px;min-width:18px;height:18px;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:900;padding:0 4px;">0</div>
+        </div>
+      </div>
+
+      <!-- Filter chips -->
+      <div class="tag-row" id="match-filters"></div>
+
+      <!-- Card stack -->
+      <div class="match-stack" id="match-stack"></div>
+
+      <!-- Actions -->
+      <div class="match-actions" id="match-actions">
+        <button class="btn btn-ghost" onclick="passMatch()" style="font-size:16px;">👋 Weiter</button>
+        <button class="btn btn-primary" onclick="connectMatch()" style="font-size:16px;">✨ Connect</button>
+      </div>
+
+      <!-- Tip -->
+      <div style="text-align:center;font-size:11px;opacity:.45;font-weight:600;">
+        Tippe auf eine Karte für mehr Details · Verbundene: <span id="match-count-2" style="color:var(--purple);font-weight:800;">0</span>
+      </div>
+
+    </section>
+
+    <!-- ════════════════════════════
+         REWARDS SCREEN
+    ════════════════════════════ -->
+    <section class="screen" id="screen-rewards">
+
+      <!-- Coins Hero -->
+      <div class="coins-hero">
+        <div>
+          <div class="label-sm" style="color:rgba(255,255,255,.7);">🪙 Deine GoCoins</div>
+          <div class="coins-amount" id="coins-display">1.250</div>
+          <div style="font-size:12px;opacity:.8;margin-top:4px;">Verdient durch echte Aktivitäten</div>
+        </div>
+        <div style="font-size:52px;opacity:.85;">🪙</div>
+      </div>
+
+      <!-- XP Progress -->
+      <div class="card c-purple-l">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+          <div>
+            <div id="level-display" style="font-family:'Space Grotesk',sans-serif;font-size:16px;font-weight:900;">Level 12</div>
+            <div id="xp-display" style="font-size:10px;opacity:.6;margin-top:2px;">2.340 / 4.000 XP</div>
+          </div>
+          <div style="font-size:28px;">⚡</div>
+        </div>
+        <div class="progress-wrap">
+          <div class="progress-fill" id="xp-bar" style="width:58%;background:var(--purple);"></div>
+        </div>
+      </div>
+
+      <!-- Badges -->
+      <div class="section-head">
+        <span>Deine Abzeichen</span>
+      </div>
+      <div class="card">
+        <div class="badge-grid" id="badges-grid"></div>
+      </div>
+
+      <!-- Shop -->
+      <div class="section-head">
+        <span>🛍️ Reward-Shop</span>
+        <span style="font-size:11px;opacity:.5;font-weight:600;">Coins einlösen</span>
+      </div>
+      <div id="rewards-list" style="display:flex;flex-direction:column;gap:8px;"></div>
+
+    </section>
+
+    <!-- ════════════════════════════
+         PROFILE SCREEN
+    ════════════════════════════ -->
+    <section class="screen" id="screen-profile">
+
+      <!-- Profile Hero -->
+      <div class="profile-hero">
+        <div style="display:flex;align-items:center;gap:14px;margin-bottom:14px;">
+          <div class="avatar av-lg" style="background:rgba(255,255,255,.2);border-color:rgba(255,255,255,.4);">🧑</div>
+          <div>
+            <div style="font-family:'Space Grotesk',sans-serif;font-size:18px;font-weight:900;">Tom R.</div>
+            <div style="font-size:11px;opacity:.7;">@tom_munich · seit Jan 2026</div>
+            <div id="profile-level" style="display:inline-block;margin-top:5px;background:rgba(255,255,255,.2);border:var(--border-xs);border-color:rgba(255,255,255,.4);border-radius:100px;padding:3px 12px;font-size:11px;font-weight:800;">Level 12</div>
+          </div>
+        </div>
+        <div style="font-size:10px;opacity:.7;margin-bottom:5px;" id="profile-xp-text">2.340 / 4.000 XP</div>
+        <div class="progress-wrap" style="margin-bottom:0;">
+          <div class="progress-fill" id="profile-xp-bar" style="width:58%;background:rgba(255,255,255,.85);"></div>
+        </div>
+      </div>
+
+      <!-- Stats -->
+      <div class="profile-stats">
+        <div class="stat-box">
+          <div class="stat-val" id="profile-quests">0</div>
+          <div class="stat-key">Quests</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-val" id="profile-friends" style="color:var(--purple);">0</div>
+          <div class="stat-key">Freunde</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-val" id="profile-coins" style="color:var(--gold);">0</div>
+          <div class="stat-key">🪙 Coins</div>
+        </div>
+      </div>
+
+      <!-- Interests -->
+      <div class="section-head">
+        <span>Meine Interessen</span>
+        <span style="font-size:10px;opacity:.5;font-weight:600;">Tippen zum Ändern</span>
+      </div>
+      <div class="card c-cream">
+        <div class="interest-grid" id="interest-grid"></div>
+      </div>
+
+      <!-- Badges -->
+      <div class="section-head">
+        <span>Abzeichen</span>
+      </div>
+      <div class="card">
+        <div class="badge-grid" id="profile-badges"></div>
+      </div>
+
+      <!-- Joined Quests -->
+      <div class="section-head">
+        <span>Meine Quests</span>
+      </div>
+      <div id="profile-joined-quests" style="display:flex;flex-direction:column;gap:8px;"></div>
+
+      <!-- Reset (dev helper) -->
+      <div style="margin-top:8px;">
+        <button class="btn btn-ghost btn-sm btn-full" onclick="resetApp()" style="opacity:.4;">
+          🔄 Prototyp zurücksetzen
+        </button>
+      </div>
+
+    </section>
+
+  </div><!-- end screen-wrap -->
+
+  <!-- Bottom Navigation -->
+  <nav class="bottom-nav">
+    <div class="nav-item active" data-screen="home" onclick="navigate('home')">
+      <div class="nav-icon">🏠</div>
+      Home
+    </div>
+    <div class="nav-item" data-screen="map" onclick="navigate('map')">
+      <div class="nav-icon">🗺️</div>
+      Karte
+    </div>
+    <div class="nav-item" data-screen="matching" onclick="navigate('matching')">
+      <div class="nav-icon">✨</div>
+      Match
+    </div>
+    <div class="nav-item" data-screen="rewards" onclick="navigate('rewards')">
+      <div class="nav-icon">🏆</div>
+      Rewards
+    </div>
+    <div class="nav-item" data-screen="profile" onclick="navigate('profile')">
+      <div class="nav-icon">👤</div>
+      Profil
+    </div>
+  </nav>
+
+</div><!-- end app-shell -->
+
+<!-- Modal / Detail Sheet -->
+<div class="modal-overlay" id="modal-overlay">
+  <div class="modal-sheet">
+    <div id="modal-content"></div>
+  </div>
+</div>
+
+<script src="js/app.js"></script>
+<script>
+  // dev helper
+  function resetApp() {
+    localStorage.removeItem('gt_state');
+    location.reload();
+  }
+
+  // sync match count in two places
+  const origRenderMatching = renderMatching;
+  function renderMatching() {
+    origRenderMatching();
+    const el = document.getElementById('match-count-2');
+    if (el) el.textContent = state.connectedUsers.size;
+    const el2 = document.getElementById('match-count');
+    if (el2) el2.textContent = state.connectedUsers.size;
+  }
+</script>
+</body>
+</html>

@@ -15,6 +15,12 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.UUID;
 
+/**
+ * Service handling user-related operations, including retrieving users,
+ * creating accounts,
+ * authentication, and managing user-specific attributes like social battery and
+ * interests.
+ */
 @Service
 @RequiredArgsConstructor
 public class UserService {
@@ -26,15 +32,41 @@ public class UserService {
     private final UserMapper userMapper;
     private final SecurityService securityService;
 
+    /**
+     * Retrieves a user by their unique identifier.
+     *
+     * @param id the UUID of the user to find
+     * @return the user data transfer object
+     * @throws RuntimeException if the user is not found
+     */
     public UserDTO getUserById(UUID id) {
+        if (id == null) {
+            throw new RuntimeException("User ID must not be null.");
+        }
+
         return repo.findById(id).map(userMapper::toDTO)
                 .orElseThrow(() -> new RuntimeException("User not found"));
     }
 
+    /**
+     * Retrieves all registered users in the system.
+     *
+     * @return a list of user data transfer objects
+     */
     public List<UserDTO> getAllUsers() {
         return repo.findAll().stream().map(userMapper::toDTO).toList();
     }
 
+    /**
+     * Creates a new user account if validation passes and the email is unique
+     * across users and companies.
+     *
+     * @param name     the username
+     * @param password the unhashed password
+     * @param email    a valid, unique email address
+     * @return the UUID of the newly created user
+     * @throws RuntimeException if inputs are invalid or the email is already in use
+     */
     public UUID createUser(String name, String password, String email) {
         // email validation
         if (email == null
@@ -75,6 +107,14 @@ public class UserService {
         return user.getId();
     }
 
+    /**
+     * Authenticates a user and updates their last login timestamp upon success.
+     *
+     * @param email    the email of the user to log in
+     * @param password the associated password
+     * @return the UUID of the logged-in user
+     * @throws RuntimeException if authentication fails
+     */
     public UUID loginUser(String email, String password) {
         User user = authenticateUser(email, password);
 
@@ -84,6 +124,17 @@ public class UserService {
         return user.getId();
     }
 
+    /**
+     * Authenticates a user by checking email validity, looking up the user, and
+     * explicitly
+     * comparing the password using the associated password encoder.
+     *
+     * @param email    the email of the user
+     * @param password the plain text password to check
+     * @return the authenticated user entity
+     * @throws RuntimeException if the email is incorrectly formatted, the user
+     *                          doesn't exist, or the password does not match
+     */
     public User authenticateUser(String email, String password) {
         // validate email input
         if (email == null
@@ -113,6 +164,15 @@ public class UserService {
         return user;
     }
 
+    /**
+     * Updates the user's current social battery.
+     *
+     * @param userId        the UUID of the user
+     * @param socialBattery the new social battery level, must be between 0 and 100
+     * @return the newly updated social battery level
+     * @throws RuntimeException if the user doesn't exist or the value is out of
+     *                          bounds
+     */
     public int setUserSocialBattery(UUID userId, int socialBattery) {
         if (socialBattery < 0 || socialBattery > 100) {
             throw new RuntimeException("Social battery must be between 0 and 100: " + socialBattery);
@@ -130,6 +190,16 @@ public class UserService {
         return socialBattery;
     }
 
+    /**
+     * Updates the user's selected interests (topics). Deduplicates inputs and
+     * resolves
+     * UUIDs to the actual {@link Topic} entities.
+     *
+     * @param userId      the UUID of the user to update
+     * @param interestIds a list of topic UUIDs the user is interested in
+     * @return a list of UUIDs corresponding to the set interests
+     * @throws RuntimeException if the user or any specific interest ID is not found
+     */
     public List<UUID> setUserInterests(UUID userId, List<UUID> interestIds) {
         if (userId == null) {
             throw new RuntimeException("User ID must not be null.");
@@ -145,6 +215,10 @@ public class UserService {
         // validate topic existence and resolve to entities
         List<Topic> topics = new java.util.ArrayList<>(interestIds.size());
         for (UUID interestId : interestIds) {
+            if (interestId == null) {
+                continue; // skip null IDs
+            }
+
             Topic topic = topicRepo.findById(interestId)
                     .orElseThrow(() -> new RuntimeException("Interest not found: " + interestId));
             topics.add(topic);

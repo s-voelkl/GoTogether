@@ -13,6 +13,13 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+/**
+ * Topic entity class representing a theme or interest category.
+ * <p>
+ * Topics are used to categorize both {@link User} interests and
+ * {@link Challenge} themes. They can have an associated icon and
+ * background color for visual representation.
+ */
 @Entity
 @Table(name = "topics")
 @Getter
@@ -21,10 +28,22 @@ import lombok.Setter;
 @AllArgsConstructor
 public class Topic {
 
+    /**
+     * Constructs a new Topic with the specified name.
+     *
+     * @param name the name of the topic
+     */
     public Topic(String name) {
         this.name = name;
     }
 
+    /**
+     * Constructs a new Topic with the specified name, icon, and background color.
+     *
+     * @param name            the name of the topic
+     * @param icon            the icon representing the topic
+     * @param backgroundColor the background color associated with the topic
+     */
     public Topic(String name, String icon, String backgroundColor) {
         this.name = name;
         this.icon = icon;

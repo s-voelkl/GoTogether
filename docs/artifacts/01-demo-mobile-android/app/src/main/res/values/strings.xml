@@ -1,0 +1,25 @@
+<resources>
+    <string name="app_name">Isolaticy</string>
+    <string name="title_map">Map</string>
+    <string name="title_quests">Quests</string>
+    <string name="title_assistant">Assistant</string>
+    <string name="title_profile">Profile</string>
+    <string name="title_shop">Shop</string>
+
+    <string name="social_battery_title">Social Battery Index</string>
+    <string name="interests_title">Interests</string>
+    <string name="social_xp_label">Social XP: %1$d</string>
+
+    <string name="low_energy_status">Low energy - prefer 1:1 or quiet activities</string>
+    <string name="balanced_energy_status">Balanced - open to small groups</string>
+    <string name="high_energy_status">High energy - ready for big events &amp; quests!</string>
+
+    <string name="assistant_intro">Hi! I\'m your Assistant.\n\n%1$s\n\nHow can I help you today?</string>
+    <string name="assistant_advice_low">I see your social energy is low. Maybe just a quiet book chat today?</string>
+    <string name="assistant_advice_balanced">You\'re feeling balanced! A small park picnic would be perfect.</string>
+    <string name="assistant_advice_high">Wow, high energy! You\'re ready for a Team Raid challenge!</string>
+
+    <string name="btn_verify_qr">Verify (QR)</string>
+    <string name="quest_verified_msg">Verifying %1$s via QR... Success! +10 XP</string>
+    <string name="quest_started_msg">Quest Started: %1$s! +%2$d XP pending.</string>
+</resources>

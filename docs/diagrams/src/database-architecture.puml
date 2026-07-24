@@ -1,0 +1,133 @@
+@startuml database-architecture
+!theme plain
+hide circle
+' skinparam linetype ortho
+' skinparam roundCorner 5
+' skinparam shadowing false
+
+header GoTogether ER-Diagram
+
+' #####################################################################
+' ENTITIES
+' #####################################################################
+
+entity "topics" as topics << (T,#E3F2FD) >> {
+  * **id** : UUID <<PK>>
+  --
+  * name : VARCHAR
+  icon : VARCHAR
+  background_color : VARCHAR(9)
+}
+
+entity "users" as users << (T,#E3F2FD) >> {
+  * **id** : UUID <<PK>>
+  --
+  * name : VARCHAR
+  * password : VARCHAR
+  * email : VARCHAR <<unique>>
+  * social_battery : INT
+  * currency : INT
+  * experience_points : INT
+  * last_login : TIMESTAMP
+  -- **Embeddable: Settings** --
+  * setting : VARCHAR
+}
+
+entity "companies" as companies << (T,#E3F2FD) >> {
+  * **id** : UUID <<PK>>
+  --
+  * name : VARCHAR
+  * password : VARCHAR
+  * email : VARCHAR <<unique>>
+  * currency : INT
+  -- **Embeddable: Address** --
+  * street : VARCHAR
+  * house_number : VARCHAR
+  * zip_code : VARCHAR
+  * city : VARCHAR
+  -- **Embeddable: Location** --
+  * latitude : DOUBLE
+  * longitude : DOUBLE
+}
+
+entity "challenges" as challenges << (T,#E3F2FD) >> {
+  * **id** : UUID <<PK>>
+  --
+  * title : VARCHAR
+  * description : TEXT
+  * is_archived : BOOLEAN
+  * start_time : TIMESTAMP
+  * duration_minutes : INT
+  * currency : INT
+  * experience_points : INT
+  * min_social_battery : INT
+  * verification_code : VARCHAR(5)
+  * max_players : INT
+  * **host_company_id** : UUID <<FK>>
+  -- **Embeddable: Location** --
+  * latitude : DOUBLE
+  * longitude : DOUBLE
+}
+
+' #####################################################################
+' JOIN TABLES (MANY-TO-MANY)
+' #####################################################################
+
+entity "user_interests" as user_interests << (J,#FFF9C4) >> {
+  * **user_id** : UUID <<FK, PK>>
+  * **topic_id** : UUID <<FK, PK>>
+}
+
+entity "challenge_topics" as challenge_topics << (J,#FFF9C4) >> {
+  * **challenge_id** : UUID <<FK, PK>>
+  * **topic_id** : UUID <<FK, PK>>
+}
+
+entity "challenge_users" as challenge_users << (J,#FFF9C4) >> {
+  * **challenge_id** : UUID <<FK, PK>>
+  * **user_id** : UUID <<FK, PK>>
+}
+
+' #####################################################################
+' RELATIONSHIPS
+' #####################################################################
+
+' One-to-Many: Company hosts Challenges
+companies ||--o{ challenges : "hosts"
+
+' Many-to-Many: Users have Interests
+users ||--o{ user_interests
+user_interests }o--|| topics
+
+' Many-to-Many: Challenges categorized by Topics
+challenges ||--o{ challenge_topics
+challenge_topics }o--|| topics
+
+' Many-to-Many: Users participate in Challenges
+challenges ||--o{ challenge_users
+challenge_users }o--|| users
+
+note right of challenges
+  Embedded Location:
+  - latitude
+  - longitude
+end note
+
+note right of companies
+  Embedded Address:
+  - street
+  - house_number
+  - zip_code
+  - city
+
+  Embedded Location:
+  - latitude
+  - longitude
+end note
+
+note right of users
+  Embedded Settings:
+  - setting
+end note
+
+@enduml

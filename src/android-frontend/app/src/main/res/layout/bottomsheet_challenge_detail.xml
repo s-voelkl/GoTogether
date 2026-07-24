@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingHorizontal="@dimen/h_margin"
+        android:paddingTop="28dp"
+        android:paddingBottom="24dp">
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/detailIconBox"
+            android:layout_width="96dp"
+            android:layout_height="96dp"
+            app:cardCornerRadius="@dimen/nearby_radius"
+            app:cardElevation="0dp"
+            app:strokeWidth="0dp"
+            android:layout_marginBottom="@dimen/spacing_md">
+
+            <TextView
+                android:id="@+id/detailEmoji"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="📍"
+                android:textSize="52sp" />
+        </com.google.android.material.card.MaterialCardView>
+
+        <TextView
+            android:id="@+id/detailName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Challenge Name"
+            android:textSize="26sp"
+            android:textStyle="bold"
+            android:textColor="@color/black"
+            android:letterSpacing="-0.02"/>
+
+        <TextView
+            android:id="@+id/detailHost"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text="Hosted by Host Name"
+            android:textSize="13sp"
+            android:textColor="@color/gray500"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:id="@+id/detailFullBadge"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingHorizontal="12dp"
+                android:paddingVertical="5dp"
+                android:text="FULL"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:textColor="#EF4444"
+                android:background="@drawable/bg_full_badge"
+                android:visibility="gone"
+                android:layout_marginEnd="10dp"/>
+
+            <TextView
+                android:id="@+id/detailDiffBadge"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingHorizontal="12dp"
+                android:paddingVertical="5dp"
+                android:text="easy"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:textAllCaps="true"
+                android:background="@drawable/bg_badge_placeholder"/>
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_weight="1"/>
+
+            <TextView
+                android:id="@+id/detailPoints"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="150 pts"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:textColor="@color/black"/>
+        </LinearLayout>
+
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            app:cardCornerRadius="18dp"
+            app:cardBackgroundColor="@color/gray100"
+            app:cardElevation="0dp"
+            app:strokeWidth="0dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingHorizontal="16dp"
+                android:paddingVertical="4dp">
+
+                <!-- When -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingVertical="12dp"
+                    android:orientation="horizontal">
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="When" android:textColor="@color/gray500" android:textSize="13sp"/>
+                    <TextView android:id="@+id/infoWhen" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="Sat 06 Jun · 15:00" android:textColor="@color/black" android:textStyle="bold" android:textSize="13sp" android:gravity="end"/>
+                </LinearLayout>
+
+                <View android:layout_width="match_parent" android:layout_height="1dp" android:background="@color/divider"/>
+
+                <!-- Duration -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingVertical="12dp"
+                    android:orientation="horizontal">
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Duration" android:textColor="@color/gray500" android:textSize="13sp"/>
+                    <TextView android:id="@+id/infoDuration" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="1h 30m" android:textColor="@color/black" android:textStyle="bold" android:textSize="13sp" android:gravity="end"/>
+                </LinearLayout>
+
+                <View android:layout_width="match_parent" android:layout_height="1dp" android:background="@color/divider"/>
+
+                <!-- Players -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingVertical="12dp"
+                    android:orientation="horizontal">
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Players" android:textColor="@color/gray500" android:textSize="13sp"/>
+                    <TextView android:id="@+id/infoPlayers" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="12 joined · unlimited" android:textColor="@color/black" android:textStyle="bold" android:textSize="13sp" android:gravity="end"/>
+                </LinearLayout>
+
+                <View android:layout_width="match_parent" android:layout_height="1dp" android:background="@color/divider"/>
+
+                <!-- Social Battery -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingVertical="12dp"
+                    android:orientation="horizontal">
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Min. social battery" android:textColor="@color/gray500" android:textSize="13sp"/>
+                    <TextView android:id="@+id/infoSocialBattery" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="2/5" android:textColor="@color/black" android:textStyle="bold" android:textSize="13sp" android:gravity="end"/>
+                </LinearLayout>
+
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:text="ABOUT THIS CHALLENGE"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            android:textColor="@color/gray500"
+            android:letterSpacing="0.05"/>
+
+        <TextView
+            android:id="@+id/detailDescription"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="Description text goes here..."
+            android:textSize="15sp"
+            android:textColor="@color/black"
+            android:lineSpacingExtra="4dp"/>
+
+        <Button
+            android:id="@+id/showOnMapButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:paddingVertical="16dp"
+            android:text="Show on map"
+            android:textAllCaps="false"
+            android:textStyle="bold"
+            app:backgroundTint="@color/blue"
+            app:cornerRadius="999dp"
+            app:strokeWidth="@dimen/border_width"
+            app:strokeColor="@color/black"
+            android:textColor="@color/black"/>
+
+    </LinearLayout>
+</androidx.core.widget.NestedScrollView>

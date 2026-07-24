@@ -172,6 +172,10 @@ public class ChallengeService {
     }
 
     public ChallengeDTO getChallengeById(UUID id) {
+        if (id == null) {
+            throw new RuntimeException("Challenge ID must not be null.");
+        }
+
         return repo.findById(id)
                 .map(challengeMapper::toDTO)
                 .orElseThrow(() -> new RuntimeException("Challenge not found"));
@@ -421,6 +425,10 @@ public class ChallengeService {
     }
 
     public ChallengeVerificationDTO verifyChallenge(UUID id, String verificationCode) {
+        if (id == null) {
+            throw new RuntimeException("Challenge ID must not be null.");
+        }
+
         var challenge = repo.findById(id)
                 .orElseThrow(() -> new RuntimeException("Challenge not found"));
 
@@ -645,6 +653,9 @@ public class ChallengeService {
         // -------- resolve topics --------
         List<Topic> topics = new ArrayList<>(topicIds.size());
         for (UUID topicId : topicIds) {
+            if (topicId == null) {
+                continue; // skip null topic ids
+            }
             Topic topic = topicRepo.findById(topicId)
                     .orElseThrow(() -> new RuntimeException("Topic not found: " + topicId));
             topics.add(topic);
@@ -722,6 +733,9 @@ public class ChallengeService {
         }
         if (!company.getPassword().equals(companyPassword)) {
             throw new RuntimeException("Invalid company credentials.");
+        }
+        if (company.getId() == null) {
+            throw new RuntimeException("Authenticated company has no id.");
         }
 
         Challenge challenge = repo.findById(challengeId)

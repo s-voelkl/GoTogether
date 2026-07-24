@@ -1,0 +1,160 @@
+@startuml backend-architecture
+
+title GoTogether Backend 
+
+' skinparam packageStyle rectangle
+' skinparam shadowing false
+skinparam class {
+    BackgroundColor White
+    ArrowColor #2C3E50
+    BorderColor #2C3E50
+}
+
+package "Presentation Layer (Controllers)" {
+    class  ChallengeController #E8F5E9
+    class  CompanyController #E8F5E9
+    class  TopicController #E8F5E9
+    class  UserController #E8F5E9
+}
+
+package "Business Logic Layer (Services)" {
+    class ChallengeService #FFF3E0
+    class CompanyService #FFF3E0
+    class TopicService #FFF3E0
+    class UserService #FFF3E0
+    class SecurityService #FFF3E0
+}
+
+package "Mapping Layer (Mappers)" {
+    class ChallengeMapper #F3E5F5
+    class CompanyMapper #F3E5F5
+    class UserMapper #F3E5F5
+}
+
+package "Data Access Layer (Repositories)" {
+    interface ChallengeRepository #E3F2FD
+    interface CompanyRepository #E3F2FD
+    interface TopicRepository #E3F2FD
+    interface UserRepository #E3F2FD
+}
+
+package "Domain Layer (Entities & Embeddables)" {
+    class Challenge #F9F9F9 {
+        UUID id
+        String title
+        String description
+        Boolean isArchived
+        LocalDateTime startTime
+        Integer durationMinutes
+        Integer currency
+        Integer experiencePoints
+        Integer minSocialBattery
+        String verificationCode
+        Integer maxPlayers
+    }
+    class Company #F9F9F9 {
+        UUID id
+        String name
+        String email
+        Integer currency
+    }
+    class User #F9F9F9 {
+        UUID id
+        String name
+        String email
+        Integer socialBattery
+        Integer currency
+        Integer experiencePoints
+        LocalDateTime lastLogin
+    }
+    class Topic #F9F9F9 {
+        UUID id
+        String name
+        String icon
+        String backgroundColor
+    }
+    
+    class Address <<Embeddable>> {
+        String street
+        String houseNumber
+        String zipCode
+        String city
+    }
+    class Location <<Embeddable>> {
+        Double latitude
+        Double longitude
+    }
+    class Settings <<Embeddable>> {
+        String setting
+    }
+}
+
+package "Data Transfer Objects (DTOs)" {
+    class UserCreateDTO
+    class UserLoginDTO
+    class UserDTO
+    class CompanyCreateDTO
+    class CompanyLoginDTO
+    class CompanyDTO
+    class CreateTopicDTO
+    class ChallengeDTO
+    class ChallengeCreateDTO
+    class ChallengeCreatedDTO
+    class ChallengeAuthenticateDTO
+    class ChallengeParticipanceDTO
+    class ChallengeVerificationDTO
+    class ChallengeFilterDTO
+    enum ChallengeSortAttribute <<enumeration>>
+}
+
+package "Configuration" {
+    class SecurityConfig #ECEFF1
+}
+
+' Relationships
+ChallengeController --> ChallengeService
+CompanyController --> CompanyService
+TopicController --> TopicService
+UserController --> UserService
+
+ChallengeService --> ChallengeRepository
+ChallengeService --> ChallengeMapper
+ChallengeService --> SecurityService
+
+CompanyService --> CompanyRepository
+CompanyService --> CompanyMapper
+CompanyService --> SecurityService
+
+TopicService --> TopicRepository
+
+UserService --> UserRepository
+UserService --> UserMapper
+UserService --> SecurityService
+
+ChallengeMapper ..> Challenge
+ChallengeMapper ..> ChallengeDTO
+CompanyMapper ..> Company
+UserMapper ..> User
+
+SecurityService --> SecurityConfig
+
+' Domain relationships
+Challenge "many" o-- "1" Company : host
+Challenge "many" o-- "many" Topic : topics
+Challenge "many" o-- "many" User : participants
+User "many" o-- "many" Topic : interests
+
+Company *-- Address
+Company *-- Location
+Challenge *-- Location
+User *-- Settings
+
+' Layout hints
+' "Presentation Layer (Controllers)" -[hidden]down-> "Business Logic Layer (Services)"
+' "Business Logic Layer (Services)" -[hidden]down-> "Mapping Layer (Mappers)"
+"Mapping Layer (Mappers)" -[hidden]down-> "Data Access Layer (Repositories)"
+"Data Access Layer (Repositories)" -[hidden]down-> "Domain Layer (Entities & Embeddables)"
+' "Domain Layer (Entities & Embeddables)" -[hidden]down-> "Data Transfer Objects (DTOs)"
+' "Data Transfer Objects (DTOs)" -[hidden]down-> "Configuration"
+
+@enduml

@@ -19,12 +19,23 @@ import com.gotogether.backend.services.ChallengeService;
 
 import java.util.UUID;
 
+/**
+ * REST controller for managing challenges.
+ * <p>
+ * Provides endpoints for retrieving, searching (filtering), creating, deleting,
+ * and participating in challenges.
+ */
 @RestController
 @RequestMapping("/api/challenges")
 public class ChallengeController {
 
     private final ChallengeService service;
 
+    /**
+     * Constructs a new ChallengeController with the given ChallengeService.
+     *
+     * @param service the service used for challenge operations
+     */
     public ChallengeController(ChallengeService service) {
         this.service = service;
     }

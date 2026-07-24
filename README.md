@@ -1,46 +1,99 @@
 # GoTogether
 
-Social networks connect people digitally, but rarely foster genuine relationships.
-Users are looking for real-world encounters, lasting friendships, or at least deeper social interactions.
+<div align="left">
+    <img src="docs/artifacts/06-corporate-design/app-logo.png" alt="App Logo" width="150"/>
+</div>
+
+Social networks connect people digitally, but rarely foster genuine relationships. Users are looking for real-world encounters, lasting friendships, or at least deeper social interactions.
+
+We present **GoTogether**, a real-world social networking app that helps users find like-minded people nearby for shared activities. The app is designed to facilitate meaningful connections and enhance social experiences.
+
+## Collaboration Tools and Repository
+
+The **GitHub repository** is used for code sharing and version control. The whole project code and documentation can be found at [GitHub s-voelkl/GoTogether](https://github.com/s-voelkl/GoTogether). The correlating **OTH-AW GitLab** project can be found at [GitLab](https://git.oth-aw.de/6565/GoTogether), where the project is mirrored for submission, but access is restricted to members of the project team.
+
+The **Taiga** project management tool is used for task management and sprint planning; it can be accessed at [Taiga](https://tree.taiga.io/project/svoelkl-pmae-projekt/).
+
+Textual discussions and communication are conducted via **Discord**.
+
+During meetings, **[Etherpad](https://yopad.eu/p/PMAE_Projektarbeit_Live_Editing-365days)** was often used for live note-taking and collaborative editing.
+
+**Figma** helped with the design of the web application and can be accessed at [Figma](https://www.figma.com/files/team/1617893399568391033/project/576678242), though a login might be required.
 
 ## LICENSE
 
-The source code of this project is released under the MIT License. For more information, see the license file `src/LICENSE`.
-The documentation and all accompanying materials are released under the CC-BY 4.0 License (see `documentation/LICENSE`).
+The source code of this project is released under the **MIT License**. For more information, see the license file `src/LICENSE`.
+The documentation and all accompanying materials are released under the **CC-BY 4.0 License** (see `documentation/LICENSE`).
 
 ## USAGE
 
-The project setup and usage can be found in the [Usage Instructions](USAGE.md) document.
-
-## Repository Structure
-
-- `src/backend`: Java Spring Boot backend with REST API
-  - `main`: Main application class and configuration
-    - `config`: Security configurations
-    - `controller`: REST controllers for endpoints
-    - `dto`: Data Transfer Objects for API communication
-    - `mappter`: Mappers for converting between entities and DTOs
-    - `model`: JPA entities and embeddables for the database
-    - `repository`: JPA repositories for database access
-    - `services`: Business logic and service layer
-  - `test`: Unit and integration tests
-    - `services`: Tests for service layer
-- `src/frontend`: React Native app
-  - `assets`: Images and icons
-  - `src`: Main app logic and screens
-    - `components`: Reusable UI components
-    - `context`: React contexts for state management
-    - `data`: Data management and state handling
-    - `navigation`: Route definitions and navigation logic
-    - `screens`: Main screens of the app
-    - `theme`: Theming and styling
+The project setup and **usage** instructions can be found in the [USAGE.md](USAGE.md) document.
 
 ## Requirement Definitions
 
-The underlying research and problem definition for the GoTogether project can be found in [research-problem-definition.md](docs/requirements/research-problem-definition.md).
+The underlying **research and problem definition** for the GoTogether project can be found in [research-problem-definition.md](docs/requirements/research-problem-definition.md).
 
-From there, the personas in [personas.md](docs/requirements/personas.md) were derived, though especially the personas Karin (54) and Tom (29) highlight the main target groups for the app. The basic app idea is described in [app-idea.md](docs/requirements/app-idea.md). Based on this idea, the user stories and the reduced MVP user stories are defined in [user-stories-mvp.md](docs/requirements/user-stories-mvp.md). The SMART goal definition for the project can be found in [smart-goal.md](docs/requirements/smart-goal.md).
+From there, the **personas** in [personas.md](docs/requirements/personas.md) were derived, though especially the personas Karin (54) and Tom (29) highlight the main target groups for the app. The basic app idea is described in [app-idea.md](docs/requirements/app-idea.md). Based on this idea, the **user stories** and the reduced **MVP** user stories are defined in [user-stories-mvp.md](docs/requirements/user-stories-mvp.md). The **SMART** goal definition for the project can be found in [smart-goal.md](docs/requirements/smart-goal.md).
 
 ## Architecture Description
 
-The [architecture description](docs/architecture/architecture.md) describes the overall architecture of the GoTogether app, including the main components, interfaces, and technologies used. It also includes a high-level overview of the system design and the rationale behind architectural decisions.
+The **architecture description** in [architecture.md](docs/architecture/architecture.md) describes the overall architecture of the GoTogether app, including the main components, interfaces, and technologies used. It also includes a high-level overview of the system design and the rationale behind architectural decisions.
+
+### Other Documents
+
+The **scrum notes** in `docs/scrum-notes/` contain the documentation of the first Scrum meetings, and the full exports of the Sprint Retrospectives.
+
+**Diagrams** were first created with Draw.io (`docs/diagrams/archive`) and later with PlantUML (`docs/diagrams/src` and `docs/diagrams/out`) to better fit the rapid development and changes in the project.
+
+A **user guide** in [user-guide.md](docs/user-manual/user-guide.md) gives an overview of how to use the GoTogether app as a user.
+
+The **artifacts** in `docs/artifacts/` contain the historical development artifacts of the project, including moodboards, initially created demo apps and other early-stage design and development materials.
+
+## Development Showcase
+
+**Design Phase**: Moodboard (`docs/artifacts/04-moodboard-web-neo-brutalism`)
+
+<div align="center">
+    <img src="docs/artifacts/04-moodboard-web-neo-brutalism/MoodboardHeader.png" alt="Moodboard Header" width="800"/>
+    <img src="docs/artifacts/04-moodboard-web-neo-brutalism/MoodboardAppScreens.png" alt="Moodboard App Screens" width="800"/>
+    <img src="docs/artifacts/04-moodboard-web-neo-brutalism/MoodboardDesignSystem.png" alt="Moodboard Design System" width="800"/>
+</div>
+
+**Design Phase**: Initial Demo App (`docs/artifacts/05-demo-mobile-vanillaJS`)
+
+<div align="center">
+    <img src="docs/artifacts/05-demo-mobile-vanillaJS/DemoProfile.png" alt="Demo App Profile" width="250"/>
+    <img src="docs/artifacts/05-demo-mobile-vanillaJS/DemoMap.png" alt="Demo App Map" width="250"/>
+</div>
+
+**Backend Development**: Backend API with routes for Challenges, Users, Companies and Topics (`src/backend/src/main`)
+
+**Frontend Development**: Frontend with React Native (`src/frontend/src`)
+
+Home screen with AI message and social battery startup and live map:
+
+<div align="center">
+    <img src="docs/screenshots/ai-message-popup-ios.png" alt="iOS AI Message Popup Screenshot" width="250"/>
+    <img src="docs/screenshots/battery-popup-ios.png" alt="iOS Social Battery Popup Screenshot" width="250"/>
+    <img src="docs/screenshots/home-ios.png" alt="iOS Home Map Screenshot" width="250"/>
+</div>
+
+Challenge list, individual challenges and challenge check-in screens:
+
+<div align="center">
+    <img src="docs/screenshots/challenges-ios.png" alt="iOS Challenge List Screenshot" width="250"/>
+    <img src="docs/screenshots/challenge-ios.png" alt="iOS Single Challenge Screenshot" width="250"/>
+    <img src="docs/screenshots/manual-checkin-ios.png" alt="iOS Manual Check-in Screenshot" width="250"/>
+    <img src="docs/screenshots/qr-checkin-ios.png" alt="iOS QR Check-in Screenshot" width="250"/>
+    <img src="docs/screenshots/successful-checkin-ios.png" alt="iOS Successful Check-in Screenshot" width="250"/>
+</div>
+
+Gamification and user profile screens:
+
+<div align="center">
+    <img src="docs/screenshots/gamification-ios.png" alt="iOS Gamification Screenshot" width="250"/>
+    <img src="docs/screenshots/profile-ios.png" alt="iOS Profile Screenshot" width="250"/>
+
+</div>
+
+**Android Development**: Android App with Kotlin (`src/android-frontend/app/src/main`)

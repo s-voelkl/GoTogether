@@ -1,0 +1,28 @@
+name: Sync to GitLab
+
+on:
+  push:
+    branches: [main, master, "ci/**"] # Trigger on pushes to these branches
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # Fetches all history for all branches and tags
+
+      - name: Push to GitLab Mirror
+        env:
+          GITLAB_PAT: ${{ secrets.GITLAB_PAT }}
+        run: |
+          # 1. Add the GitLab remote
+          git remote add gitlab https://oauth2:${GITLAB_PAT}@git.oth-aw.de/6565/GoTogether.git
+
+          # 2. Delete the origin/HEAD reference so Git does not try to push it as a branch name
+          git update-ref -d refs/remotes/origin/HEAD || true
+
+          # 3. Push remote-tracking branches to GitLab's heads, and prune truly deleted branches.
+          # Note: We omitted the '+' force flag on the branches to prevent accidental forced overrides on protected branches.
+          git push gitlab --prune refs/remotes/origin/*:refs/heads/* +refs/tags/*:refs/tags/*

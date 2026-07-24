@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/blue"
+    android:paddingHorizontal="24dp"
+    android:paddingTop="35dp"
+    android:paddingBottom="22dp">
+
+    <TextView
+        android:id="@+id/checkInTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Check in"
+        android:textSize="22sp"
+        android:textStyle="bold"
+        android:textColor="@color/black"
+        android:letterSpacing="-0.01"/>
+
+    <TextView
+        android:id="@+id/checkInSubtitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:text="Point your camera at the QR code\nshown at the challenge venue"
+        android:textSize="13sp"
+        android:textColor="@color/black"
+        android:alpha="0.7"/>
+
+    <FrameLayout
+        android:id="@+id/mainContentArea"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:layout_marginTop="24dp">
+
+        <!-- Scan Mode -->
+        <LinearLayout
+            android:id="@+id/scanArea"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:gravity="center">
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardCornerRadius="28dp"
+                app:cardBackgroundColor="@color/black"
+                app:strokeWidth="@dimen/border_width"
+                app:strokeColor="@color/black"
+                app:cardElevation="0dp">
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:layout_margin="0dp"
+                    android:minHeight="280dp">
+                    <!-- Camera View Placeholder -->
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="Camera Preview"
+                        android:textColor="@color/white"
+                        android:textSize="13sp"/>
+                </FrameLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <Button
+                android:id="@+id/enterCodeBtn"
+                style="@style/Widget.Material3.Button.TextButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:text="Enter code manually"
+                android:textColor="@color/black"
+                android:textStyle="bold"
+                android:textSize="16sp"/>
+        </LinearLayout>
+
+        <!-- Manual Mode -->
+        <LinearLayout
+            android:id="@+id/manualArea"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <EditText
+                android:id="@+id/codeInput"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:padding="16dp"
+                android:hint="K7M2Q"
+                android:textSize="22sp"
+                android:textStyle="bold"
+                android:gravity="center"
+                android:letterSpacing="0.2"
+                android:maxLength="5"
+                android:inputType="textCapCharacters"
+                android:layout_marginBottom="16dp"/>
+
+            <Button
+                android:id="@+id/submitCodeBtn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingVertical="16dp"
+                android:text="Check in"
+                android:textAllCaps="false"
+                app:backgroundTint="@color/black"
+                android:textColor="@color/white"
+                app:cornerRadius="100dp"
+                android:textStyle="bold"/>
+
+            <Button
+                android:id="@+id/backToScanBtn"
+                style="@style/Widget.Material3.Button.TextButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="16dp"
+                android:text="Scan a QR code instead"
+                android:textColor="@color/black"
+                android:textStyle="bold"/>
+        </LinearLayout>
+
+        <!-- Success Mode -->
+        <LinearLayout
+            android:id="@+id/successArea"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:visibility="gone">
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="92dp"
+                android:layout_height="92dp"
+                app:cardCornerRadius="100dp"
+                app:cardBackgroundColor="@color/white"
+                app:strokeWidth="@dimen/border_width"
+                app:strokeColor="@color/black"
+                app:cardElevation="0dp">
+                <ImageView
+                    android:layout_width="44dp"
+                    android:layout_height="44dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/ic_check"
+                    app:tint="@color/black"/>
+            </com.google.android.material.card.MaterialCardView>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="You're checked in!"
+                android:textSize="22sp"
+                android:textStyle="bold"
+                android:textColor="@color/black"/>
+
+            <TextView
+                android:id="@+id/matchedChallengeName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="Café Baroco"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                android:textColor="@color/black"/>
+
+            <TextView
+                android:id="@+id/matchedChallengePoints"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:paddingHorizontal="20dp"
+                android:paddingVertical="8dp"
+                android:text="+150 pts"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:textColor="@color/black"
+                android:background="@drawable/bg_status_chip_ready"/>
+
+            <Button
+                android:id="@+id/doneBtn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:paddingVertical="16dp"
+                android:text="Done"
+                android:textAllCaps="false"
+                app:backgroundTint="@color/black"
+                android:textColor="@color/white"
+                app:cornerRadius="100dp"
+                android:textStyle="bold"/>
+        </LinearLayout>
+
+    </FrameLayout>
+
+</LinearLayout>

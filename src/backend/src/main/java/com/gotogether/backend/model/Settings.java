@@ -7,6 +7,12 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+/**
+ * Settings embeddable class representing user-specific settings.
+ * <p>
+ * This class encapsulates settings configuration and is embedded
+ * within the {@link User} entity to keep user preferences inline.
+ */
 @Embeddable
 @Getter
 @Setter

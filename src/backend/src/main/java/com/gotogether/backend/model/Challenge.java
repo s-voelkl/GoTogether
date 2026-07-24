@@ -22,6 +22,14 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+/**
+ * Challenge entity class representing a challenge in the system.
+ * <p>
+ * A challenge is an event or activity hosted by a {@link Company}.
+ * It includes details like title, description, location, timing,
+ * rewards (currency and experience points), and participant limits.
+ * Participants are represented by a list of {@link User}s.
+ */
 @Entity
 @Table(name = "challenges")
 @Getter

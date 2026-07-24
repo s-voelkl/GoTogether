@@ -3,7 +3,7 @@ import { FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native
 import { useNavigation, useRoute } from '@react-navigation/native';
 
 import { ScreenShell } from '../components/ScreenShell';
-import { FilterButton } from '../components/FilterButton';
+// import { FilterButton } from '../components/FilterButton';
 import { FilterSheet } from '../components/FilterSheet';
 import { ChallengeCard } from '../components/ChallengeCard';
 import { ChallengeDetail } from '../components/ChallengeDetail';
@@ -110,7 +110,8 @@ export const ChallengesScreen: React.FC = () => {
 
   return (
     <ScreenShell
-      rightButton={<FilterButton open={anyOverlayOpen} onPress={onHeaderRight} />}
+      // rightButton={<FilterButton open={anyOverlayOpen} onPress={onHeaderRight} />}
+      rightButton={null}
     >
       <View style={styles.scanRow}>
         <TouchableOpacity

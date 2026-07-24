@@ -1,0 +1,104 @@
+@startuml frontend-architecture
+!theme plain
+skinparam componentStyle rectangle
+skinparam roundCorner 10
+skinparam nodesep 50
+skinparam ranksep 60
+skinparam padding 5
+
+title GoTogether Frontend
+
+package "GoTogether Frontend (React Native / Expo)" {
+    
+    component "App.tsx" as EntryPoint <<EntryPoint>> #F9F9F9
+    
+    package "Navigation Layer" as NavLayer {
+        component "RootNavigator" as Navigator <<Navigator>>
+        component "types.ts" as NavTypes
+    }
+    
+    package "State & Context" as StateContext {
+        component "FiltersContext" as FiltersCtx <<Provider>> #E3F2FD
+        component "LocationContext" as LocationCtx <<Provider>> #E3F2FD
+    }
+    
+    package "Screens" as ScreensStack {
+        component "HomeScreen\n(Map Interface)" as Home <<Screen>> #FFF9C4
+        component "ChallengesScreen\n(List & Discovery)" as Challenges <<Screen>> #FFF9C4
+        component "GamificationScreen\n(Rewards & XP)" as Gamification <<Screen>> #FFF9C4
+        component "ProfileScreen\n(User Data)" as Profile <<Screen>> #FFF9C4
+    }
+    
+    package "UI Components" as UIComponents {
+        component "ScreenShell" as Shell <<Layout>>
+        component "AppHeader" as Header <<Shared>>
+        component "TabBar" as TabBar <<Shared>>
+        component "ChallengeDetail" as Detail <<Overlay>>
+        component "ChallengeCard" as Card <<UI>>
+        component "CheckInSheet" as CheckIn <<Overlay>>
+        component "FilterSheet" as FilterSheet <<Overlay>>
+        component "NearbyOverlay" as Nearby <<Overlay>>
+        component "UserLocationMarker" as UserMarker <<Map>>
+        component "ChallengeMarker" as ChallengeMarker <<Map>>
+    }
+    
+    package "Data Layer" as DataLayer {
+        component "mockChallenges.ts" as MockData <<MockStore>> #FFEBEE
+    }
+    
+    package "Theme & Styling" as Aesthetics {
+        component "design-tokens" as DesignTokens <<Theme>> #E8F5E9
+        note right of DesignTokens
+            colors, font,
+            spacing, radius,
+            layout border
+        end note
+    }
+
+    ' Relationships
+    EntryPoint --> Navigator
+    EntryPoint ..> FiltersCtx : "wraps"
+    EntryPoint ..> LocationCtx : "wraps"
+    
+    Navigator -down-> Home
+    Navigator -down-> Challenges
+    Navigator -down-> Gamification
+    Navigator -down-> Profile
+    Navigator .right.> TabBar : "renders"
+
+    ' Layout adjustments
+    NavLayer -[hidden]left- StateContext
+    ScreensStack -[hidden]right- UIComponents
+    ' UIComponents -[hidden]right- Aesthetics
+
+    Home .down.> Shell : "uses"
+    Home .down.> UserMarker : "displays"
+    Home .down.> ChallengeMarker : "displays"
+    Home .right.> Nearby : "overlay"
+    
+    Challenges .down.> Shell : "uses"
+    Challenges .down.> Card : "lists"
+    Challenges .down.> Detail : "opens"
+    Challenges .left.> CheckIn : "QR Scan"
+    
+    Shell -right-> Header : "contains"
+    
+    ' Context Connections
+    Home .up.> LocationCtx : "useUserLocation()"
+    Home .up.> FiltersCtx : "useFilteredChallenges()"
+    Challenges .up.> FiltersCtx : "useFilteredChallenges()"
+    
+    ' Data Connections
+    FiltersCtx .down.> MockData : "consumes"
+    LocationCtx .down.> MockData : "consumes"
+    
+    ' Styling
+    ScreensStack .right.> DesignTokens : "apply"
+    UIComponents .right.> DesignTokens : "apply"
+}
+
+interface "REST API" as API
+
+[GoTogether Frontend (React Native / Expo)] -down-> API : "HTTP/JSON"
+
+@enduml
