@@ -1,0 +1,144 @@
+\documentclass[10pt,journal,final,a4paper]{IEEEtran}
+
+% --- 1. Mathematik & Symbole ---
+\usepackage{amsmath} 
+\usepackage{amssymb}
+\usepackage{amsfonts}
+
+% --- 2. Code-Blöcke (Zuerst laden wegen fvextra/lineno-Interaktionen) ---
+% \usepackage{minted} 
+\usepackage{listings}
+
+% --- 3. Text & Sprache (csquotes MUSS nach minted/fvextra geladen werden) ---
+\usepackage{csquotes} 
+
+% --- 4. Tabellen & Grafiken ---
+\usepackage{color,array}
+\usepackage{graphicx}
+\usepackage{multirow} 
+\usepackage{booktabs} 
+\usepackage{float}
+\usepackage{siunitx}
+\usepackage{tabularx}
+
+% --- 5. IEEEtran Layout-Helfer (algorithmic gelöscht, da nicht vorhanden/benötigt) ---
+\usepackage[caption=false,font=normalsize,labelfont=sf,textfont=sf]{subfig}
+\usepackage{textcomp}
+\usepackage{stfloats}
+\usepackage{verbatim}
+\usepackage{balance}
+
+% --- 6. Links & Referenzen (Immer ganz ans Ende der Präambel) ---
+\usepackage[colorlinks,urlcolor=blue,linkcolor=blue,citecolor=blue]{hyperref}
+\usepackage{orcidlink} % benötigt hyperref, daher danach laden
+\usepackage[capitalise,nameinlink,noabbrev]{cleveref} % MUSS als letztes geladen werden
+
+% --- IEEEtran spezifische Definitionen ---
+\hyphenation{op-tical net-works semi-conduc-tor IEEE-Xplore}
+\def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
+    T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}{Lemma}
+\setcounter{page}{1}
+
+\begin{document}
+
+\title{GoTogether} 
+
+% TODO FOR PUBLICATION: edit author list and affiliations
+\author{Simon Völkl\,\orcidlink{0009-0005-5334-9673}, 
+        Johannes Schieder\,\orcidlink{0009-0004-0096-3808}%
+\thanks{The authors are with the Department of Electrical Engineering, Media, and Computer Science, Ostbayerische Technische Hochschule Amberg-Weiden, 92224 Amberg, Germany (e-mail: \{s.voelkl2, j.schieder\}@oth-aw.de).}%
+}
+
+% TODO FOR PUBLICATION: Update date, title
+\markboth{TECHNICAL REPORT, JULY 2026}
+{Völkl \MakeLowercase{\textit{et al.}}: GoTogether}
+
+\maketitle
+
+\begin{abstract}
+    % \textbf{Background:} 
+    % \textbf{Objective:} 
+    % \textbf{Methods:} 
+    % \textbf{Results:} 
+    % \textbf{Conclusion:} 
+\end{abstract}
+
+\begin{IEEEkeywords}
+    % A, B, C, D
+\end{IEEEkeywords}
+
+
+% \tableofcontents
+
+\section{Introduction}
+\label{sec:introduction}
+
+% TODO FOR PUBLICATION: update introduction
+\IEEEPARstart{E}{mbedded}...
+The source code and documentation for the GoTogether project are publicly available on GitHub~\cite{gotogether2026github}.
+
+% \begin{figure}[htb]
+%     \centering
+%     \includegraphics[width=0.6\linewidth]{../assets/logo/logo_cut.png}
+%     \caption{GoTogether Project Logo. Designed by Simon Völkl.}
+%     \label{fig:logo}
+% \end{figure}
+
+\subsection{Mission Statement}
+\label{subsec:mission_statement}
+
+
+\subsection{Document Structure}
+\label{subsec:document_structure}
+
+
+\section{Technical Concept}
+\label{sec:technical_concept}
+
+\subsection{High-Level Architecture}
+\label{subsec:high_level_architecture}
+
+\subsection{Components}
+\label{subsec:components_concept}
+
+\subsection{Project Management}
+\label{subsec:project_management}
+
+
+\subsection{Task Dependencies}
+\label{subsec:task_dependencies}
+
+\subsection{Task Distribution}
+\label{subsec:task_distribution}
+
+% To coordinate development and ensure progress, tasks were tracked and managed using a GitHub Project board integrated directly with the code repository. This allowed issues to be linked to commits and Pull Requests (PRs).
+
+% To maintain code quality and structural integrity across the shared codebase, the development followed several guidelines:
+
+% \begin{itemize}
+%     \item \textbf{Branch Protection:} Direct commits to the \texttt{main} branch were restricted. All feature updates and bug fixes were developed on separate branches.
+%     \item \textbf{Code Review:} Merging any branch into \texttt{main} required a Pull Request accompanied by the other team member's review and approval.
+%     \item \textbf{CI Pipeline}: A GitHub Actions pipeline was configured to automatically verify the compilation of the ESP32 firmware for both test and production builds.
+%     \item \textbf{Code Coverage Targets:} A unit test coverage of about 60\% was targeted for the core ESP32 modules, while the Android application aimed for basic unit tests. Node-RED flows were excluded from automated testing due to their visual nature.
+%     \item \textbf{Docstrings:} All public methods and classes were documented with docstrings to enhance code readability and accessibility.
+% \end{itemize}
+
+% Transparency note: The unit test writing and docstring generation were partly assisted by AI.
+
+\section{Discussion}
+\label{sec:discussion}
+
+\section{Summary and Future Work}
+\label{sec:summary-future-work}
+
+% --- References ---
+% The \balance command ensures that the two columns on the last
+% page end cleanly at the same height. Uncomment as soon as the text is finished!
+\balance 
+\bibliographystyle{IEEEtran}
+\bibliography{references}
+
+\end{document}
