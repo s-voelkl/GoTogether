@@ -66,7 +66,7 @@ The **artifacts** in `docs/artifacts/` contain the historical development artifa
     <img src="docs/artifacts/05-demo-mobile-vanillaJS/DemoMap.png" alt="Demo App Map" width="250"/>
 </div>
 
-**Backend Development**: Backend API with routes for Challenges, Users, Companies and Topics (`src/backend/src/main`)
+**Backend Development**: Backend API with routes for Challenges, Users, Companies and Topics, though currently not used by the frontend (`src/backend/src/main`)
 
 **Frontend Development**: Frontend with React Native (`src/frontend/src`)
 

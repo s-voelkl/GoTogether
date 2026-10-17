@@ -1,0 +1,35 @@
+# Git ignore file for local LaTeX build files, which should not be committed to the repository. 
+*.aux
+*.fls
+*.log
+*.nav
+*.out
+*.snm
+*.toc
+*.bbl
+*.bfc
+*.blg
+*.lof
+*.lot
+*.toc
+*.bcf
+# additional
+*.latexmk
+*.synctex(busy)
+*.synctex
+*.gz
+*.lol
+*.xml
+*.fdb_latexmk
+*.aux
+*.bcf-SAVE-ERROR
+_minted/*
+.devcontainer/*
+*.upa
+*.upb
+*.bib
+!references.bib
+*.bkp
+*.bat
+__latexindent_temp*
+*-SAVE-ERROR

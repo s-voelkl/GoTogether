@@ -8,7 +8,7 @@ The architecture follows the MVP and focuses on the core use cases from the sect
   <img src="/docs/diagrams/out/three-tier-architecture/three-tier-architecture.png" alt="Three-Tier Architecture" width="250"/>
 </div>
 
-- **Presentation Tier:** The React Native app displays the open challenge list, the real-time map, social battery, matching, and reward status. It encapsulates only the UI and communicates with the backend via the API (see [Frontend-Architecture](#frontend-architecture)). A migration to a native Android app is currently in progress but not finished, so the React Native app is still the main presentation tier.
+- **Presentation Tier:** The React Native app displays the open challenge list, the real-time map, social battery, matching, and reward status. It encapsulates only the UI and communicates with the backend via the API (see [Frontend-Architecture](#frontend-architecture)). A migration to a native Android app is currently in progress but not finished, so the React Native app is still the main presentation tier. The frontend currently runs without the Application and Data Tiers, so it is not a full-stack application. The backend must be integrated in the future to provide a complete user experience.
 - **Application Tier:** The Java Spring Boot backend with a REST API interface implements the MVP logic: challenge filters, map queries, social battery filtering, interest matching, QR check-in, rewards, and company APIs for events or challenges (see [Backend-Architecture](#backend-architecture)).
 - **Data Tier:** PostgreSQL stores the required data, including users, profiles, interests, quests, events, check-ins, friendships, rewards, and company profiles (see [Database-Architecture](#database-architecture)).
 
